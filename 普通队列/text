@@ -1,0 +1,127 @@
+import java.util.Arrays;
+import java.util.Scanner;
+class ArrayQueue{
+    private int front;// 队列的头指针
+    private int rear;// 队列的尾指针
+    private int maxSize;// 表示数组的最大容量
+    private int[] arr;// 队列的容量
+    public ArrayQueue(int size) {
+        this.maxSize = size;
+        this.front = -1;
+        this.rear = -1;
+         arr = new int[this.maxSize];
+    }
+
+    /**
+     * 判断队列是否为空
+     * @param data
+     */
+    public  boolean isEmpty() {
+        return this.front == this.rear;
+    }
+
+    /**
+     * 判断队列是否满
+     * @param data
+     */
+    public boolean isFull() {
+        return this.rear == this.maxSize - 1;
+    }
+
+    /**
+     *  添加数据
+     * @param data
+     */
+    public void addQueue(int data) {
+        // 先判断队列是否满了
+        if (isFull()) {
+            System.out.println("队列已满，无法添加数据");
+            return;
+        }
+        this.arr[++rear] = data;
+    }
+    /**
+     * 出队列
+     */
+    public int getQueue() {
+        // 判空
+        if (isEmpty()) {
+            // 抛出异常
+            throw new RuntimeException("队列为空，无法取数据");
+        }
+        return this.arr[++front] ;
+    }
+    /**
+     * 打印队列所有数据
+     */
+    public void  displayQueue() {
+        // 判空
+        if (isEmpty()) {
+            throw new RuntimeException("队列为空，无法打印数据");
+        }
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print(this.arr[i]+" ");
+        }
+        System.out.println();
+    }
+    /**
+     * 显示队头元素
+     */
+    public int headQueue() {
+        // 判空
+        if (isEmpty()) {
+            throw new RuntimeException("队列为空");
+        }
+        return this.arr[front+1];
+    }
+ }
+
+public class text {
+    public static void main(String[] args) {
+        ArrayQueue queue = new ArrayQueue(3);
+       Scanner scan = new Scanner(System.in);
+        boolean loop = true;
+        while (loop) {
+            System.out.println("d(dispaly): 打印队列");
+            System.out.println("e(exit):退出程序");
+            System.out.println("a(add) :添加数据");
+            System.out.println("g(get) :取队头元素");
+            System.out.println("h(head):显示队头元素");
+            char choice = scan.next().charAt(0);
+            switch (choice) {
+                case 'd':
+                    queue.displayQueue();
+                    break;
+                case 'a':
+                    System.out.println("请输入一个数字");
+                    int data = scan.nextInt();
+                    queue.addQueue(data);
+                    break;
+                case 'g':
+                    try{
+                        int ret = queue.getQueue();
+                        System.out.println("取出的队头数据是："+ret);
+                    }catch(Exception e) {
+                        e. printStackTrace();
+                    }
+                    break;
+                case 'h':
+                    try{
+                        int ret = queue.headQueue();
+                        System.out.println("队头当前的数据是："+ret);
+                    }catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 'e':
+                    scan.close();
+                    System.out.println("退出程序");
+                    loop = false;
+                    break;
+                default:
+                    System.out.println("输入有误，请重新输入");
+                    break;
+            }
+        }
+    }
+}
