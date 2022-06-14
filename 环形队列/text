@@ -1,0 +1,168 @@
+/**
+ * @author 26568
+ * 环形队列
+ * @date 2022-06-14 16:31
+ */
+
+import com.sun.xml.internal.ws.addressing.WsaActionUtil;
+
+import java.util.Scanner;
+
+/**
+ *  创建环形队列
+ */
+class CircleArrayQueue {
+    // 队头
+    private int front;
+    // 队尾
+    private int rear;
+    // 数组容量
+    private int maxSize;
+    // 队列
+    private int[] array;
+    /**
+     * 构造器，初始化队列
+     */
+    public CircleArrayQueue(int size) {
+        this.maxSize = size;
+        this.front = 0;
+        this.rear =  0;
+        this.array = new int[this.maxSize];
+    }
+    /**
+     * 判断队列满
+     */
+    public  boolean isFull() {
+        return (this.rear + 1) % this.maxSize == this.front;
+    }
+    /**
+     * 判断队空
+     */
+    public boolean isEmpty() {
+        return this.rear == this.front;
+    }
+    /**
+     * 添加数据
+     */
+    public void addQueue(int data) {
+        // 先判满
+        if (isFull()) {
+            System.out.println("队列已满，无法添加新数据");
+            return;
+        }
+        // 因为rear始终指向队列的下一个位置，所以直接添加到rear位置即可
+        this.array[this.rear] = data;
+        // 注意环形队列，rear的位置要取模
+        rear = (rear + 1) % this.maxSize;
+        System.out.println("添加成功");
+    }
+    /**
+     * 取队头元素
+     */
+    public int getQueue() {
+        // 判空
+        if (isEmpty()) {
+            throw new RuntimeException("队列为空，无法取数据");
+        }
+        /*
+        front 下标处就是队列头
+        但是取出去数据后要让front 后移 所以不能直接返回
+         */
+        int val = this.array[this.front];
+        // 注意front不能越界，要取模
+        this.front = (this.front + 1) % this.maxSize;
+        return val;
+    }
+    /**
+     *  打印所有队列数据
+     */
+    public  void displayQueue() {
+        // 判空
+        if (isEmpty()) {
+            System.out.println("队列为空");
+            return;
+        }
+        /**
+         * 打印有效元素的个数，所以我们要先知道有效元素共有多少个
+         */
+        for (int i = this.front; i < this.front +this.size(); i++) {
+            System.out.print(this.array[i % this.maxSize] + " ");
+        }
+        System.out.println();
+    }
+    /**
+     *   有效元素数据的个数
+     */
+    public int size() {
+        return (this.rear - this.front + this.maxSize) % this.maxSize;
+    }
+    /**
+     *  显示对头元素
+     */
+    public int headQueuq() {
+        if (isEmpty()) {
+            throw new RuntimeException("队列为空");
+        }
+        return this.array[this.front];
+    }
+}
+public class TextDemo {
+    public static void main(String[] args) {
+        CircleArrayQueue queue = new CircleArrayQueue(4);
+        Scanner  scan = new Scanner(System.in);
+        boolean loop = true;
+        while (loop) {
+            // 提供一个菜单
+            int choice = menu();
+            switch (choice) {
+                case 1:
+                    System.out.println("请输入你要添加的数据");
+                    int data = scan.nextInt();
+                    queue.addQueue(data);
+                    break;
+                case 2:
+                    try {
+                        int getData = queue.getQueue();
+                        System.out.println("取出的队头元素是："+ getData);
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    break;
+                case 3:
+                    queue.displayQueue();
+                    break;
+                case 4:
+                    try {
+                        int headData = queue.headQueuq();
+                        System.out.println("此时队头元素是："+ headData);
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    break;
+                case 0:
+                    System.out.println("退出程序！！！");
+                    scan.close();
+                    loop = false;
+                    break;
+                default:
+                    System.out.println("你的选择有误，请重新输入");
+                    break;
+            }
+        }
+
+    }
+    public static int menu() {
+        System.out.println("============================");
+        System.out.println("===1.添加数据    2.取队头数据===");
+        System.out.println("===3.打印队列    4.查队头数据===");
+        System.out.println("===========0.退出系统=========");
+        System.out.println("=============================");
+        System.out.println();
+        System.out.println("请选择操作");
+        Scanner scan = new Scanner(System.in);
+        int choice  = scan.nextInt();
+         return choice;
+    }
+}
