@@ -178,5 +178,11 @@ public class LinkList {
             head.next = head.next.next;
         }
     }
+        /**
+     * 清除内存
+     */
+    public void clear() {
+        this.head = null;
+    }
     }
 
