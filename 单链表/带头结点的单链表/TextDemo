@@ -28,5 +28,6 @@ public class TextDemo {
         likeList.display();
         likeList.delAllKey(5);
         likeList.display();
+        likeList.clear();
     }
 }
