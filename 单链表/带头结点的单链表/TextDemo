@@ -1,0 +1,32 @@
+/**
+ * @author 26568
+ * 环形队列
+ * @date 2022-06-14 16:31
+ */
+
+import com.sun.xml.internal.ws.addressing.WsaActionUtil;
+
+import java.util.Scanner;
+import java.util.Stack;
+
+/**
+ *  创建环形队列
+ */
+
+public class TextDemo {
+    public static void main(String[] args) {
+        LinkList likeList = new LinkList();
+        likeList.addLast(5);
+        likeList.addLast(1);
+        likeList.addLast(5);
+        likeList.addLast(2);
+        likeList.addLast(5);
+        likeList.addLast(5);
+        likeList.display();
+        System.out.println(likeList.search(9));
+        System.out.println(likeList.size());
+        likeList.display();
+        likeList.delAllKey(5);
+        likeList.display();
+    }
+}
