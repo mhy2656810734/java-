@@ -1,0 +1,182 @@
+/**
+ * @author 26568
+ * 单链表
+ * @date 2022-06-15 16:27
+ */
+class  Node {
+    int  data;
+    Node next;
+    public Node(int data) {
+        this.data = data;
+    }
+}
+public class LinkList {
+    Node head = new Node(-1); // 头结点
+    /**
+     * 尾插法
+     */
+    public void addLast(int data) {
+        Node cur = this.head;
+        Node node = new Node(data);
+        while (cur.next != null) {
+            cur = cur.next;
+        }
+        cur.next = node;
+    }
+    /**
+     * 头插法
+     */
+    public void addFirst(int data) {
+        Node node = new Node(data);
+        node.next = head.next;
+        head.next = node;
+    }
+    /**
+     * 打印链表
+     */
+    public void display() {
+        Node cur = head.next;
+        if (cur == null) {
+            System.out.println("链表为空，操作失败");
+            return;
+        }
+        while (cur != null) {
+            System.out.print(cur.data+" ");
+            cur = cur.next;
+        }
+        System.out.println();
+    }
+    /**
+     * 查询数据
+     */
+    public boolean search(int data) {
+        Node cur =  head.next;
+        if (cur == null) {
+            throw new RuntimeException("链表为空，操作失败");
+        }
+        while (cur != null) {
+            if (cur.data == data) {
+                return true;
+            }
+            cur = cur.next;
+        }
+        return false;
+    }
+    /**
+     * 求单链表数据的个数
+     */
+    public int size() {
+        Node cur = this.head.next;
+        if (cur == null) {
+            return 0;
+        }
+        int count = 0;
+        while (cur != null) {
+            count++;
+            cur = cur.next;
+        }
+        return count;
+    }
+    /**
+     * 检查index合法性
+     */
+    private boolean checkIndex(int index) {
+        if (index < 0 || index > this.size()) {
+            return true;
+        }
+        return false;
+    }
+    /**
+     * 在index位置插入数据
+     */
+    public void addIndex(int index,int data) {
+        // 先判断index 的合法性
+        if (this.checkIndex(index)) {
+            System.out.println("index 位置不合法");
+            return;
+        }
+        Node node = new Node(data);
+        if (index == 0) {
+            this.addFirst(data);
+            return;
+        }
+        if (index == this.size()) {
+            this.addLast(data);
+            return;
+        }
+        // index 合法 查找index的前一个位置
+        Node cur = this.head.next;
+        while ( index - 1 > 0) {
+            cur = cur.next;
+            index--;
+        }
+        node.next = cur.next;
+        cur.next = node;
+    }
+    /**
+     * 找前驱结点
+     */
+    public Node searchPrev(int key) {
+        Node cur = this.head.next;
+        if (cur == null) {
+            throw new RuntimeException("单链表为空");
+        }
+        if (cur.data == key) {
+            return cur;
+        }
+        while (cur.next != null ) {
+            if (cur.next.data == key) {
+                return cur;
+            }
+            cur =  cur.next;
+        }
+        return null;
+    }
+    /**
+     * 删除第一次出现的key值
+     */
+    public void delKey(int key) {
+        Node cur = this.head.next;
+        if (cur == null) {
+            System.out.println("链表为空，操作失败");
+            return;
+        }
+        // key值结点的前驱结点
+        Node prev = this.searchPrev(key);
+        if (prev == null) {
+            System.out.println("没有你要删除的那个结点");
+            return;
+        }
+        if (prev.data == key) {
+            this.head.next = prev.next;
+        }
+        prev.next = prev.next.next;
+    }
+    /**
+     *  删除所有key值
+     */
+    public void delAllKey(int key) {
+        Node cur = this.head.next;
+        if (cur == null) {
+            throw new RuntimeException("单链表为空");
+        }
+        // 双指针法
+        Node prev = this.head.next;
+        cur = cur.next;
+        while (cur != null)  {
+            // 如果相等
+            if (cur.data == key) {
+                cur = cur.next;
+                prev.next = cur;
+            } else {
+                prev = cur;
+                cur = cur.next;
+            }
+        }
+        // 处理头结点
+        if (head.next.data == key) {
+            head.next = head.next.next;
+        }
+    }
+    }
+
