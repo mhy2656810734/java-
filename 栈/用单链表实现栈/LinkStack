@@ -1,0 +1,90 @@
+/**
+ * @author 26568
+ *  链表模拟实现栈
+ * @date 2022-06-17 16:03
+ */
+
+/**
+ * 结点
+ */
+class Node {
+    private int data;
+    private Node next;
+    public Node(int data) {
+        this.data = data;
+    }
+    public int getData() {
+        return data;
+    }
+
+    public Node getNext() {
+        return next;
+    }
+
+    public void setNext(Node next) {
+        this.next = next;
+    }
+
+    public void setData(int data) {
+        this.data = data;
+    }
+}
+public class LinkedStack {
+    Node head  = new Node(-1);
+    /**
+     * 添加数据
+     */
+    public void pop(int data) {
+        // 判断是不是第一次添加数据
+        Node node = new Node(data);
+        if (this.head.getNext() == null) {
+            this.head.setNext(node);
+            System.out.println("入栈成功");
+            return;
+        }
+        Node cur = this.head.getNext();
+        while (cur.getNext() != null) {
+            cur = cur.getNext();
+        }
+        cur.setNext(node);
+        System.out.println("入栈成功");
+    }
+    /**
+     * 出栈操作
+     */
+    public int push() {
+        if (this.head.getNext() == null) {
+            throw new RuntimeException("队列为空，操作失败");
+        }
+        Node cur = this.head.getNext();
+        Node prev = cur;
+        // 如果只有一个结点
+        if (cur.getNext() == null) {
+            this.head.setNext(null);
+            return cur.getData();
+        }
+        while (cur.getNext() != null) {
+            cur = cur.getNext();
+        }
+        while (prev.getNext().getNext() != null) {
+            prev = prev.getNext();
+        }
+        prev.setNext(null);
+        return cur.getData();
+    }
+    /**
+     * 展示栈中的数据
+     */
+    public void display() {
+        if (this.head.getNext() == null) {
+            System.out.println("队列为空，操作失败");
+            return;
+        }
+        Node cur = this.head.getNext();
+        while (cur != null) {
+            System.out.println(cur.getData());
+            cur = cur.getNext();
+        }
+        System.out.println("展示成功");
+    }
+}
