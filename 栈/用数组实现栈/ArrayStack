@@ -1,0 +1,62 @@
+/**
+ * @author 26568
+ *  数组模拟实现栈
+ * @date 2022-06-17 16:03
+ */
+public class ArrayStack {
+    private int maxSize;// 栈的容量
+    private int[] stack;// 数组
+    private int top;// 栈顶下标
+    public ArrayStack(int size) {
+        this.maxSize = size;
+        stack = new int[maxSize];
+        this.top = -1;
+    }
+    /**
+     * 判空
+     */
+    public boolean isEmpty() {
+        return this.top == -1;
+    }
+    /**
+     * 判满
+     */
+    public boolean isFull() {
+        return this.top == this.maxSize - 1;
+    }
+    /**
+     * 入栈
+     */
+    public void pop(int data) {
+        // 先判满
+        if (isFull()) {
+            System.out.println("栈满，操作失败");
+            return;
+        }
+        top++;
+        this.stack[top] = data;
+        System.out.println("入栈成功");
+    }
+    /**
+     * 出栈
+     */
+    public int push() {
+        // 判空
+        if (isEmpty()) {
+            throw new RuntimeException("栈已空，操作失败");
+        }
+        return this.stack[top--];
+    }
+    /**
+     * 显示栈中数据
+     */
+    public void diispaly() {
+        // 判空
+        if (isEmpty()) {
+            throw new RuntimeException("栈已空，操作失败");
+        }
+        for(int i = top; i >= 0; i--) {
+            System.out.printf("stack[%d] = %d\n",i,this.stack[i]);
+        }
+    }
+}
