@@ -1,0 +1,10 @@
+
+
+public class TextDemo {
+    public static void main(String[] args) {
+        RingLinkiList ringLinkiList = new RingLinkiList();
+        ringLinkiList.addNode(10);
+        ringLinkiList.display();
+        ringLinkiList.countNode(1,2,10);
+    }
+}
