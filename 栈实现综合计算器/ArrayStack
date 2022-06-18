@@ -1,0 +1,106 @@
+/**
+ * @author 26568
+ * 用栈实现两位数以内的算术运算
+ * @date 2022-06-18 15:53
+ */
+public class ArrayStack {
+    private int top = -1; // 栈顶指针
+    private int[] stack; // 数组
+    private int maxSize; // 容量
+
+    public ArrayStack(int size) {
+        this.maxSize = size;
+        stack = new int[maxSize];
+    }
+
+    /**
+     * 判空
+     */
+    public boolean isEmpty() {
+        return this.top == -1;
+    }
+
+    /**
+     * 判满
+     */
+    public boolean isFull() {
+        return this.top == maxSize - 1;
+    }
+
+    /**
+     * 入栈
+     */
+    public void push(int data) {
+        // 先判满
+        if (isFull()) {
+            System.out.println("队列已满");
+            return;
+        }
+        stack[++top] = data;
+    }
+
+    /**
+     * 出栈
+     */
+    public int pop() {
+        // 判空
+        if (isEmpty()) {
+            throw new RuntimeException("栈空，操作失败");
+        }
+        return stack[top--];
+    }
+
+    /**
+     * 查看栈顶元素
+     * @return 栈顶元素
+     */
+    public int peek() {
+        return stack[top];
+    }
+    /**
+     * 判断优先级
+     * @param oper 操作符
+     * @return  优先级
+     */
+    public int priority(int oper) {
+        if (oper == '*' || oper == '/') {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    /**
+     * 判断是不是操作符
+     */
+    public boolean isoper(char val) {
+        return val == '*' || val == '/' || val == '+' || val == '-';
+    }
+
+    /**
+     * 计算方法
+     * @param nums1  第一个弹出数
+     * @param nums2  第二个弹出数
+     * @param oper   弹出的操作符
+     * @return       计算结果
+     */
+    public int cal(int nums1, int nums2, int oper) {
+        int  ret = 0;
+        switch (oper) {
+            case '+':
+                ret = nums1 + nums2;
+                break;
+            case '-':
+                ret = nums2 -nums1;
+                break;
+            case '*':
+                ret = nums1 * nums2;
+                break;
+            case '/':
+                ret = nums2 / nums1;
+                break;
+            default:
+                break;
+        }
+        return ret;
+    }
+}
