@@ -1,0 +1,81 @@
+import java.util.Scanner;
+
+public class TextDemo {
+    public static void main(String[] args) {
+        String str = "70+20*4-4";
+        //  实例化两个栈，一个数栈，一个字符栈
+        ArrayStack numStack = new ArrayStack(10);
+        ArrayStack operStack = new ArrayStack(10);
+        int index = 0;// 作为字符串的下标
+        int nums1 = 0; // 弹出的第一个数
+        int nums2 = 0; // 弹出的第二个数
+        int oper =  0;// 弹出的操作符
+        int ret = 0; // 计算结果
+        String keepNum = ""; // 用于拼接两位数
+        char ch = ' ';// 将每次扫描到的字符保存到char中
+        while (true) {
+           // 扫描完毕就结束循环
+            if (index >= str.length()) {
+                break;
+            }
+            // 拿到index处的元素
+            ch = str.substring(index,index+1).charAt(0);
+            // 判断ch是字符还是
+            if (operStack.isoper(ch)) {
+                // 如果是字符,继续判断是不是第一次插入
+                if (operStack.isEmpty()) {
+                    // 第一次插入，直接入栈
+                    operStack.push(ch);
+                } else {
+                    // 不是第一次入栈，要判断优先级，
+                    if (operStack.priority(ch) <= operStack.priority(operStack.peek())) {
+                        // 如果当前优先级比栈内优先级 <= 的话，弹出两个数字和当前栈内字符
+                        nums1 = numStack.pop();
+                        nums2 = numStack.pop();
+                        oper  = operStack.pop();
+                        ret = operStack.cal(nums1,nums2,oper);
+                        // 将计算结果压入数字栈中
+                        numStack.push(ret);
+                        // 再将当前的字符 ch 压入字符栈
+                        operStack.push(ch);
+                    } else {
+                        // 如果当前的优先级大于栈顶的就直接压入字符栈
+                        operStack.push(ch);
+                    }
+                }
+            } else {
+                // 如果不是字符,是数字
+                keepNum += ch;
+                // 如果ch已经是最后一个数字的话直接入栈
+                if (index == str.length() -1) {
+                    numStack.push(Integer.parseInt(keepNum));
+                } else {
+                    // 判断下一个字符是不是数字，如果是的话，继续扫描。不是的话就入栈
+                    char ch1 = str.substring(index+1,index+2).charAt(0);// index位置的后一个字符
+                    if (operStack.isoper(ch1)) {
+                        // 如果 ch1 是字符，就入栈
+                        numStack.push(Integer.parseInt(keepNum)); // 将拼接好的转换成数字
+                        // 注意！！！！一定要将keepNum清空
+                        keepNum = "";
+                    }
+                }
+            }
+            index++; // 每次操作完，让索引向后移动一位
+        }
+        // 此时扫描完毕，循环将两个栈中的取出再计算
+        while (true) {
+            // 如果符号栈为空的话，说明此时数栈中只有一个数组，就是最后结果
+            if (operStack.isEmpty()) {
+                break;
+            }
+            nums1 = numStack.pop();
+            nums2 = numStack.pop();
+            oper  = operStack.pop();
+            ret = operStack.cal(nums1,nums2,oper);
+            // 将计算结果压入数字栈中
+            numStack.push(ret);
+        }
+        // 此时最后的数栈中的数字就是最后结果
+        System.out.printf("字符串%s = %d",str,numStack.pop());
+    }
+}
