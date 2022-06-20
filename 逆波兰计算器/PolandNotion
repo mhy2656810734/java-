@@ -1,0 +1,66 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
+/**
+ * @author 26568
+ * 逆波兰计算器
+ * @date 2022-06-20 14:02
+ */
+public class PolandNotion {
+    public static void main(String[] args) {
+        String str = "3 4 + 5 * 6 -";
+        // 思路：1.将上面字符串存放到数组中
+        List<String> list = getListString(str);
+        System.out.println("list = "+ list);
+        //  2.再将数组传递给一个方法，配合栈计算
+        int ret = calculate(list);
+        System.out.println("计算结果是"+ ret);
+    }
+
+    /**
+     * 分割方法
+     * @param str 传入的字符串
+     * @return  分割后的字符串
+     */
+    public static List<String> getListString(String str) {
+        // 先按照空格将str分割
+        String[] split = str.split(" ");
+        List<String> list = new ArrayList<>(); // 要返回的字符串
+        for (String str1: split) {
+            list.add(str1);
+        }
+        return list;
+    }
+    public static int calculate(List<String> list) {
+        // 创建一个栈，开始进行计算
+        Stack<String> stack = new Stack<>();
+        //  遍历进行操作   是数字就压入栈  不是的话就弹出进行计算，将计算结果压入栈中
+        for (String item: list) {
+            // 这里使用正则表达式
+            if (item.matches("\\d+")) { // 匹配多位数
+                stack.push(item);
+            } else {
+                // 弹出两个数字进行计算   因为弹出的是字符串需要转成整数
+                int num2 = Integer.parseInt(stack.pop());
+                int num1 = Integer.parseInt(stack.pop());
+                int ret = 0;
+                if (item.equals("+")) {
+                    ret = num1 + num2;
+                } else if (item.equals("-")) {
+                    ret = num1 - num2;
+                } else if (item.equals("*")) {
+                    ret = num1 * num2;
+                } else if (item.equals("/")) {
+                    ret = num1 / num2;
+                } else {
+                    throw new RuntimeException("符号不正确，操作失败");
+                }
+                // 将计算结果压入栈中
+                stack.push("" + ret);
+            }
+        }
+        // 最后留在栈中的字符串数字就是计算结果
+        return Integer.parseInt(stack.pop());
+    }
+}
