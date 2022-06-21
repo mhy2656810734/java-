@@ -1,0 +1,82 @@
+package com.haiyang.recursion;
+
+import netscape.security.UserTarget;
+
+/**
+ * @author 26568
+ * 迷宫问题
+ * @date 2022-06-21 14:43
+ */
+public class MiGong {
+    public static void main(String[] args) {
+    int[][] map = new int[8][7];
+    // 设置上下挡板
+        for (int i = 0; i < 7; i++) {
+            map[0][i] = 1;
+            map[7][i] = 1;
+        }
+        // 设置左右挡板
+        for (int i = 0; i < 8; i++) {
+            map[i][0] = 1;
+            map[i][6] = 1;
+        }
+        // 设置中间的两个挡板
+        map[3][1] = 1;
+        map[3][2] = 1;
+        map[1][2] = 1;
+        map[2][2] = 1;
+        System.out.println("设置挡板后的地图");
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 7; j++) {
+                System.out.print(map[i][j] + " ");
+            }
+            System.out.println();
+        }
+        // 使用递归回溯小球路径
+        setWay(map,1,1);
+        System.out.println("回溯后，地图情况");
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 7; j++) {
+                System.out.print(map[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    /**
+     * 计算路径方法
+     * 小球起始位置是 1,1  行走策略是： 下->右->上->左   假设小球走过的位置可以到达最终点 6,5 将该点设置成2
+     * 如果最终无法到达就设置陈3     坐标为0说明该点可以走
+     * @param map  地图
+     * @param i    小球开始的横坐标
+     * @param j    小球开始的纵坐标
+     * @return     给出该坐标是否可行
+     */
+    public static boolean setWay(int[][] map, int i, int j) {
+        if (map[6][5] == 2) {  // 通路已经找到
+            return true;
+        } else {
+            //  如果该点等于0  就开始行走
+            if (map[i][j] == 0) {
+                // 假设这个点可以走，就设置成2  然候按照行走策略继续找路径
+                map[i][j] = 2;
+                if (setWay(map,i+1,j)) { // 向下走
+                    return true;
+                } else if (setWay(map,i,j+1)) {  // 向右走
+                    return true;
+                } else if (setWay(map,i-1,j)) { // 像上走
+                    return true;
+                } else if (setWay(map,i,j-1)) { // 向左走
+                    return true;
+                } else {
+                    // 说明上下左右都不通，这个点作废，这条路就不通
+                    map[i][j] = 3;
+                    return false;
+                }
+            } else {
+                // 该店不是0的话直接返回错误
+                return false;
+            }
+        }
+    }
+}
