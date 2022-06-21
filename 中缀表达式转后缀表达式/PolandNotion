@@ -1,0 +1,176 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
+/**
+ * @author 26568
+ * 中缀表达式转后缀表达式步骤
+ * 1.初始化两个栈，操作符栈s1 和 保存结果的s2栈(s2没有出栈操作，可以定义成List）
+ * 2.从左至右依次扫描中缀表达式
+ * 3.遇到操作数时，压入栈s2
+ * 4.遇到操作符时
+ *    4.1 如果s1栈空，或s1栈顶是"("时，就将操作符直接压入s1
+ *    4.2 否则，如果优先级比栈顶高，就直接压入栈
+ *    4.3 否则，如果优先级比栈顶低，就弹出栈顶操作符压入栈s2，继续进行步骤4判断
+ * 5.遇到括号时
+ *    5.1遇到左括号直接压入s1
+ *    5.2遇到右括号，一次弹出s1栈顶操作符压入s2中，直到遇到左括号为止，直接丢弃这一对括号
+ * 6.重复步骤2-5，直到表达式结束
+ * 7.将s1所有操作符压入s2
+ * 8.依次弹出s2元素，结果的逆序就是：后缀表达式
+ * @date 2022-06-20 14:02
+ */
+public class PolandNotion {
+    public static void main(String[] args) {
+        String str = "1+((2+3)*4)-5";
+        List<String> infixList = toInfixList(str);
+        System.out.println(infixList);
+        List<String> suffixList = parseSuffixList(infixList);
+        System.out.println(suffixList);
+        System.out.println(calculate(suffixList));
+    }
+
+    /**
+     * 中缀表达式转对应的List
+     * @param s 中缀表达式
+     * @return List
+     */
+    public static List<String> toInfixList(String s) {
+        int i = 0;// s的下标
+        List<String> list = new ArrayList<String>();
+        String str;// 用于对多位数的拼接
+        char ch;// 每一个i下标处的字符
+        do {
+            // 如果是非数字，直接加入list
+    if ((ch = s.charAt(i)) < 48 || (ch = s.charAt(i)) > 57) {
+        list.add("" + ch);
+        i++;
+    } else {
+        // 如果是数字的话就需要进行拼接
+        str = ""; // 每次让str为空串
+        while ((i < s.length()) && (ch = s.charAt(i)) >= 48 && (ch = s.charAt(i)) <= 57) {
+            str += ch;
+            i++;
+        }
+        // 拼接好以后就将str加到list
+        list.add(str);
+    }
+        } while (i < s.length());
+        // 循环结束以后返回即可
+        return list;
+    }
+
+    /**
+     * 中缀表达式转后缀表达式
+     * @param list 中缀表达式
+     * @return 后缀表达式
+     */
+    public static List<String> parseSuffixList(List<String> list) {
+        // 首先创建一个栈s1：用来存放操作符
+        // 由于栈s2不存在出栈操作，我们直接设为List
+        Stack<String> s1 = new Stack<String>();
+        List<String> s2 = new ArrayList<String>();
+        // 遍历list
+        for (String item : list) {
+            // 使用正则表达式：如果是一个数，直接加到s2
+            if (item.matches("\\d+")) {
+                s2.add(item);
+            } else if (item.equals("(")) {
+                s1.push(item);
+            } else if (item.equals(")")) {
+                // 如果是有括号，依次弹出左括号之前的所有操作符并加到s2中
+                while (!s1.peek().equals("(")) {
+                    s2.add(s1.pop());
+                }
+                // 此时栈顶为左括号，需要弹出
+                s1.pop();
+            } else {
+                // 如果栈s1为空 或者栈顶是左括号直接压入item
+                if (s1.size() == 0 || s1.peek().equals("(")) {
+                    s1.push(item);
+                } else
+                {
+                    // 此时就是操作符之间的比较了
+                    // 比较栈顶和item的优先级谁的比较高
+                    while (s1.size() != 0 && Operation.getValue(s1.peek()) >= Operation.getValue(item)) {
+                        s2.add(s1.pop());
+                    }
+                    // 此时栈顶的优先级比item的小，将item压入栈
+                    s1.push(item);
+                }
+            }
+        }
+        // 将栈留下的所有操作符加入到s2
+        while (s1.size() != 0) {
+            s2.add(s1.pop());
+        }
+        return s2;
+    }
+    /**
+     * 后缀表达式计算方法
+     * @param list 传入的后缀表达式
+     * @return 计算结果
+     */
+    public static int calculate(List<String> list) {
+        // 创建一个栈，开始进行计算
+        Stack<String> stack = new Stack<>();
+        //  遍历进行操作   是数字就压入栈  不是的话就弹出进行计算，将计算结果压入栈中
+        for (String item: list) {
+            // 这里使用正则表达式
+            if (item.matches("\\d+")) { // 匹配多位数
+                stack.push(item);
+            } else {
+                // 弹出两个数字进行计算   因为弹出的是字符串需要转成整数
+                int num2 = Integer.parseInt(stack.pop());
+                int num1 = Integer.parseInt(stack.pop());
+                int ret = 0;
+                if (item.equals("+")) {
+                    ret = num1 + num2;
+                } else if (item.equals("-")) {
+                    ret = num1 - num2;
+                } else if (item.equals("*")) {
+                    ret = num1 * num2;
+                } else if (item.equals("/")) {
+                    ret = num1 / num2;
+                } else {
+                    throw new RuntimeException("符号不正确，操作失败");
+                }
+                // 将计算结果压入栈中
+                stack.push("" + ret);
+            }
+        }
+        // 最后留在栈中的字符串数字就是计算结果
+        return Integer.parseInt(stack.pop());
+    }
+}
+
+/**
+ * 该类是判断操作符的优先级
+ */
+class Operation {
+    private static int ADD = 1;
+    private static int SUB = 1;
+    private static int MUL = 2;
+    private static int DIV = 2;
+    public static int getValue(String str) {
+        int ret = 0;
+        switch(str) {
+            case "+":
+                ret = ADD;
+                break;
+            case "-":
+                ret = SUB;
+                break;
+            case "*":
+                ret = MUL;
+                break;
+            case "/":
+                ret = DIV;
+                break;
+            default:
+                System.out.println("该字符有误");
+                break;
+        }
+        return ret;
+    }
+}
