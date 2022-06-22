@@ -1,0 +1,57 @@
+/**
+ * @author 26568
+ * 八皇后问题
+ * @date 2022-06-22 15:24
+ */
+public class Queue8 {
+    int max = 8; // 设置8个皇后
+    int[] array = new int[max]; // 该数组用来存放皇后放置的位置
+    // 用一维数组来表示，共8X8的表格 array[i] = val   val表示在 i+1下标处的列
+    static int count = 0;// 用来记录共多少个解法
+    static int sum = 0; // 用来检测共判断了多少次
+    public static void main(String[] args) {
+        Queue8 queue8 = new Queue8();
+        queue8.check(0); // 第一个皇后
+        System.out.println("解法的种类共："+count+"类");
+        System.out.println("共判断了"+sum+"次");
+    }
+
+    /**
+     * 放置皇后的方法
+     * @param n 第几个皇后
+     */
+    private void check(int n) {
+        if (n == max) {
+            // 只要放完了就打印
+            print();
+            return;
+        }
+        // 没有满的话
+        for (int i = 0; i < max; i++) {
+            array[n] = i;// 先把当前的这个皇后放到该行的每一列
+            // 判断当放置第n个皇后到第i列时是否冲突
+            if (judge(n)) {
+                // 如果不冲突就继续放第n+1个
+                check(n+1);
+            }
+        }
+    }
+    private void print() {
+        count++;
+        for (int i = 0; i < max;i++) {
+            System.out.print(this.array[i]+" ");
+        }
+        System.out.println();
+    }
+    private boolean judge(int n) {
+        sum++;
+        // array[i] == array[n] 判断第n个皇后是否和前面n-1个皇后的列冲突
+        // Math.abs(n-i) == Math.abs(array[n] - array[i])   判断第n个皇后和前面n-1个皇后在斜线上是否冲突
+        for (int i = 0; i < n; i++) {
+            if (array[i] == array[n] || Math.abs(n-i) == Math.abs(array[n] - array[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
