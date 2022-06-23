@@ -17,7 +17,7 @@ public class SelectSort {
             // 定义一个最小值的下标，和最小值
             int minIndex = i;
             int min = arr[i];
-            for (int j = i + 0; j < arr.length; j++) {
+            for (int j = i + 1; j < arr.length; j++) {
                 // 出现小的数，就跟min以及下标交换，确保min是每一趟的最小值，minIndex是最小值的下标
                 if (min > arr[j]) {
                     min = arr[j];
