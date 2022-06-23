@@ -1,0 +1,51 @@
+import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Scanner;
+
+public class TextDemo {
+
+    /**
+     * 冒泡排序
+     * @param arr  传进来的数组
+     */
+    public static void bubbleSort(int[] arr) {
+        int flag = 0;// 用来标记有没有交换过
+        // 趟数
+        for (int i = 0; i < arr.length - 1; i++) {
+            // 比较的对数
+            for (int j = 0; j < arr.length - 1 - i; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    int tmp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = tmp;
+                    flag = 1;
+                }
+            }
+            // 如果flag没有改变就说明已经排好序了
+            if (flag == 0) {
+                break;
+            }
+        }
+    }
+    public static void main(String[] args) {
+        int[] nums = new int[80000];
+        for (int i = 0; i < 80000; i++) {
+            nums[i] = (int)(Math.random() *80000);
+        }
+        // 测试时间
+        Date date1 = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 格式化年月日
+        String date1str = simpleDateFormat.format(date1);
+        System.out.println("排序前的时间是："+date1str);
+//        System.out.println("排序前")
+//        System.out.println(Arrays.toString(nums));
+        bubbleSort(nums);
+        Date date2 = new Date();
+        String date2str = simpleDateFormat.format(date2);
+        System.out.println("排序前的时间是："+date2str);
+//        System.out.println("排序后");
+//        System.out.println(Arrays.toString(nums));
+    }
+}
