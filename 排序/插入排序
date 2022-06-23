@@ -1,0 +1,42 @@
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+
+/**
+ * @author 26568
+ * 插入排序
+ * @date 2022-06-23 17:20
+ */
+public class InsertSort {
+    /**
+     * 插入排序
+     */
+    public static void insertSort(int[] arr) {
+        // 将arr[0] 当做有序，从下标1开始将后面的数据插入到前面
+        for (int i = 1; i < arr.length; i++) {
+            int indexVal = arr[i];// 要插入的数据
+            int index = i - 1; // 要插入数据的前一个数据的下标
+            while (index >= 0 && arr[index] > indexVal) {
+                // 如果index下标合法，且当前index的数据大于要插入的数据，就将前面的数据依次向后移动一位
+                arr[index + 1] = arr[index];
+                index--;
+            }
+            // 然后将arr[i]插入到当前index+1的位置
+            arr[index + 1] = indexVal;
+        }
+    }
+    public static void main(String[] args) {
+        int[] arr = new int[80000];
+        for (int i = 0; i < 80000; i++) {
+            arr[i] = (int)(Math.random()*80000);
+        }
+        Date date1 = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date1Str = simpleDateFormat.format(date1);
+        System.out.println("排序前的时间是："+date1Str);
+        insertSort(arr);
+        Date date2 = new Date();
+        String date2Str = simpleDateFormat.format(date2);
+        System.out.println("排序后的时间是："+date2Str);
+    }
+}
