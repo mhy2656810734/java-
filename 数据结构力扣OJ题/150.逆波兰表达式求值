@@ -1,0 +1,41 @@
+class Solution {
+    public int evalRPN(String[] tokens) {
+        // 封装一个方法计算逆波兰表达式的结果
+        int ret = calculate(tokens);
+        return ret;
+    }
+    public int calculate(String[] tokens) {
+        // 通过栈进行运算，遇到数字压入栈，遇到符号进行计算
+        Stack<String> stack = new Stack<>();
+        // 开始遍历查找
+        for (String item: tokens) {
+            // 如果是数字，直接压入栈
+            if (isNumber(item)) {
+                stack.push(item);
+            } else {
+                // 如果不是数字的话就要弹出两个数字进行计算,并将计算结果压入栈中
+                // 弹出的是字符串，要转换成数字
+                int num2 = Integer.parseInt(stack.pop());
+                int num1 = Integer.parseInt(stack.pop());
+                int ret = 0;
+                if (item.equals("+")) {
+                    ret = num1 + num2;
+                } else if (item.equals("-")) {
+                    ret = num1 - num2;
+                } else if (item.equals("*")) {
+                    ret = num1 * num2;
+                } else {
+                    ret = num1 / num2;
+                }
+                // 然后将计算结果压入栈中
+                stack.push("" + ret);
+            }
+        }
+        // 栈中最后留下的那个数据就是最后结果
+        return Integer.parseInt(stack.pop());
+    }
+    // 判断是不是数字的方法
+    public boolean isNumber(String item) {
+         return !("+".equals(item) || "-".equals(item) || "*".equals(item) || "/".equals(item));
+    }
+}
