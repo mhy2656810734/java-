@@ -1,0 +1,66 @@
+import exercise.ArrayQueue;
+
+import java.util.Arrays;
+
+/**
+ * @author 26568
+ * @date 2022-06-24 17:46
+ */
+public class QuickSort {
+    public static void main(String[] args) {
+        int[] arr = {4,3,5,8,1,6};
+        quickSort(arr,0,arr.length-1);
+        System.out.println(Arrays.toString(arr));
+    }
+
+    /**
+     * 快速排序：  找到一个中间值pivot，然后将左边比它大的挪到右边，右边比他小的挪到左边
+     * @param arr
+     */
+    public static void quickSort(int[] arr, int lf,int rg) {
+        int left = lf; // 左下标
+        int right = rg;// 右下标
+        int pivot = arr[(left + right) >>1];
+        while (left < right) {
+            //  从左向右找大
+            while (arr[left] < pivot) {
+                left++;
+            }
+            // 此时arr[left] >= pivot
+            // 然后从右向左找小
+            while (arr[right] > pivot) {
+                right--;
+            }
+            // 首先我们需要判断一下这个right和left的合法性
+            if (left >= right) {
+                break;
+            }
+            // 交换left和right的值
+            int tmp = arr[left];
+            arr[left] = arr[right];
+            arr[right] = tmp;
+            // 交换完后，还需要进行判断
+            // 让right指向下一个位置
+            if (arr[left] == pivot) {
+                right--;;
+            }
+            // 让left指向下一个位置
+            if (arr[right] == pivot) {
+                left++;
+            }
+        }
+        // 避免后面递归操作死循环
+        if (left == right) {
+            left += 1;
+            right -= 1;
+        }
+        // 向左递归
+        if (lf < right) {
+            quickSort(arr,lf,right);
+        }
+        // 向右递归
+        if (left < rg) {
+            quickSort(arr,left,rg);
+        }
+    }
+}
