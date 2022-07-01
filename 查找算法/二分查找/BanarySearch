@@ -1,0 +1,71 @@
+package search;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author 26568
+ *  普通二分查找 和 查找所有结果下标
+ * @date 2022-07-01 14:22
+ */
+public class BinarySearch {
+    public static void main(String[] args) {
+        int arr[] = {8, 10, 15, 45, 100,100,100, 101, 205};
+        List<Integer> list = binarySearch(arr,0,arr.length-1,100);
+        System.out.println(list);
+        int resuIndex = binaSearch(arr,0,arr.length,45);
+        System.out.println(resuIndex);
+    }
+    public static int binaSearch(int[] arr, int left,int right,int value) {
+        if (left > right) {
+            return -1;
+        }
+        int mid = (left + right) >>1;
+        if (arr[mid] < value) {
+            // 向右递归
+            return binaSearch(arr,mid+1,right,value);
+        } else if (arr[mid] > value) {
+            // 向左递归
+            return binaSearch(arr,left,mid-1,value);
+        } else {
+            return mid;
+        }
+    }
+    public static List<Integer> binarySearch(int[] arr, int left, int right, int value) {
+        if (left > right) {
+            return new ArrayList<>();
+        }
+        List<Integer> list = new ArrayList<>();
+        int mid = (left + right) >> 1;
+        if (arr[mid] < value) {
+            // 向左递归
+            return  binarySearch(arr, left, mid - 1, value);
+        } else if (arr[mid] > value) {
+            // 向右递归
+            return binarySearch(arr, mid + 1, right, value);
+        } else {
+           // 然后向左递归和向右递归拿到所有结果
+            int temp = mid - 1;
+            while (true) {
+                // 向左递归
+                if (temp < 0 || arr[temp] != value) {
+                    break;
+                }
+                list.add(temp);
+                temp -= 1;
+            }
+            // 将mid也加进去
+            list.add(mid);
+            // 向右递归
+            temp = mid + 1;
+            while (true) {
+                if (temp > right || arr[temp] != value) {
+                    break;
+                }
+                list.add(temp);
+                temp += 1;
+            }
+        }
+        return list;
+    }
+}
