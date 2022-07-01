@@ -1,0 +1,76 @@
+package search;
+
+import java.util.Arrays;
+
+/**
+ * @author 26568
+ *  斐波那契（黄金分割）查找
+ * @date 2022-07-01 17:06
+ */
+public class FibonaciSearch {
+    public static int maxSize = 20;
+    public static void main(String[] args) {
+        int[] arr = {1,8,10,89,1000,1234};
+        int ret = fibSearch(arr,1234);
+        System.out.println(ret);
+    }
+
+    /**
+     * 产生斐波那契数列
+     * @return 返回斐波那契数列
+     */
+    public static int[] fib() {
+        int[] f = new int[maxSize];
+        f[0] = 1;
+        f[1] = 1;
+        for (int i = 2; i < maxSize; i++) {
+            f[i] = f[i-1] + f[i - 2];
+        }
+        return f;
+    }
+
+    /**
+     *  斐波那契查找法
+     * @param arr 原数组
+     * @param key 查找值
+     * @return 找到返回下标， 找不到返回 -1
+     */
+    public static int fibSearch(int[] arr,int key) {
+        int low = 0;
+        int high = arr.length - 1;
+        int k = 0; // 需要获取的斐波那契分割数值的下标
+        int mid = 0;// 存放mid的值
+        int [] f = fib(); // 获取到斐波那契数列
+        // 需要获取的斐波那契分割数值的下标
+        while (high > f[k] - 1) {
+            k++;
+        }
+        // f[k] 的值可能大于数组的长度，所以我们还需要对数组尽心扩充
+        int[] temp = Arrays.copyOf(arr,f[k]);
+        // 进行填充
+        for (int i = high+1; i < temp.length; i++) {
+            temp[i] = arr[high];
+        }
+        // 使用while来寻欢处理找到key
+        while (low <= high) {
+            mid = low + f[k - 1] -1;
+            if (key < temp[mid]) {
+                // 向左递归
+                high = mid - 1;
+                k--;
+            } else if (key > temp[mid]) {
+                // 向右递归
+                low = mid + 1;
+                k -= 2;
+            } else {
+                // 需要确定返回的是哪个下标
+                if (mid <= high) {
+                    return mid;
+                } else {
+                    return high;
+                }
+            }
+        }
+        return -1;
+    }
+}
