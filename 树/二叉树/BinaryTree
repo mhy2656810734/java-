@@ -1,0 +1,166 @@
+package tree;
+
+/**
+ * @author 26568
+ * @date 2022-07-03 11:49
+ */
+public class BinaryTreeTextDemo {
+    public static void main(String[] args) {
+        BinaryTree binaryTree = new BinaryTree();;
+        // 创建四个节点
+        HeroNode root = new HeroNode(1,"宋江");
+        HeroNode node2 = new HeroNode(2,"吴用");
+        HeroNode node3 = new HeroNode(3,"卢俊义");
+        HeroNode node4 = new HeroNode(4,"林冲");
+        binaryTree.setRoot(root);
+        root.setLeft(node2);
+        root.setRight(node3);
+        node3.setRight(node4);
+        System.out.println("前序遍历");
+        binaryTree.preOrder();
+        System.out.println("中序遍历");
+        binaryTree.midOrder();
+        System.out.println("后序遍历");
+        binaryTree.postOrder();
+    }
+}
+/**
+ * 二叉树
+ */
+class BinaryTree {
+    // 有一个根节点
+    private HeroNode root;
+
+    public void setRoot(HeroNode root) {
+        this.root = root;
+    }
+    /**
+     * 前序遍历
+     */
+    public void preOrder() {
+       if (this.root != null) {
+           this.root.preOrder();
+       } else {
+           System.out.println("二叉树为空，操作失败");
+       }
+    }
+
+    /**
+     * 中序遍历
+     */
+    public void midOrder() {
+        if (this.root != null) {
+            this.root.midOrder();
+        } else {
+            System.out.println("二叉树为空，操作失败");
+        }
+    }
+    /**
+     * 后序遍历
+     */
+    public void postOrder() {
+        if (this.root != null) {
+            this.root.postOrder();
+        } else {
+            System.out.println("二叉树为空，操作失败");
+        }
+    }
+}
+
+/**
+ * 节点
+ */
+class HeroNode {
+    private int data;
+    private String name;
+    private HeroNode left;
+    private HeroNode right;
+
+    public HeroNode(int data, String name) {
+        this.data = data;
+        this.name = name;
+    }
+
+    public int getData() {
+        return data;
+    }
+
+    public void setData(int data) {
+        this.data = data;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public HeroNode getLeft() {
+        return left;
+    }
+
+    public void setLeft(HeroNode left) {
+        this.left = left;
+    }
+
+    public HeroNode getRight() {
+        return right;
+    }
+
+    public void setRight(HeroNode right) {
+        this.right = right;
+    }
+
+    @Override
+    public String toString() {
+        return "HeroNode{" +
+                "data=" + data +
+                ", name='" + name + '\'' +
+                '}';
+    }
+    /**
+     * 前序遍历: 根左右
+     */
+    public void preOrder() {
+        System.out.println(this);// 先删除父节点
+        // 递归左子树
+        if (this.left != null) {
+            this.left.preOrder();
+        }
+        // 递归右子树
+        if (this.right != null) {
+            this.right.preOrder();
+        }
+    }
+    /**
+     * 中序遍历：左根右
+     */
+    public void midOrder() {
+        // 递归左子树
+        if (this.left != null) {
+            this.left.midOrder();
+        }
+        System.out.println(this);
+        // 递归右子树
+        if (this.right != null) {
+            this.right.midOrder();
+        }
+    }
+    /**
+     * 后序遍历: 左右根
+     */
+    public void postOrder() {
+        // 向左递归
+        if (this.left != null) {
+            this.left.postOrder();
+        }
+        // 向右递归
+        if (this.right != null) {
+            this.right.postOrder();
+        }
+        // 打印根节点
+        System.out.println(this);
+    }
+}
