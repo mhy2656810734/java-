@@ -1,0 +1,169 @@
+package tree.threadedtree;
+
+/**
+ * @author 26568
+ * @date 2022-07-04 15:25
+ */
+public class ThreadedTreeDemo {
+    public static void main(String[] args) {
+        ThreadedBinaryTree threadedBinaryTree = new ThreadedBinaryTree();
+        HeroNode root = new HeroNode(1,"jimi");
+        HeroNode node2 = new HeroNode(3,"jack");
+        HeroNode node3 = new HeroNode(10,"lili");
+        HeroNode node4 = new HeroNode(8,"tom");
+        HeroNode node5 = new HeroNode(14,"xiaoma");
+        HeroNode node6 = new HeroNode(6,"索隆");
+        root.setLeft(node2);
+        root.setRight(node6);
+        node2.setLeft(node4);
+        node2.setRight(node3);
+        node6.setLeft(node5);
+        threadedBinaryTree.setRoot(root);
+        // 中序线索二叉树 以10为例 Debug查看：前驱结点为3 后继节点为1就正确
+        threadedBinaryTree.midThreadedNodes();
+        threadedBinaryTree.midOrderList();
+
+    }
+}
+/**
+ * 线索化二叉树
+ */
+
+class ThreadedBinaryTree {
+    // 有一个根节点
+    private HeroNode root;
+    private HeroNode prev = null;// 前驱结点  用来辅助进行线索化
+
+    public void setRoot(HeroNode root) {
+        this.root = root;
+    }
+    /**
+     * 重写 线索化方法
+     */
+    public void midThreadedNodes() {
+        this.midThreadedNodes(root);
+    }
+    /**
+     *  中序线索化方法
+     * @param node 要线索化的结点
+     */
+    public void midThreadedNodes(HeroNode node) {
+        if (node == null) {
+            return;
+        }
+        // 先线索化左子树
+        midThreadedNodes(node.getLeft());
+        // 线索化当前结点
+        if (node.getLeft() == null) {
+            // 如果左子树以及为空 让其指向前驱结点
+            node.setLeft(prev);
+            // 再将标记改为表示前驱结点
+            node.setLeftType(1);
+        }
+        // 处理后继节点
+        if (prev != null && prev.getRight() == null) {
+            prev.setRight(node);
+            prev.setRightType(1);
+        }
+        prev = node;
+        // 再线索化右子树
+        midThreadedNodes(node.getRight());
+    }
+    /**
+     * 中序遍历
+     */
+    public void midOrderList() {
+        // 定义一个辅助结点遍历
+        HeroNode node = root;
+        while (node != null) {
+            // 循环找到letfType == 1的结点，说明这个结点就是第一个需要打印的结点
+            while (node.getLeftType() != 1) {
+                node = node.getLeft();
+            }
+            // 循环结束，打印这个结点
+            System.out.println(node);
+            // 然后开始遍历打印rightType == 1 的结点
+            while (node.getRightType() == 1) {
+                node = node.getRight();
+                System.out.println(node);
+            }
+            // 替换这个遍历的结点
+            node = node.getRight();
+        }
+
+    }
+}
+/**
+ * 结点
+ */
+class HeroNode {
+    private int data;
+    private String name;
+    private HeroNode left;
+    private HeroNode right;
+    // 下面两个属性用来表示 是与左右子树相连还是与前驱后继节点相连
+    // 0表示左右子树，1 表示前驱后继节点
+    private int leftType;
+    private int rightType;
+
+    public HeroNode(int data, String name) {
+        this.data = data;
+        this.name = name;
+    }
+
+    public int getData() {
+        return data;
+    }
+
+    public void setData(int data) {
+        this.data = data;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public HeroNode getLeft() {
+        return left;
+    }
+
+    public void setLeft(HeroNode left) {
+        this.left = left;
+    }
+
+    public HeroNode getRight() {
+        return right;
+    }
+
+    public void setRight(HeroNode right) {
+        this.right = right;
+    }
+
+    @Override
+    public String toString() {
+        return "HeroNode{" +
+                "data=" + data +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    public int getLeftType() {
+        return leftType;
+    }
+
+    public void setLeftType(int leftType) {
+        this.leftType = leftType;
+    }
+
+    public int getRightType() {
+        return rightType;
+    }
+
+    public void setRightType(int rightType) {
+        this.rightType = rightType;
+    }
+}
