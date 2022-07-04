@@ -24,13 +24,18 @@ public class BinaryTreeTextDemo {
 //        binaryTree.midOrder();
 //        System.out.println("后序遍历");
 //        binaryTree.postOrder();
-        System.out.println("后序遍历查找——————");
-        HeroNode resNode = binaryTree.postOrderSearch(5);
-        if (resNode != null) {
-            System.out.printf("查找到的信息为: data = %d  name = %s\n",resNode.getData(),resNode.getName());
-        } else {
-            System.out.printf("没有找到data = %d \n",5);
-        }
+//        System.out.println("后序遍历查找——————");
+//        HeroNode resNode = binaryTree.postOrderSearch(5);
+//        if (resNode != null) {
+//            System.out.printf("查找到的信息为: data = %d  name = %s\n",resNode.getData(),resNode.getName());
+//        } else {
+//            System.out.printf("没有找到data = %d \n",5);
+//        }
+        System.out.println("删除前，前序遍历");
+        binaryTree.preOrder();
+        binaryTree.delNode(5);
+        System.out.println("删除后，前序遍历");
+        binaryTree.preOrder();
     }
 }
 /**
@@ -102,6 +107,21 @@ class BinaryTree {
             return root.postOrderSearch(data);
         } else {
             return null;
+        }
+    }
+    /**
+     * 删除结点
+     */
+    public void delNode(int data) {
+        if (root != null) {
+            // 判断root是不是要删除的结点
+            if (root.getData() == data) {
+                root = null;
+            } else {
+                root.delNode(data);
+            }
+        } else {
+            System.out.println("当前二叉树为空，操作失败");
         }
     }
 }
@@ -277,5 +297,29 @@ class HeroNode {
             return this;
         }
         return resNode;// 说明resNode是空节点，都没有找到
+    }
+    /**
+     * 删除结点： 1.首先判断当前结点是不是要删除结点，如果是就删除，不是的话就调用删除方法
+     *          2.先判断当前结点的左节点是不是不为空且要是要删除的结点，那么就删除，并结束操作
+     *          3.如果左子结点不是要删除的，那么就判断右结点是不是要删除的，是的话就删除，并结束操作
+     *          4.如果左右结点都不是要删除的结点，那么我们开始递归，先递归做节点（不为空）
+     *          5.左节点如果递归没删除掉，就递归右子树进行操作
+     */
+    public void delNode(int data) {
+        if ((this.left != null) && (this.left.data == data)) {
+            this.left = null;
+            return;
+        }
+        if ((this.right != null) && (this.right.data == data)) {
+            this.right = null;
+            return;
+        }
+        // 开始递归
+        if(this.left != null) {
+            this.left.delNode(data);
+        }
+        if (this.right != null) {
+            this.right.delNode(data);
+        }
     }
 }
