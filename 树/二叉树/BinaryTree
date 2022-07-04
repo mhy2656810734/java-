@@ -33,7 +33,7 @@ public class BinaryTreeTextDemo {
 //        }
         System.out.println("删除前，前序遍历");
         binaryTree.preOrder();
-        binaryTree.delNode(5);
+        binaryTree.delNode(1);
         System.out.println("删除后，前序遍历");
         binaryTree.preOrder();
     }
@@ -115,8 +115,15 @@ class BinaryTree {
     public void delNode(int data) {
         if (root != null) {
             // 判断root是不是要删除的结点
-            if (root.getData() == data) {
-                root = null;
+            if (root.getData() == data ) {
+                // 然后判断根节点的左右子树
+                if ((root.getLeft() != null)) {
+                    HeroNode node = root.getRight();
+                    root = root.getLeft();
+                    root.setRight(node);
+                } else {
+                    root = root.getRight();
+                }
             } else {
                 root.delNode(data);
             }
@@ -307,12 +314,24 @@ class HeroNode {
      */
     public void delNode(int data) {
         if ((this.left != null) && (this.left.data == data)) {
-            this.left = null;
+            if (this.left.left != null) {
+                HeroNode node = this.left.right;
+                this.left = this.left.left;
+                this.left.right = node;
+                return;
+            }
+            this.left = this.left.right;
             return;
         }
         if ((this.right != null) && (this.right.data == data)) {
-            this.right = null;
-            return;
+          if (this.right.left != null) {
+              HeroNode node = this.right.right;
+              this.right = this.right.left;
+              this.right.right = node;
+              return;
+          }
+          this.right = this.right.right;
+          return;
         }
         // 开始递归
         if(this.left != null) {
