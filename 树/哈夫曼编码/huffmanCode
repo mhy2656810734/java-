@@ -1,0 +1,113 @@
+package tree;
+
+import sun.applet.resources.MsgAppletViewer;
+
+import java.util.*;
+
+/** 哈夫曼编码
+ * @author 26568
+ * @date 2022-07-08 21:25
+ */
+public class HuffManCode {
+    public static void main(String[] args) {
+        String str = "i like like like java do you like a java";
+        byte[] bytes = str.getBytes();// 转换成byte数组
+        List<hufumanNode> list = getNodes(bytes);
+        System.out.println(list);
+        // 创建哈夫曼树
+        hufumanNode root = huffmanTree(list);
+        preOrder(root);
+    }
+/**
+ * 统计字符出现次数，创建结点
+ */
+private static List<hufumanNode> getNodes(byte[] bytes) {
+// 创建一个Arraylist
+    List<hufumanNode> nodes = new ArrayList<hufumanNode>();
+    // 遍历byte 统计每一个字符(byte)出现的次数
+    Map<Byte,Integer> counts = new HashMap<>();
+    for (byte b:bytes) {
+        Integer count = counts.get(b);// 判断该字符是否已经统计过
+        if (count == null) {
+            counts.put(b,1);
+        } else {
+            counts.put(b,count + 1);
+        }
+    }
+    // 把每一个键值转换成结点,加入到nodes里面
+    // 遍历Map
+    for (Map.Entry<Byte,Integer> entry: counts.entrySet()) {
+        nodes.add(new hufumanNode(entry.getKey(), entry.getValue()));
+    }
+    return nodes;
+}
+    /**
+     * 前序遍历
+     * @param root 根节点
+     */
+    public static void preOrder(hufumanNode root) {
+        if (root != null) {
+            root.preOrder();
+        } else {
+            System.out.println("该二叉树为空");
+        }
+    }
+    /**
+     * 创建哈夫曼树
+     */
+    public static hufumanNode huffmanTree(List<hufumanNode> nodes) {
+        while (nodes.size() > 1) {
+            // 先排序
+            Collections.sort(nodes);
+            hufumanNode leftNode = nodes.get(0);
+            hufumanNode rightNode = nodes.get(1);
+            // 创建父节点
+            hufumanNode parent = new hufumanNode(null, leftNode.value + rightNode.value);
+            parent.left = leftNode;
+            parent.right = rightNode;
+            nodes.remove(leftNode);
+            nodes.remove(rightNode);
+            nodes.add(parent);
+        }
+        return nodes.get(0);
+    }
+}
+/**
+ * 创建结点
+ */
+class hufumanNode implements Comparable<hufumanNode>{
+    public Byte data; // 存放字符本身
+    public int value;// 字符出现的次数
+    public hufumanNode left;
+    public hufumanNode right;
+
+    public hufumanNode(Byte data, int value) {
+        this.data = data;
+        this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return "hufumanNode{" +
+                "data=" + data +
+                ", value=" + value +
+                '}';
+    }
+
+    @Override
+    public int compareTo(hufumanNode o) {
+        return this.value - o.value;
+    }
+    /**
+     * 前序遍历
+     */
+    public void preOrder() {
+        System.out.println(this);
+        if (this.left != null) {
+            this.left.preOrder();
+        }
+        if (this.right != null) {
+            this.right.preOrder();
+        }
+    }
+}
