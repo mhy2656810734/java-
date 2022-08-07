@@ -70,7 +70,7 @@ class ThreadedBinaryTree {
         midThreadedNodes(node.getRight());
     }
     /**
-     * 中序遍历
+     * 遍历线索化二叉树
      */
     public void midOrderList() {
         // 定义一个辅助结点遍历
