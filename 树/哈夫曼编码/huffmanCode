@@ -1,102 +1,147 @@
-package tree;
+package exercise3.huffmancode;
 
-import sun.applet.resources.MsgAppletViewer;
-
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-/** 哈夫曼编码
+/**
  * @author 26568
- * @date 2022-07-08 21:25
+ * @date 2022-08-12 11:27
  */
-public class HuffManCode {
+public class HuffmanCode {
     public static void main(String[] args) {
         String str = "i like like like java do you like a java";
-        byte[] bytes = str.getBytes();// 转换成byte数组
-        List<hufumanNode> list = getNodes(bytes);
-        System.out.println(list);
-        // 创建哈夫曼树
-        hufumanNode root = huffmanTree(list);
-        preOrder(root);
+        // 先将字符串转换成byte
+        byte[] bytes = str.getBytes();
+        // 然后将这个bytes数组放入到List中
+        List<Node> nodes = getNodes(bytes);
+        // 然后将list传入 创建哈夫曼树
+        Node node = createHuffmanTree(nodes);
+        // 进行前序遍历
+        preOrder(node);
+        // 测试生成的哈夫曼编码
+        Map<Byte,String> huffmanCodes = getCodes(node);
+        System.out.println("生成的哈夫曼编码表如下：");
+        System.out.println(huffmanCodes);
     }
-/**
- * 统计字符出现次数，创建结点
- */
-private static List<hufumanNode> getNodes(byte[] bytes) {
-// 创建一个Arraylist
-    List<hufumanNode> nodes = new ArrayList<hufumanNode>();
-    // 遍历byte 统计每一个字符(byte)出现的次数
-    Map<Byte,Integer> counts = new HashMap<>();
-    for (byte b:bytes) {
-        Integer count = counts.get(b);// 判断该字符是否已经统计过
-        if (count == null) {
-            counts.put(b,1);
+    public static void preOrder(Node node) {
+        if (node != null) {
+            node.preOrder();
         } else {
-            counts.put(b,count + 1);
+            System.out.println("哈夫曼树为空");
         }
     }
-    // 把每一个键值转换成结点,加入到nodes里面
-    // 遍历Map
-    for (Map.Entry<Byte,Integer> entry: counts.entrySet()) {
-        nodes.add(new hufumanNode(entry.getKey(), entry.getValue()));
-    }
-    return nodes;
-}
+    // 用来进行存储哈夫曼编码表 32->01  97->100
+    private static Map<Byte,String> huffmanCodes = new HashMap<Byte,String>();
+    // 进行路径拼接  存储叶子结点的路径
+    private static StringBuilder stringBuilder = new StringBuilder();
+
     /**
-     * 前序遍历
-     * @param root 根节点
+     * 重载getCodes方法
+     * @param root 哈夫曼树的跟结点
+     * @return 创建好后的huffmanCodes
      */
-    public static void preOrder(hufumanNode root) {
-        if (root != null) {
-            root.preOrder();
-        } else {
-            System.out.println("该二叉树为空");
+    private static Map<Byte,String> getCodes(Node root) {
+        if (root == null) {
+            return null;
         }
+        // 处理root的左子树
+        getCodes(root.left,"0",stringBuilder);
+        // 处理root的右子树
+        getCodes(root.right,"1",stringBuilder);
+        return huffmanCodes;
     }
+    /**
+     * 得到node结点的哈夫曼编码,并将其加入到huffmanCodes中
+     * @param node
+     * @param code
+     * @param stringBuilder
+     */
+    private static void getCodes(Node node,String code,StringBuilder stringBuilder) {
+       StringBuilder stringBuilder1 = new StringBuilder(stringBuilder);
+       // 将code加入到stringBuilde 中
+       stringBuilder1.append(code);
+       if (node.data == null) {
+           // 说明该结点是非叶子结点
+           // 向左递归
+           getCodes(node.left,"0",stringBuilder1);
+           // 向右递归
+           getCodes(node.right,"1",stringBuilder1);
+       } else {
+           // 说明是叶子结点, 将其哈夫曼编码加入好huffmanCodes中
+           huffmanCodes.put(node.data,stringBuilder1.toString());
+       }
+   }
+
+
     /**
      * 创建哈夫曼树
+     * @param nodes 待创建集合
+     * @return 返回哈夫曼结点
      */
-    public static hufumanNode huffmanTree(List<hufumanNode> nodes) {
-        while (nodes.size() > 1) {
-            // 先排序
+    public static Node createHuffmanTree(List<Node> nodes) {
+        while(nodes.size() > 1) {
+            // 先进行排序
             Collections.sort(nodes);
-            hufumanNode leftNode = nodes.get(0);
-            hufumanNode rightNode = nodes.get(1);
+            Node leftNode = nodes.get(0);
+            Node rightNode = nodes.get(1);
             // 创建父节点
-            hufumanNode parent = new hufumanNode(null, leftNode.value + rightNode.value);
+            Node parent = new Node(null, leftNode.weight + rightNode.weight);
             parent.left = leftNode;
             parent.right = rightNode;
+            // 然后删除左右结点
             nodes.remove(leftNode);
             nodes.remove(rightNode);
+            // 加入nodes
             nodes.add(parent);
         }
         return nodes.get(0);
     }
+    /**
+     * 数组转集合
+     * @param bytes 待转数组
+     */
+    public static List<Node> getNodes(byte[] bytes) {
+        // 创建集合
+        List<Node> list = new ArrayList<Node>();
+        // 创建map进行统计
+        Map<Byte,Integer> map = new HashMap<>();
+        // 通过遍历数组来进行统计次数
+        for (byte x : bytes) {
+            // 首先判断当前字符(值)有没有在map中出现过
+            Integer count = map.get(x);
+            if (count == null) {
+                // 说明没有出现，就加入map
+                map.put(x,1);
+            } else {
+                // 说明出现过，那么就让其权值(出现次数) +1
+                map.put(x,count+1);
+            }
+        }
+        // 遍历map  将其加入到list中
+        for (Map.Entry<Byte,Integer> entry:map.entrySet()) {
+            list.add(new Node(entry.getKey(), entry.getValue()));
+        }
+        // 然后返回这个list
+        return list;
+    }
 }
-/**
- * 创建结点
- */
-class hufumanNode implements Comparable<hufumanNode>{
-    public Byte data; // 存放字符本身
-    public int value;// 字符出现的次数
-    public hufumanNode left;
-    public hufumanNode right;
+class Node implements Comparable<Node>{
+    public Byte data;// 表示字符值
+    public int weight;// 表示权值（字符出现的次数）
+    public Node left;
+    public Node right;
 
-    public hufumanNode(Byte data, int value) {
+    public Node(Byte data, int weight) {
         this.data = data;
-        this.value = value;
+        this.weight = weight;
     }
 
     @Override
     public String toString() {
-        return "hufumanNode{" +
+        return "Node{" +
                 "data=" + data +
-                ", value=" + value +
+                ", weight=" + weight +
                 '}';
-    }
-
-    @Override
-    public int compareTo(hufumanNode o) {
-        return this.value - o.value;
     }
     /**
      * 前序遍历
@@ -109,5 +154,10 @@ class hufumanNode implements Comparable<hufumanNode>{
         if (this.right != null) {
             this.right.preOrder();
         }
+    }
+
+    @Override
+    public int compareTo(Node o) {
+        return this.weight - o.weight;
     }
 }
