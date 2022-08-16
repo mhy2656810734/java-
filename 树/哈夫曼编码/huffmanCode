@@ -5,10 +5,89 @@ import java.util.*;
 
 /** 
  * 一、压缩：1.byte数组放入集合 2.利用集合创建哈夫曼树 3.通过哈夫曼树实现哈夫曼编码 4.将最原始的byte数组通过哈夫曼编码进行压缩
+ * 二、解压: 1.将压缩后的huffmanCodesByte数组转换成原来的哈夫曼编码的二进制字符串（拿到每一个数据，通过一个方法进行转换(byte->string))
+ *           2.得到字符串以后，创建一个新map《String,Byte》类型，循环将原来的map放入，然后通过遍历的到的字符串，判断是不是在map中出现过该字符串，通过字符串找字符加入到list中
+ *           3.将list中的数据全部放入到一个byte数组中返回即可
  * @author 26568
  * @date 2022-08-12 11:27
  */
 public class HuffmanCode {
+   
+    // 完成数据解压的过程步骤：
+    // 1.首先将最后压缩得到的huffmanCodesBytes数组转换成二进制对应的字符串
+    // 2. 将二进制对应的字符串转换成最原始的byte数组 ，然后将byte数组转换成字符串就行
+
+    /**
+     * 完成数据解压
+     * @param huffmanCodes  得到哈夫曼编码
+     * @param huffmanCodesBytes 经过哈夫曼编码处理压缩后的数组
+     * @return
+     */
+    public static byte[] decode(Map<Byte,String> huffmanCodes,byte[] huffmanCodesBytes) {
+        // 得到huffmanCodesBytes 对应的字符串
+        StringBuilder stringBuilder1 = new StringBuilder();
+        for (int i = 0; i < huffmanCodesBytes.length;i++) {
+            // 最后一位数据不需要进行补高位的操作
+            boolean flag = (i == huffmanCodesBytes.length - 1);
+            byte b = huffmanCodesBytes[i];
+            stringBuilder1.append(byteToBitString(!flag,b));
+        }
+        // 我们要通过哈夫曼编码得到的字符串，来寻找其对应的字符
+        Map<String,Byte> map = new HashMap<String,Byte>();
+        // 遍历原来的哈夫曼编码将其放入到map中
+        for (Map.Entry<Byte,String> entry:huffmanCodes.entrySet()) {
+            map.put(entry.getValue(), entry.getKey());// 我们要通过编码找到字符：例如: 100 ——>97
+        }
+        // 然后将所有的字符放入到一个集合中
+        List<Byte> list = new ArrayList<>();
+        // 通过的到的二进制字符串来获得每一个字符
+        for (int i = 0; i < stringBuilder1.length();) {
+            int count = 1;// 用来辅助找到每一个字符对应的原来的字符串需要走几步
+            Byte b = null;// 最后需要加入list中的字符
+            boolean flag = true;// 用来循环
+            while (flag) {
+                String str =stringBuilder1.substring(i,i+count);// 每次得到一段距离的字符串，判断在map中是否存在
+                b = map.get(str);
+                if (b == null) {
+                    // 说明map中没有这个字符串，则让count继续走
+                    count++;
+                } else {
+                    // 说明map中有该字符串，则 b 就是该二进制字符串对应的字符
+                    flag = false;
+                }
+            }
+            // 将该字符 b 加入到list中
+            list.add(b);
+            i += count;// 让i移动count步
+        }
+        // 此时list中存放的就是原来所有的字符，此时将其转换成byte数组即可
+        byte[] bytes = new byte[list.size()];
+        for (int i = 0; i < bytes.length;i++) {
+            bytes[i] = list.get(i);
+        }
+        return bytes;
+    }
+    /**
+     * 将一个byte数据转换成字符串
+     * @param flag 根据传入的flag的值进行判断是否需要进行截取
+     * @param b  待转换数据
+     * @return   转换后的字符串
+     */
+    public static String byteToBitString(boolean flag,byte b) {
+        int temp = b;// 首先将b转换成int型
+        // 如果为真就需要补高位
+        if (flag) {
+            temp |= 256;
+        }
+        String str = Integer.toBinaryString(temp);
+        if (flag) {
+            return str.substring(str.length()-8);// byte数据，得到后8位
+        } else {
+            return str;
+        }
+
+    }
+
     // 将压缩的过程封装成一个方法
     /**
      * 压缩过程
