@@ -1,0 +1,28 @@
+package algorithm;
+
+/**
+ * @author 26568
+ * @date 2022-08-24 10:31
+ */
+public class HanoiTower {
+    public static void main(String[] args) {
+        hanoi('A','B','C',3);
+    }
+
+
+    public static void hanoi(char A,char B,char C,int num) {
+        if (num == 1) {
+            reverse(A,C);
+            return;
+        }
+        // 先将num - 1 个借助C盘移动到b柱
+        hanoi(A,C,B,num - 1);
+        // 然后将最后一个移动到C柱
+        reverse(A,C);
+        // 再将B柱所有盘子借助A全部移动到C上
+        hanoi(B,A,C,num - 1);
+    }
+    public static void reverse(char pos1,char pos2) {
+        System.out.println(pos1+"->"+pos2);
+    }
+}
