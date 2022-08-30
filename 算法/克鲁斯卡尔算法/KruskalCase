@@ -1,0 +1,179 @@
+package algorithm;
+
+import java.util.Arrays;
+
+/**
+ * @author 26568
+ * @date 2022-08-30 19:38
+ */
+public class KruskalCase {
+    private int edgeNum;// 表示边的数目
+    private char[] verters;// 表示顶点
+    private int[][] matrix;// 邻接矩阵
+    private static final int INF = Integer.MAX_VALUE;// 表示两个结点不能连通
+    public static void main(String[] args) {
+        char[] verters = {'A','B','C','D','E','F','G'};
+        int[][] matrix = {
+                {0,12,INF,INF,INF,16,14},
+                {12,0,10,INF,INF,7,INF},
+                {INF,10,0,3,5,6,INF},
+                {INF,INF,3,0,4,INF,INF},
+                {INF,INF,5,4,0,2,8},
+                {16,7,6,INF,2,0,9},
+                {14,INF,INF,INF,8,9,0}};
+        KruskalCase kruskalCase = new KruskalCase(verters,matrix);
+        // 输出构建的图
+        kruskalCase.show();
+        kruskalCase.kruskal();
+        }
+    // 构造器
+    public KruskalCase(char[] verters,int[][] matrix) {
+        this.verters = new char[verters.length];
+        // 初始化顶点
+        for (int i = 0; i < verters.length; i++) {
+            this.verters[i] = verters[i];
+        }
+        // 初始化边
+        this.matrix = new int[verters.length][verters.length];
+        for (int i = 0; i < verters.length;i++) {
+            for (int j = 0;j < verters.length;j++) {
+                this.matrix[i][j] = matrix[i][j];
+            }
+        }
+        // 统计边的数目
+        for (int i = 0; i < verters.length;i++) {
+            for (int j = i+1;j < verters.length;j++) {
+                if (this.matrix[i][j] != INF) {
+                    edgeNum++;
+                }
+            }
+        }
+    }
+    // 打印邻接矩阵
+    public void show() {
+        for (int i = 0; i < verters.length;i++) {
+            for (int j = 0;j < verters.length;j++) {
+                System.out.printf("%12d\t",this.matrix[i][j]);
+            }
+            System.out.println();
+        }
+    }
+
+    /**
+     * 对边进行排序
+     * @param eData 边的集合
+     */
+    public void bubbleSort(EData[] eData) {
+        for (int i = 0; i < eData.length -1; i++) {
+            for (int j = 0; j < eData.length - 1 - i; j++) {
+                if (eData[j].weight > eData[j+1].weight) {
+                    EData temp = eData[j];
+                    eData[j] = eData[j+1];
+                    eData[j+1] = temp;
+                }
+            }
+        }
+    }
+
+    /**
+     * 返回结点对应的下标
+     * @param ch
+     * @return
+     */
+    public int getPosition(char ch) {
+        for (int i = 0; i < verters.length;i++) {
+            if (verters[i] == ch) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 功能：将邻接矩阵中的边添加到Edata数组中  后续需要遍历该数组
+     * Edata[] 形式 [['A','B',12],['B','F',7]...]
+     * @return
+     */
+    public EData[] getEdata() {
+        int index = 0;// 表示返回Edata数组的下标
+        EData[] eData = new EData[edgeNum];
+        for (int i = 0; i < verters.length; i++) {
+            for (int j = i+1; j < verters.length; j++) {
+                if (matrix[i][j] != INF) {
+                    // 满足条件说明存在边，添加到数组中
+                    eData[index++] = new EData(verters[i], verters[j], matrix[i][j]);
+                }
+            }
+        }
+        return eData;
+    }
+
+    /**
+     * 功能：获取下标为i的顶点的终点，后续判断终点是否相同
+     * @param ends 用来记录每个顶点的终点 逐步形成
+     * @param i  传入的顶点的下标
+     * @return
+     */
+    public int getEnd(int[] ends,int i) {
+        while (ends[i] != 0) {
+            i = ends[i];
+        }
+        return i;
+    }
+
+    /**
+     * 克鲁斯卡尔算法
+     */
+    public void kruskal() {
+        int index = 0;// 表示最后结果数组的索引
+        int[] ends = new int[edgeNum];// 用于记录已有最小生成树的结点的终点
+        // 创建结果数组，存储最后的结果
+        EData[] rets = new EData[edgeNum];
+        // 获取图中所有的边的集合 一共12条边
+        EData[] eData = getEdata();
+        System.out.println("图的边的集合"+ Arrays.toString(eData)+"共"+eData.length+"条边");
+        // 按照边的权值大小进行从小到大排序
+        bubbleSort(eData);
+        // 遍历eData数组，将边添加到最小生成树中，如果不够成回路就添加，否则不能添加
+        for (int i = 0; i < edgeNum;i++) {
+            // 获取到第i条边的第一个顶点
+            int p1 = getPosition(eData[i].start);
+            int p2 = getPosition(eData[i].end);
+            // 获取下标p1在已有生成树中的中点
+            int m = getEnd(ends,p1);
+            // 获取下标p1=2在已有生成树中的中点
+            int n = getEnd(ends,p2);
+            // 如果终点不相同就添加到rets数组中 不构成回路
+            if (m != n) {
+                ends[m] = n;// 设置m 在已有最小生成树中的结点
+                rets[index++] = eData[i];// 将下标i边添加到结果数组中
+            }
+        }
+        // 打印结果数组
+        System.out.println("最小生成树");
+        for (int i = 0; i < index; i++) {
+            System.out.println(rets[i]);
+        }
+    }
+}
+// 一个实例表示一条边
+class EData {
+    public char start;// 边的起始顶点
+    public char end;// 边的终点
+    public int weight;// 边的权值
+
+    public EData(char start, char end, int weight) {
+        this.start = start;
+        this.end = end;
+        this.weight = weight;
+    }
+
+    @Override
+    public String toString() {
+        return "EData{" +
+                "<"+ start +
+                "," + end +
+                ">" + weight +
+                '}';
+    }
+}
