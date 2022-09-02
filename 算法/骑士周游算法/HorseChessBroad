@@ -1,0 +1,138 @@
+package algorithm.horse;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+
+/**
+ * 马踏棋盘算法
+ * @author 26568
+ * @date 2022-09-02 19:31
+ */
+public class HorseChessBroad {
+    private static int X;// 棋盘的列
+    private static int Y;// 棋盘行
+    private static boolean[] visited;// 标记某个位置是否被访问过
+    private static boolean finished;// 标记棋盘的所有位置是否都已经被访问
+    public static void main(String[] args) {
+        // 测试马踏棋盘算法是否正确
+        X = 8;
+        Y = 8;
+        visited = new boolean[X * Y];
+        int row = 1;// 马儿从1开始编号
+        int col = 1;// 从1开始编号
+        // 创建棋盘
+        int[][] chessborad = new int[X][Y];
+        // 测试一下耗时
+        long start = System.currentTimeMillis();
+        traversalChessBoard(chessborad,row -1,col - 1,1);
+
+        long end = System.currentTimeMillis();
+        System.out.println("共耗时"+(end - start)+"毫秒");
+        // 输出最后棋盘的情况
+        for (int[] arr : chessborad) {
+            for (int temp:arr) {
+                System.out.print(temp+"\t");
+            }
+            System.out.println();
+        }
+    }
+
+    /**
+     * 骑士周游算法
+     * @param chessboard 棋盘
+     * @param row 马儿开始的行
+     * @param col 马儿开始的列
+     * @param step 第几步，初始位置就是第一步
+     */
+    public static void traversalChessBoard(int[][] chessboard,int row,int col,int step) {
+        // 设置该位置的步骤
+        chessboard[row][col] = step;
+        visited[row * X + col] = true;// 将该位置标记为已经访问过
+        ArrayList<Point> ps = next(new Point(col,row));
+        sort(ps);
+        // 遍历ps
+        while (!ps.isEmpty()) {
+            Point p = ps.remove(0);// 取出下一个可以走的位置
+            // 判断该点是否已经被访问过
+            if (!visited[p.y *X + p.x]) {
+                // 说明还没有访问过  开始回溯
+                traversalChessBoard(chessboard,p.y,p.x,step + 1);
+            }
+        }
+        // 判断马儿是否完成了任务
+        // 如果没有达到数量，就说明没有完成任务，将整个棋盘置0
+        //
+        if (step < X * Y && !finished) {
+            chessboard[row][col] = 0;
+            visited[row * X + col] = false;
+        } else {
+            finished = true;
+        }
+    }
+    /**
+     * 功能：根据当前位置(Point 对象)，计算马儿还能走哪些位置，并放入到一个集合ArrayList中  最多8个位置
+     * @param curPoint
+     * @return
+     */
+    public static ArrayList<Point> next(Point curPoint) {
+        // 创建一个ArrayList集合
+        ArrayList<Point> ps = new ArrayList<Point>();
+        // 创建一个Point
+        Point p1 = new Point();
+        // 表示马儿可以走5这个位置
+        if ((p1.x = curPoint.x - 2) >= 0 && (p1.y = curPoint.y - 1) >= 0) {
+            ps.add(new Point(p1));
+        }
+        // 表示马儿可以走6这个位置
+        if ((p1.x = curPoint.x - 1) >= 0 && (p1.y = curPoint.y - 2) >= 0) {
+            ps.add(new Point(p1));
+        }
+        // 表示马儿可以走7这个位置
+        if ((p1.x = curPoint.x + 1) < X && (p1.y = curPoint.y - 2) >= 0) {
+            ps.add(new Point(p1));
+        }
+        // 表示马儿可以走0这个位置
+        if ((p1.x = curPoint.x + 2) < X && (p1.y = curPoint.y - 1) >= 0) {
+            ps.add(new Point(p1));
+        }
+        // 表示马儿可以走1这个位置
+        if ((p1.x = curPoint.x + 2) < X && (p1.y = curPoint.y + 1) < Y) {
+            ps.add(new Point(p1));
+        }
+        // 表示马儿可以走2这个位置
+        if ((p1.x = curPoint.x + 1) < X && (p1.y = curPoint.y + 2) < Y) {
+            ps.add(new Point(p1));
+        }
+        // 表示马儿可以走3这个位置
+        if ((p1.x = curPoint.x - 1) >= 0 && (p1.y = curPoint.y + 2) < Y) {
+            ps.add(new Point(p1));
+        }
+        // 表示马儿可以走4这个位置
+        if ((p1.x = curPoint.x - 2) >= 0 && (p1.y = curPoint.y + 1) < Y) {
+            ps.add(new Point(p1));
+        }
+        return ps;
+    }
+    // 贪心算法：根据当前位置的下一步进行选择，进行非递减排序 减少回溯次数
+    public static void sort(ArrayList<Point> ps) {
+        ps.sort(new Comparator<Point>() {
+            @Override
+            public int compare(Point o1, Point o2) {
+                // 获取到o1的下一步的位置的个数
+                int count1 = next(o1).size();
+                // 获取到o2的下一步的位置的个数
+                int count2 = next(o2).size();
+                // 进行比较
+                if (count1 < count2) {
+                    return -1;
+                } else if (count1 == count2) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+
+            }
+        });
+    }
+}
