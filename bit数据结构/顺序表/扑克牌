@@ -1,0 +1,107 @@
+package poker;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+/**
+ * @author 26568
+ * @date 2022-09-15 13:26
+ */
+public class TextDemo {
+    public static final String[] SUITS = {"♥","♠","♣","♦"};
+    public static void main(String[] args) {
+        List<Poker> list = buyPokers();
+        System.out.println(list);
+        // 洗牌
+        shuffle(list);
+        System.out.println(list);
+        // 揭牌: 3个人揭牌 揭5张牌
+        // 三个人
+        List<Poker> hand1 = new ArrayList<>();
+        List<Poker> hand2 = new ArrayList<>();
+        List<Poker> hand3 = new ArrayList<>();
+        List<List<Poker>> hand = new ArrayList<>();// 用于区分这三个揭牌的人
+        hand.add(hand1);
+        hand.add(hand2);
+        hand.add(hand3);
+        for (int i = 0; i < 5;i++) {
+            for (int j = 0; j < 3;j++) {
+                List<Poker> handTemp = hand.get(j);// 代表第几个人
+                handTemp.add(list.remove(0));// 每次揭第一张牌放入到第j个人的手里
+            }
+        }
+        // 此时hand里面就是三个人揭的牌
+        for (int i = 0; i < hand.size(); i++) {
+            System.out.println("第"+(i+1)+"个人揭的牌"+hand.get(i));
+        }
+        System.out.println("剩余的牌:"+list);
+        System.out.println("剩余"+list.size()+"张牌");
+    }
+
+    /**
+     * 买一副扑克牌
+     * @return
+     */
+    public static List<Poker> buyPokers() {
+        List<Poker> list = new ArrayList<>();
+        for (int i = 0; i < 4;i++) {
+            for (int j = 1; j <= 13;j++) {
+                // 四种花色 13张牌
+                String suit = SUITS[i];
+                Poker poker = new Poker(suit,j);
+                list.add(poker);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 洗牌
+     * @param list 一副扑克
+     */
+    public static void shuffle(List<Poker> list) {
+        Random random = new Random();
+        for (int i = list.size() - 1;i > 0;i--) {
+            int index = random.nextInt(i);// 生成 0 ~ i的随机数但是不包括i 然后交换i和index下标的数据即可
+            swap(list,i,index);
+        }
+    }
+    // 交换扑克牌位置
+    public static void swap(List<Poker> list, int i,int j) {
+        Poker temp = list.get(i);
+        list.set(i,list.get(j));
+        list.set(j,temp);
+    }
+}
+// 扑克牌
+class Poker {
+    private String  suit;// 花色
+    private int rank;// 数字
+
+    public Poker(String suit, int rank) {
+        this.suit = suit;
+        this.rank = rank;
+    }
+
+    public String getSuit() {
+        return suit;
+    }
+
+    public void setSuit(String suit) {
+        this.suit = suit;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
+
+    @Override
+    public String toString() {
+        return suit+" "+rank;
+    }
+}
