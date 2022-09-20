@@ -1,0 +1,25 @@
+// 双指针法
+class Solution {
+    public int[] intersect(int[] nums1, int[] nums2) {
+          Arrays.sort(nums1);
+          Arrays.sort(nums2);
+          int len1 = nums1.length;
+          int len2 = nums2.length;
+          int[] arr = new int[Math.min(len1,len2)];
+          int index1 = 0;
+          int index2 = 0,index = 0;
+          while ((index1 < len1) && (index2 < len2)) {
+              if (nums1[index1] < nums2[index2]) {
+                  // 将小的一位下标移动
+                  index1++; 
+              } else if (nums1[index1] > nums2[index2]) {
+                  index2++;
+              } else {
+                  // 相等就将数据添加  同时两个下标都移动
+                  arr[index++] = nums1[index1++];
+                  index2++;
+              } 
+    }
+    return Arrays.copyOfRange(arr,0,index);
+    }
+}
