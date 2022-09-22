@@ -192,6 +192,18 @@ public class MyLinkedList {
             cur = cur.next;
         }
     }
+    // 清空链表
+    public void clear() {
+        ListNode cur = this.head;
+        while (cur != null) {
+            ListNode curNext = cur.next;
+            cur.prev = null;
+            cur.next = null;
+            cur = curNext;
+        }
+        this.head = null;
+        this.head = null;
+    }
 }
 
 class IndexException extends  RuntimeException{
