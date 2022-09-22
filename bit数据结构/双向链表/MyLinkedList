@@ -1,0 +1,204 @@
+import myarraylist.MyArrayList;
+
+/**
+ * 双向链表
+ * @author 26568
+ * @date 2022-09-22 12:01
+ */
+public class MyLinkedList {
+    public static void main(String[] args) {
+        MyLinkedList myLinkedList = new MyLinkedList();
+        for (int i = 0; i < 5;i++) {
+            myLinkedList.addFirst(4);
+        }
+        myLinkedList.display();
+        System.out.println(myLinkedList.contains(4));
+        myLinkedList.addIndex(2,99);
+        myLinkedList.display();
+        myLinkedList.remove(0);
+        myLinkedList.display();
+        myLinkedList.removeAllKey(4);
+        myLinkedList.display();
+
+    }
+    static class ListNode {
+        public int val;
+        public ListNode next;
+        public ListNode prev;
+        public ListNode(int val) {
+            this.val = val;
+        }
+    }
+    public ListNode head;// 头节点
+    public ListNode tail;// 尾节点
+    // 打印双向链表
+    public void display() {
+        ListNode cur = this.head;
+        if (cur == null) {
+            System.out.println("双向链表为空");
+            return;
+        }
+        while (cur != null) {
+            System.out.print(cur.val+" ");
+            cur = cur.next;
+        }
+        System.out.println();
+    }
+    // 求链表长度
+    public int size() {
+        ListNode cur = this.head;
+        int count = 0;
+        while (cur != null) {
+          count++;
+          cur = cur.next;
+        }
+        return count;
+    }
+    // 判断是否包含key值节点
+    public boolean contains(int key) {
+        ListNode cur = this.head;
+        while (cur != null) {
+            if (cur.val == key) {
+                return true;
+            }
+            cur = cur.next;
+        }
+        return false;
+    }
+    // 头插法
+    public void addFirst(int val) {
+        ListNode node = new ListNode(val);
+        if (this.head == null) {
+            this.head = node;
+            this.tail = node;
+        } else {
+            node.next = this.head;
+            this.head.prev = node;
+            this.head = node;
+        }
+    }
+    // 尾插法
+    public void addLast(int val) {
+        ListNode node = new ListNode(val);
+        if (this.head == null) {
+            this.head = node;
+            this.tail = node;
+        } else {
+            this.tail.next = node;
+            node.prev = this.tail;
+            this.tail = node;
+        }
+    }
+    // 在index位置插入数据
+    public void addIndex(int index,int val) {
+        // 1.判断index合法性
+        if (index < 0 || index > size()) {
+            throw  new IndexException("index位置不合法");
+        }
+        // 2.头插尾插
+        if (index == 0) {
+            addFirst(val);
+            return;
+        }
+        if (index == size()) {
+            addLast(val);
+            return;
+        }
+        // 3.找到index下标开始插入
+        ListNode cur = getIndex(index);
+        ListNode node = new ListNode(val);
+        node.next = cur;
+        node.prev = cur.prev;
+        cur.prev.next = node;
+        cur.prev = node;
+    }
+    private ListNode getIndex(int index) {
+        ListNode cur = this.head;
+        while (index > 0) {
+            cur = cur.next;
+            index--;
+        }
+        return cur;
+    }
+    // 删除第一次出现key值的节点
+    public void remove(int key) {
+        if (this.head == null) {
+            System.out.println("链表为空，无法删除");
+            return;
+        }
+        ListNode cur = this.head;
+        while (cur != null) {
+            if (cur.val == key) {
+                // 如果是删除头节点
+                if (cur == this.head) {
+                    this.head = this.head.next;
+                    // 此时判断是不是只有一个节点的情况，避免空指针异常
+                    if (this.head != null) {
+                        this.head.prev = null;
+                    } else {
+                        // 只有一个节点
+                        this.tail = null;
+                    }
+                } else {
+                    //  不是头节点
+                    // 判断是不是尾节点
+                    if (cur == this.tail) {
+                        this.tail = cur.prev;
+                        this.tail.next = null;
+                    } else {
+                        cur.prev.next = cur.next;
+                        cur.next.prev = cur.prev;
+                    }
+                }
+                return;
+            }
+            cur = cur.next;
+        }
+        if (cur == null) {
+            System.out.println("没有你要删除的数据");
+        }
+    }
+    // 删除所有key值的节点
+    public void removeAllKey(int key) {
+        if (this.head == null) {
+            System.out.println("链表为空，无法删除");
+            return;
+        }
+        ListNode cur = this.head;
+        while (cur != null) {
+            if (cur.val == key) {
+                // 如果是删除头节点
+                if (cur == this.head) {
+                    this.head = this.head.next;
+                    // 此时判断是不是只有一个节点的情况，避免空指针异常
+                    if (this.head != null) {
+                        this.head.prev = null;
+                    } else {
+                        // 只有一个节点
+                        this.tail = null;
+                    }
+                } else {
+                    //  不是头节点
+                    // 判断是不是尾节点
+                    if (cur == this.tail) {
+                        this.tail = cur.prev;
+                        this.tail.next = null;
+                    } else {
+                        cur.prev.next = cur.next;
+                        cur.next.prev = cur.prev;
+                    }
+                }
+            }
+            cur = cur.next;
+        }
+    }
+}
+
+class IndexException extends  RuntimeException{
+    public IndexException() {
+    }
+
+    public IndexException(String message) {
+        super(message);
+    }
+}
