@@ -1,0 +1,21 @@
+ public class TextDemo {
+     public static void main(String[] args) {
+         ArrayList<Integer> arrayList = new ArrayList<>();
+         arrayList.add(1);
+         arrayList.add(2);
+         arrayList.add(3);
+         LinkedList<Integer> linkedList = new LinkedList<>(arrayList);
+         ListIterator<Integer> listIterator = linkedList.listIterator();
+         while (listIterator.hasNext()) {
+             System.out.print(listIterator.next()+" ");
+         }
+         // 反向遍历
+         ListIterator<Integer> listIterator1 = linkedList.listIterator(linkedList.size());
+         while (listIterator1.hasPrevious()) {
+             System.out.print(listIterator1.previous()+" ");
+         }
+
+
+     }
+}
+
