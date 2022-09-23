@@ -1,0 +1,21 @@
+class Solution {
+    public boolean validateStackSequences(int[] pushed, int[] popped) {
+      Stack<Integer> stack = new Stack<>();
+      int j = 0;// popA的下标
+      // 遍历pushA数组
+      for (int i = 0;i < pushed.length;i++) {
+          // 先将pushed数据放入栈
+          stack.push(pushed[i]);
+          // 此时判断栈顶数据是不是和popped[j]数据相等
+          // 避免越界
+          while (j < popped.length && !stack.empty() && stack.peek() == popped[j]) {
+              // 弹出栈顶数据
+              stack.pop();
+              j++;
+          }
+      }
+      // 不为空说明无法匹配
+      // 为空说明匹配成功
+      return stack.empty();
+    }
+}
