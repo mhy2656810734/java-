@@ -38,4 +38,41 @@ class Solution {
     public boolean isNumber(String item) {
          return !("+".equals(item) || "-".equals(item) || "*".equals(item) || "/".equals(item));
     }
+       public int evalRPN(String[] tokens) {
+           // 1.遍历字符串
+    Stack<Integer> stack = new Stack<>();
+    // 2.遇到数字入栈
+    for (String str : tokens) {
+        if (!isOperation(str)) {
+            // 数字入栈
+            stack.push(Integer.parseInt(str));
+        } else {
+            // 是操作符
+            int num2 = stack.pop();
+            int num1 = stack.pop();
+            switch(str) {
+                case "+":
+                stack.push(num1+num2);
+                break;
+                 case "-":
+                 stack.push(num1 - num2);
+                break;
+                 case "*":
+                 stack.push(num1 * num2);
+                break;
+                 case "/":
+                 stack.push(num1 / num2);
+                break;
+            }
+        }
+    }
+    return stack.pop();
+    }
+    private boolean isOperation(String x) {
+        // 判断是不是字符
+        if (x.equals("+") || x.equals("-") || x.equals("*") || x.equals("/")) {
+            return true;
+        }
+        return false;
+    }
 }
