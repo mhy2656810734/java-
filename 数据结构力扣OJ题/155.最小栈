@@ -1,0 +1,57 @@
+class MinStack {
+    private Stack<Integer> stack;
+    private Stack<Integer> minStack;// 每次存放最小的元素
+    public MinStack() {
+        stack = new Stack<>();
+        minStack = new Stack<>();
+    }
+    public void push(int val) {
+        // stack 都要放入数据
+        stack.push(val);
+        // 如果最小元素栈为空直接放入
+        if (minStack.empty()) {
+            minStack.push(val);
+        } else {
+            // 不为空的话 判断minStack栈顶的数据与当前val值的大小
+            // 小于等于就放 大于不放
+            int x = minStack.peek();
+            if (val <= x) {
+                minStack.push(val);
+            }
+        }
+    }
+    
+    public void pop() {
+        if (!stack.empty()) {
+            // 先将stack栈顶元素出栈 然后比较与minStack栈顶数据的大小
+            int x = stack.pop();
+            if (x == minStack.peek()) {
+                // 相等则出栈
+                minStack.pop();
+            }
+        }
+    }
+    
+    public int top() {
+        if (!stack.empty()) {
+            return stack.peek();
+        }
+        return -1;
+    }
+    
+    public int getMin() {
+        if (minStack.empty()) {
+            return -1;
+        }
+        return minStack.peek();
+    }
+}
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack obj = new MinStack();
+ * obj.push(val);
+ * obj.pop();
+ * int param_3 = obj.top();
+ * int param_4 = obj.getMin();
+ */
