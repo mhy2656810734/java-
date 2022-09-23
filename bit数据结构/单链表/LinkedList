@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Stack;
 
 /**
  * 单向不循环链表
@@ -28,6 +29,27 @@ public class LinkedList {
             cur = cur.next;
         }
         System.out.println();
+    }
+    // 递归逆序单链表
+    public void display1(ListNode head) {
+        if (head != null) {
+            display1(head.next);
+            System.out.print(head.val+" ");
+        }
+    }
+    // 利用栈逆序打印链表
+    public void display2() {
+        ListNode cu = this.head;
+        Stack<ListNode> stack = new Stack<>();
+        while (cu != null) {
+            stack.push(cu);
+            cu = cu.next;
+        }
+        // 开始取数据打印
+        while (!stack.empty()) {
+            ListNode cur = stack.pop();
+            System.out.print(cur.val+" ");
+        }
     }
     // 头插法
     public void addFirst(int val) {
@@ -128,7 +150,8 @@ public class LinkedList {
         }
         pre.next = pre.next.next;
     }
-    public ListNode removePrev(int key) {
+    // 先查找要删除结点的前一个节点
+    private ListNode removePrev(int key) {
         ListNode cur = this.head;
         while (cur.next != null) {
             if (cur.next.val == key) {
@@ -189,9 +212,10 @@ public class LinkedList {
 //        linkedList.display();
 //        linkedList.remove(9);
         linkedList.display();
-        linkedList.removeAllKey(4);
-        linkedList.display();
+//       linkedList.removeAllKey(4);
+        linkedList.display1(linkedList.head);
 //        linkedList.clear();
+        linkedList.display2();
     }
 }
 class IndexWrongException extends RuntimeException{
