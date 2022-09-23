@@ -8,7 +8,7 @@ class Solution {
           stack.push(pushed[i]);
           // 此时判断栈顶数据是不是和popped[j]数据相等
           // 避免越界
-          while (j < popped.length && !stack.empty() && stack.peek() == popped[j]) {
+          while (j < popped.length && !stack.empty() && stack.peek().equals(popped[j])) {
               // 弹出栈顶数据
               stack.pop();
               j++;
