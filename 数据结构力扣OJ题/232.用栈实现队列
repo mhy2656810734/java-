@@ -1,0 +1,50 @@
+class MyQueue {
+    // 思路：两个栈 一个入栈  一个出栈
+    private Stack<Integer> s1;
+    private Stack<Integer> s2;
+    public MyQueue() {
+        s1 = new Stack<>();
+        s2 = new Stack<>();
+    }
+    // s1入栈
+    public void push(int x) {
+        s1.push(x);
+    }
+    // 先判断s2中是否有数据有的话就出 没有的话s1中的放入s2后再出
+    public int pop() {
+        if (empty()) {
+            return -1;
+        }
+        if (s2.empty()) {
+            while (!s1.empty()) {
+                s2.push(s1.pop());
+            }
+        }
+        return s2.pop();
+    }
+    // 与出队列一致
+    public int peek() {
+        if (empty()) {
+            return -1;
+        }
+        if (s2.empty()) {
+            while (!s1.empty()) {
+                s2.push(s1.pop());
+            }
+        }
+        return s2.peek();
+    }
+    
+    public boolean empty() {
+        return s1.empty() && s2.empty();
+    }
+}
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * MyQueue obj = new MyQueue();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * int param_3 = obj.peek();
+ * boolean param_4 = obj.empty();
+ */
