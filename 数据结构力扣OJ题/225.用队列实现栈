@@ -1,0 +1,66 @@
+class MyStack {
+// 思路：创建两个队列： 每次入栈就入不为空的队列  出栈：就将不为空的size - 1 个数据放入空队列 然后将最后一个数据返回即可
+    Queue<Integer> que1;
+    Queue<Integer> que2;
+    public MyStack() {
+        que1 = new LinkedList<>();
+        que2 = new LinkedList<>();
+    }
+    
+    public void push(int x) {
+        if (!que1.isEmpty()) {
+            que1.offer(x);
+        } else if (!que2.isEmpty()){
+            que2.offer(x);
+        } else {
+            que1.offer(x);
+        }
+    }
+    // 首先将不为空的队列中的数据的前size-1个数据全部放入为空的队列
+    public int pop() {
+        if (empty()) {
+            return -1;
+        }
+        if (!que1.isEmpty()) {
+            int size = que1.size();
+            for (int i = 0; i < size - 1;i++) {
+                que2.offer(que1.poll());
+            }
+            return que1.poll();
+        } else {
+             int size = que2.size();
+            for (int i = 0; i < size - 1;i++) {
+                que1.offer(que2.poll());
+            }
+            return que2.poll();
+        }
+
+    }
+    // 读取栈顶数据
+    public int top() {
+             if (empty()) {
+            return -1;
+        }
+        if (!que1.isEmpty()) {
+            int size = que1.size();
+            int ret = -1;// 保留每次弹出的数据
+            for (int i = 0; i < size;i++) {
+                ret = que1.poll();
+                que2.offer(ret);
+            }
+            return ret;
+        } else {
+             int size = que2.size();
+             int ret = -1;// 保留每次弹出的数据
+            for (int i = 0; i < size;i++) {
+                ret = que2.poll();
+                que1.offer(ret);
+            }
+            return ret;
+        }
+    }
+    
+    public boolean empty() {
+        return que1.isEmpty() && que2.isEmpty();
+    }
+}
