@@ -1,0 +1,137 @@
+import sun.reflect.generics.tree.Tree;
+
+/**
+ * 二叉树
+ * @author 26568
+ * @date 2022-09-25 16:07
+ */
+class BinaryTree {
+    static class TreeNode {
+        public char val;
+        public TreeNode left; // 左孩子节点
+        public TreeNode right;// 右孩子节点
+
+        public TreeNode(char val) {
+            this.val = val;
+        }
+    }
+
+    // 创建一个棵二叉树
+    public TreeNode createTree() {
+        TreeNode A = new TreeNode('A');
+        TreeNode B = new TreeNode('B');
+        TreeNode C = new TreeNode('C');
+        TreeNode D = new TreeNode('D');
+        TreeNode E = new TreeNode('E');
+        TreeNode F = new TreeNode('F');
+        TreeNode G = new TreeNode('G');
+        TreeNode H = new TreeNode('H');
+        A.left = B;
+        A.right = C;
+        B.left = D;
+        B.right = E;
+        C.left = F;
+        C.right = G;
+        E.right = H;
+        return A;
+    }
+
+    // 前序遍历
+    public void preOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        System.out.print(root.val + " ");
+        preOrder(root.left);
+        preOrder(root.right);
+    }
+    // 中序遍历
+    public void inOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        inOrder(root.left);
+        System.out.print(root.val+" ");
+        inOrder(root.right);
+    }
+    // 后续遍历
+    public void postOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        postOrder(root.left);
+        System.out.print(root.val+" ");
+        postOrder(root.right);
+    }
+    // 获取二叉树中结点的个数
+    // 1.遍历方法
+    public static int nodeSize = 0;
+    public int size(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        nodeSize++;
+        size(root.left);
+        size(root.right);
+        return nodeSize;
+    }
+    // 2.子问题的方法  节点个数 = 根节点左子树节点个数 + 根节点右子树节点个数 + 1
+    public int size2(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        return size2(root.left) + size2(root.right) + 1;
+    }
+    // 获取叶子节点的个数
+    // 如果一个节点的左子树和右子树为空就是叶子节点
+    // 1.递归的方法
+    public static int leafNodeSize = 0;
+    public void getgetLeafNodeCount1(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        if ((root.left == null ) && (root.right == null)) {
+            leafNodeSize++;
+        }
+        getgetLeafNodeCount1(root.left);
+        getgetLeafNodeCount1(root.right);
+    }
+    // 2.子问题的方法
+    public int getLeafNodeCount(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        if ((root.left == null ) && (root.right == null)) {
+            return 1;
+        }
+        return getLeafNodeCount(root.left) + getLeafNodeCount(root.right);
+    }
+    // 获取根节点的第k层节点的个数
+    // 实际上是根节点的 左子树的 k-1 层节点个数 + 根节点的 右子树的 k-1 层节点个数
+    public int getKLevelNodeCount(TreeNode root,int k) {
+        if (root == null || k <= 0) {
+            return 0;
+        }
+        if (k == 1) {
+            return 1;
+        }
+        return getKLevelNodeCount(root.left,k-1) + getKLevelNodeCount(root.right,k-1);
+    }
+}
+public class TextBinaryTree {
+    public static void main(String[] args) {
+        BinaryTree binaryTree = new BinaryTree();
+        BinaryTree.TreeNode root = binaryTree.createTree();
+        binaryTree.preOrder(root);
+        System.out.println();
+        binaryTree.inOrder(root);
+        System.out.println();
+        binaryTree.postOrder(root);
+       // binaryTree.size(root);
+        System.out.println();
+        System.out.println("节点个数："+binaryTree.size2(root));
+        binaryTree.getgetLeafNodeCount1(root);
+        System.out.println("叶子节点的个数："+BinaryTree.leafNodeSize);
+        System.out.println(binaryTree.getKLevelNodeCount(root,3));
+    }
+}
