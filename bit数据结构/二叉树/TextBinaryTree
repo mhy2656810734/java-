@@ -117,6 +117,34 @@ class BinaryTree {
         }
         return getKLevelNodeCount(root.left,k-1) + getKLevelNodeCount(root.right,k-1);
     }
+    // 得到二叉树的高度
+    public int getHeight(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int leftHeight = getHeight(root.left);
+        int rightHeight = getHeight(root.right);
+        return leftHeight > rightHeight ? leftHeight+1:rightHeight+1;
+    }
+    // 在二叉树中查找value值元素
+    public TreeNode find(TreeNode root,char value) {
+        if (root == null) {
+            return null;
+        }
+        if (root.val == value) {
+            return root;
+        }
+        TreeNode ret1 =find(root.left,value);
+        if (ret1 != null) {
+            return ret1;
+        }
+        TreeNode ret2 = find(root.right,value);
+        if (ret2 != null) {
+            return ret2;
+        }
+        // 都没找到
+        return null;
+    }
 }
 public class TextBinaryTree {
     public static void main(String[] args) {
@@ -133,5 +161,6 @@ public class TextBinaryTree {
         binaryTree.getgetLeafNodeCount1(root);
         System.out.println("叶子节点的个数："+BinaryTree.leafNodeSize);
         System.out.println(binaryTree.getKLevelNodeCount(root,3));
+        System.out.println("二叉树的高度:" +binaryTree.getHeight(root));
     }
 }
