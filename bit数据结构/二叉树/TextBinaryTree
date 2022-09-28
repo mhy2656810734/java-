@@ -1,4 +1,9 @@
+package binarytree;
+
 import sun.reflect.generics.tree.Tree;
+
+import java.util.*;
+
 
 /**
  * 二叉树
@@ -45,27 +50,31 @@ class BinaryTree {
         preOrder(root.left);
         preOrder(root.right);
     }
+
     // 中序遍历
     public void inOrder(TreeNode root) {
         if (root == null) {
             return;
         }
         inOrder(root.left);
-        System.out.print(root.val+" ");
+        System.out.print(root.val + " ");
         inOrder(root.right);
     }
+
     // 后续遍历
     public void postOrder(TreeNode root) {
         if (root == null) {
             return;
         }
         postOrder(root.left);
-        System.out.print(root.val+" ");
+        System.out.print(root.val + " ");
         postOrder(root.right);
     }
+
     // 获取二叉树中结点的个数
     // 1.遍历方法
     public static int nodeSize = 0;
+
     public int size(TreeNode root) {
         if (root == null) {
             return 0;
@@ -75,6 +84,7 @@ class BinaryTree {
         size(root.right);
         return nodeSize;
     }
+
     // 2.子问题的方法  节点个数 = 根节点左子树节点个数 + 根节点右子树节点个数 + 1
     public int size2(TreeNode root) {
         if (root == null) {
@@ -82,41 +92,46 @@ class BinaryTree {
         }
         return size2(root.left) + size2(root.right) + 1;
     }
+
     // 获取叶子节点的个数
     // 如果一个节点的左子树和右子树为空就是叶子节点
     // 1.递归的方法
     public static int leafNodeSize = 0;
+
     public void getgetLeafNodeCount1(TreeNode root) {
         if (root == null) {
             return;
         }
-        if ((root.left == null ) && (root.right == null)) {
+        if ((root.left == null) && (root.right == null)) {
             leafNodeSize++;
         }
         getgetLeafNodeCount1(root.left);
         getgetLeafNodeCount1(root.right);
     }
+
     // 2.子问题的方法
     public int getLeafNodeCount(TreeNode root) {
         if (root == null) {
             return 0;
         }
-        if ((root.left == null ) && (root.right == null)) {
+        if ((root.left == null) && (root.right == null)) {
             return 1;
         }
         return getLeafNodeCount(root.left) + getLeafNodeCount(root.right);
     }
+
     // 获取根节点的第k层节点的个数
     // 实际上是根节点的 左子树的 k-1 层节点个数 + 根节点的 右子树的 k-1 层节点个数
-    public int getKLevelNodeCount(TreeNode root,int k) {
+    public int getKLevelNodeCount(TreeNode root, int k) {
         if (root == null || k <= 0) {
             return 0;
         }
         if (k == 1) {
             return 1;
         }
-        return getKLevelNodeCount(root.left,k-1) + getKLevelNodeCount(root.right,k-1);
+        return getKLevelNodeCount(root.left, k - 1) + getKLevelNodeCount(root.right, k - 1);
     }
+
     // 得到二叉树的高度
     public int getHeight(TreeNode root) {
         if (root == null) {
@@ -124,26 +139,48 @@ class BinaryTree {
         }
         int leftHeight = getHeight(root.left);
         int rightHeight = getHeight(root.right);
-        return leftHeight > rightHeight ? leftHeight+1:rightHeight+1;
+        return leftHeight > rightHeight ? leftHeight + 1 : rightHeight + 1;
     }
+
     // 在二叉树中查找value值元素
-    public TreeNode find(TreeNode root,char value) {
+    public TreeNode find(TreeNode root, char value) {
         if (root == null) {
             return null;
         }
         if (root.val == value) {
             return root;
         }
-        TreeNode ret1 =find(root.left,value);
+        TreeNode ret1 = find(root.left, value);
         if (ret1 != null) {
             return ret1;
         }
-        TreeNode ret2 = find(root.right,value);
+        TreeNode ret2 = find(root.right, value);
         if (ret2 != null) {
             return ret2;
         }
         // 都没找到
         return null;
+    }
+    public void levelOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        // 先将头节点加入
+        queue.offer(root);
+        // 开始循环打印
+        while (!queue.isEmpty()) {
+            TreeNode cur = queue.poll();
+            // 先打印
+            System.out.print(cur.val+" ");
+            // 再将左和右子节点添加
+            if (cur.left != null) {
+                queue.offer(cur.left);
+            }
+            if (cur.right != null) {
+                queue.offer(cur.right);
+            }
+        }
     }
 }
 public class TextBinaryTree {
@@ -155,12 +192,14 @@ public class TextBinaryTree {
         binaryTree.inOrder(root);
         System.out.println();
         binaryTree.postOrder(root);
-       // binaryTree.size(root);
+        // binaryTree.size(root);
         System.out.println();
         System.out.println("节点个数："+binaryTree.size2(root));
         binaryTree.getgetLeafNodeCount1(root);
         System.out.println("叶子节点的个数："+BinaryTree.leafNodeSize);
         System.out.println(binaryTree.getKLevelNodeCount(root,3));
         System.out.println("二叉树的高度:" +binaryTree.getHeight(root));
+        System.out.println("层序遍历：");
+        binaryTree.levelOrder(root);
     }
 }
