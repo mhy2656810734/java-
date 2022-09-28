@@ -1,0 +1,31 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public TreeNode invertTree(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+        // 翻转root的左子树和右子树
+        TreeNode tem = root.left;
+        root.left = root.right;
+        root.right = tem;
+        // 递归翻转root的左子树和右子树的子树
+        invertTree(root.left);
+        invertTree(root.right);
+        // 返回root
+        return root;
+    }
+}
