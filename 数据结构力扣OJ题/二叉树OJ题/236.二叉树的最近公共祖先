@@ -1,0 +1,83 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    // 方法一
+    // public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    //     // 两个栈 分别来存放从root到p或者q的所有节点
+    //     Stack<TreeNode> stack1 = new Stack<>();
+    //     Stack<TreeNode> stack2 = new Stack<>();
+    //     getPath(root,p,stack1);
+    //     getPath(root,q,stack2);
+    //     // 此时两个栈放的都是路径上的节点，先将多的栈数据弹出
+    //     int size1 = stack1.size();
+    //     int size2 = stack2.size();
+    //     if (size1 - size2 > 0) {
+    //         int size = size1 - size2;
+    //         while (size > 0 ) {
+    //             stack1.pop();
+    //             size--;
+    //         }
+    //     } else {
+    //         int size = size2 - size1;
+    //         while (size > 0 ) {
+    //             stack2.pop();
+    //             size--;
+    //         }
+    //     }
+    //     // 此时让两个栈同时弹数据
+    //     while (stack1.peek() != stack2.peek()) {
+    //         stack1.pop();
+    //         stack2.pop();
+    //     }
+    //     return stack1.peek();
+    // }
+    // public boolean getPath(TreeNode root,TreeNode p,Stack<TreeNode> stack) {
+    //     if (root == null || p == null) {
+    //         return false;
+    //     }
+    //     stack.push(root);
+    //     if (root == p) {
+    //         return true;
+    //     }
+    //     // 递归去root的左子树和右子树找
+    //     boolean flag1 = getPath(root.left,p,stack);
+    //     if (flag1 == true) {
+    //         return true;
+    //     }
+    //     boolean flag2 = getPath(root.right,p,stack);
+    //     if (flag2 == true) {
+    //         return true;
+    //     }
+    //     // 此时说明左右子树都没有 那么该节点就不在 root ->p 的路径 则弹出
+    //     stack.pop();
+    //     return false;
+    // }
+    // 方法二：子问题方法
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) {
+            return null;
+        }
+        if (root == p || root == q) {
+            return root;
+        }
+        // 递归去找左子树和右子树
+        TreeNode leftTree = lowestCommonAncestor(root.left,p,q);
+        TreeNode rightTree = lowestCommonAncestor(root.right,p,q);
+        if (leftTree != null && rightTree != null) {
+            return root;
+        } else if (leftTree != null) {
+            return leftTree;
+        } else if (rightTree != null) {
+            return rightTree;
+        } else {
+            return null;
+        }
+    }
+}
