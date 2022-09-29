@@ -2,6 +2,7 @@ package binarytree;
 
 import sun.reflect.generics.tree.Tree;
 
+import javax.transaction.TransactionRequiredException;
 import java.util.*;
 
 
@@ -40,7 +41,38 @@ class BinaryTree {
         E.right = H;
         return A;
     }
-
+    public TreeNode createTree1() {
+        TreeNode A = new TreeNode('1');
+        TreeNode B = new TreeNode('2');
+        TreeNode C = new TreeNode('3');
+        TreeNode D = new TreeNode('4');
+        TreeNode E = new TreeNode('5');
+        TreeNode F = new TreeNode('6');
+        TreeNode G = new TreeNode('7');
+        A.left = B;
+        A.right = C;
+        B.left = D;
+        B.right = E;
+        C.left = F;
+        C.right = G;
+        return A;
+    }
+    public TreeNode createTree2() {
+        TreeNode A = new TreeNode('1');
+        TreeNode B = new TreeNode('2');
+        TreeNode C = new TreeNode('3');
+        TreeNode D = new TreeNode('4');
+        TreeNode E = new TreeNode('5');
+        TreeNode F = new TreeNode('6');
+        TreeNode G = new TreeNode('7');
+        A.left = C;
+        A.right = B;
+        C.left = G;
+        C.right = F;
+        B.right = D;
+        B.left = E;
+        return A;
+    }
     // 前序遍历
     public void preOrder(TreeNode root) {
         if (root == null) {
@@ -161,6 +193,7 @@ class BinaryTree {
         // 都没找到
         return null;
     }
+    // 层序遍历
     public void levelOrder(TreeNode root) {
         if (root == null) {
             return;
@@ -181,6 +214,49 @@ class BinaryTree {
                 queue.offer(cur.right);
             }
         }
+
+    }
+    // 判断两个二叉树是不是镜像对称的
+    public boolean mirrorSameTree(TreeNode p,TreeNode q) {
+        if ((p == null && q != null) || (p != null) && (q == null)) {
+            return false;
+        }
+        if (q == null && p == null) {
+            return true;
+        }
+        if (q.val != p.val) {
+            return false;
+        }
+        // 此时递归判断 p的左子树和q的右子树是否相等
+        return mirrorSameTree(p.left,q.right) && mirrorSameTree(p.right,q.left);
+    }
+    // 判断一棵树是不是完全二叉树
+    public boolean isCompleteTree(TreeNode root) {
+        if (root == null) {
+            return false;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            // 取出一个数据
+            TreeNode cur = queue.poll();
+            if (cur != null) {
+                // 不为空就将左右孩子节点都放进去
+                queue.offer(cur.left);
+                queue.offer(cur.right);
+            } else {
+                // 如果弹出的是空节点结束循环
+                break;
+            }
+        }
+        // 此时判断队列里面是不是都是null
+        while (!queue.isEmpty()) {
+            TreeNode cur = queue.poll();
+            if (cur != null) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 public class TextBinaryTree {
@@ -201,5 +277,10 @@ public class TextBinaryTree {
         System.out.println("二叉树的高度:" +binaryTree.getHeight(root));
         System.out.println("层序遍历：");
         binaryTree.levelOrder(root);
+        System.out.println("==============================");
+        BinaryTree.TreeNode p = binaryTree.createTree1();
+        BinaryTree.TreeNode q = binaryTree.createTree2();
+        binaryTree.mirrorSameTree(p,q);
+        System.out.println(binaryTree.mirrorSameTree(p,q));
     }
 }
