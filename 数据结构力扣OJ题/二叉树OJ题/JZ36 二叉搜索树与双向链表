@@ -1,0 +1,43 @@
+/**
+public class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+
+    public TreeNode(int val) {
+        this.val = val;
+
+    }
+
+}
+*/
+public class Solution {
+    private TreeNode prev = null;
+    public TreeNode Convert(TreeNode pRootOfTree) {
+        if (pRootOfTree == null) {
+            return null;
+        }
+        ConvertChild(pRootOfTree);
+        TreeNode head = pRootOfTree;
+        while (head.left != null) {
+            head = head.left;
+        }
+        return head;
+    }
+    public void ConvertChild(TreeNode cur) {
+        if (cur == null) {
+            return;
+        }
+        // 向左递归
+       ConvertChild(cur.left);
+        // 此时开始连接节点
+        cur.left = prev;
+        // 判断是不是第一次构建
+        if (prev != null) {
+            prev.right = cur;
+        }
+        prev = cur;
+        // 向右递归
+        ConvertChild(cur.right);
+    }
+}
