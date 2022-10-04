@@ -1,0 +1,222 @@
+package exercise;
+
+import myarraylist.PosWangException;
+
+import java.util.List;
+import java.util.Stack;
+
+/**
+ * @author 26568
+ * @date 2022-10-02 13:52
+ */
+public class MyLinkedList {
+    class ListNode {
+        public int val;
+        public ListNode prev;
+        public ListNode next;
+        public ListNode (int val) {
+            this.val = val;
+        }
+    }
+    public ListNode head;// 头节点
+    public ListNode tail;// 尾节点
+    // 打印双向链表
+    public void display() {
+        ListNode cur = this.head;
+        while (cur != null) {
+            System.out.print(cur.val+" ");
+            cur = cur.next;
+        }
+        System.out.println();
+    }
+    // 得到链表节点个数
+    public int size() {
+        int count = 0;
+        ListNode cur = this.head;
+        while (cur != null) {
+            count++;
+            cur = cur.next;
+        }
+        return count;
+    }
+    // 头插法
+    public void addFirst(int val) {
+        ListNode node = new ListNode(val);
+        if (this.head == null) {
+            this.head = node;
+            this.tail = node;
+        } else {
+            node.next = this.head;
+            this.head.prev = node;
+            this.head = node;
+        }
+    }
+    // 尾插法
+    public void addLast(int val) {
+        ListNode node = new ListNode(val);
+        if (this.head == null) {
+            this.head = node;
+            this.tail = node;
+        } else {
+            this.tail.next = node;
+            node.prev = this.tail;
+            this.tail = node;
+        }
+    }
+    // 在任意位置插入
+    public void addIndex(int pos,int val) {
+        if (isEmpty()) {
+            System.out.println("双向链表为空");
+            return;
+        }
+        if (!checkPos(pos)) {
+            throw new PosWangException("pos位置不合法");
+        }
+        if (pos == 0) {
+            addFirst(val);
+            return;
+        }
+        if (pos == size()) {
+            addLast(val);
+            return;
+        }
+        // 找到pos位置
+        ListNode cur = getPos(pos);
+        ListNode node = new ListNode(val);
+        node.next = cur;
+        node.prev = cur.prev;
+        cur.prev.next = node;
+        cur.prev = node;
+    }
+    public ListNode getPos(int pos) {
+        ListNode cur = this.head;
+        while (pos > 0) {
+            cur = cur.next;
+            pos--;
+        }
+        return cur;
+    }
+    public boolean checkPos(int pos) {
+        if (pos < 0 || pos > size()) {
+            return false;
+        }
+        return true;
+    }
+    public boolean isEmpty() {
+        return this.head == null;
+    }
+    public boolean contains(int val) {
+        if (isEmpty()) {
+            throw new RuntimeException("双向链表为空");
+        }
+        // 遍历查找
+        ListNode cur = this.head;
+        while (cur != null) {
+            if (cur.val == val) {
+                return true;
+            }
+            cur = cur.next;
+        }
+        return false;
+    }
+    // 删除第一次出现的关键字key
+    public void remove(int key) {
+        if (isEmpty()) {
+            throw new RuntimeException("双向链表为空");
+        }
+        ListNode cur = this.head;
+        while (cur != null) {
+            if (cur.val == key) {
+                // 判断是不是头节点
+                if (cur == this.head) {
+                    this.head = this.head.next;
+                    // 判断是不是只有一个节点的情况
+                    if (this.head == null) {
+                        this.tail = null;
+                    } else {
+                        this.head.prev = null;
+                    }
+                } else {
+                    // 判断是不是尾节点
+                    if (cur == this.tail) {
+                        this.tail = this.tail.prev;
+                        this.tail.next = null;
+                    } else {
+                        cur.prev.next = cur.next;
+                        cur.next.prev = cur.prev;
+                    }
+                }
+                return;
+            } else {
+                cur = cur.next;
+            }
+        }
+        System.out.println("没有你要删除的数据");
+    }
+    public void removeAllKey(int key) {
+        if (isEmpty()) {
+            throw new RuntimeException("双向链表为空");
+        }
+        ListNode cur = this.head;
+        while (cur != null) {
+            if (cur.val == key) {
+                // 判断是不是头节点
+                if (cur == this.head) {
+                    this.head = this.head.next;
+                    // 判断是不是只有一个节点的情况
+                    if (this.head == null) {
+                        this.tail = null;
+                    } else {
+                        this.head.prev = null;
+                    }
+                } else {
+                    // 判断是不是尾节点
+                    if (cur == this.tail) {
+                        this.tail = this.tail.prev;
+                        this.tail.next = null;
+                    } else {
+                        cur.prev.next = cur.next;
+                        cur.next.prev = cur.prev;
+                    }
+                }
+            }
+                cur = cur.next;
+
+        }
+    }
+    // 清空链表
+    public void clear() {
+        ListNode cur = this.head;
+        while (cur != null) {
+            ListNode curNext = cur.next;
+            cur.prev = null;
+            cur.next = null;
+            cur = curNext;
+        }
+        this.tail = null;
+        this.head = null;
+        Stack
+    }
+    public static void main(String[] args) {
+        MyLinkedList myLinkedList = new MyLinkedList();
+        for (int i = 0; i < 5;i++) {
+            myLinkedList.addFirst(4);
+        }
+        myLinkedList.display();
+        System.out.println(myLinkedList.contains(4));
+        myLinkedList.addIndex(2,99);
+        myLinkedList.display();
+        myLinkedList.remove(0);
+        myLinkedList.display();
+        myLinkedList.removeAllKey(4);
+        myLinkedList.display();
+    }
+}
+class PosWrongException1 extends RuntimeException {
+    public PosWrongException1() {
+    }
+
+    public PosWrongException1(String message) {
+        super(message);
+    }
+}
