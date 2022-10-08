@@ -1,0 +1,64 @@
+import java.util.ArrayList;
+
+/**
+ * @author 26568
+ * @date 2022-09-15 9:56
+ */
+public class ArrayListDemo {
+    public static void main(String[] args) {
+//        ArrayList<Student> arrayList = new ArrayList<>();
+//        arrayList.add(new Student("张三",18,19.9));
+//        arrayList.add(new Student("李四",20,11.9));
+//        arrayList.add(new Student("王五",17,20.9));
+//        Collections.sort(arrayList);
+//        for (Student s:arrayList) {
+//            System.out.println(s);
+//        }
+        String str1 = "welcome to bit";
+        String str2 = "come";
+        ArrayList<String> arrayList = func(str1,str2);
+        for (int i = 0; i < arrayList.size(); i++) {
+            System.out.print(arrayList.get(i));
+        }
+    }
+    public static ArrayList<String>  func(String str1,String str2) {
+        ArrayList<String> arrayList = new ArrayList<>();
+
+        for (int i = 0; i < str1.length();i++) {
+            if (!str2.contains(str1.charAt(i)+"")) {
+                arrayList.add(str1.charAt(i)+"");
+            }
+        }
+        return arrayList;
+
+    }
+}
+/**
+ * @author 26568
+ * @date 2022-09-15 9:39
+ */
+class Student implements Comparable<Student>{
+    private String name;
+    private int age;
+    private double score;
+
+    public Student(String name, int age, double score) {
+        this.name = name;
+        this.age = age;
+        this.score = score;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                ", score=" + score +
+                '}';
+    }
+
+    @Override
+    public int compareTo(Student o) {
+        return (int)(this.score - o.score);
+    }
+}
