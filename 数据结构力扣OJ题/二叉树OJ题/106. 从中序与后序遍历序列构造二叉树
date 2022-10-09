@@ -1,0 +1,46 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int postIndex = 0;
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        postIndex = postorder.length - 1;
+        return buildTreeChild(inorder,postorder,0,inorder.length - 1);
+    }
+    public TreeNode buildTreeChild(int[] inorder, int[] postorder,int inbegin,int inend) {
+        if (inbegin > inend) {
+            return null;
+        }
+        TreeNode root = new TreeNode(postorder[postIndex]);
+        int index = find(postorder[postIndex],inorder,inbegin,inend);
+         postIndex--;
+        if (index == -1) {
+            return null;
+        }
+        // 递归构建左子树和右子树
+        root.right = buildTreeChild(inorder,postorder, index+1,inend);
+        root.left = buildTreeChild(inorder,postorder,inbegin,index-1);
+        return root;
+    }
+      // 查找这个节点在中序遍历中的下标
+       public int find(int val,int[] inorder,int inbegin,int inend) {
+            for (int i = inbegin;i <= inend;i++) {
+                if (inorder[i] == val) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+}
