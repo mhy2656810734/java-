@@ -1,0 +1,42 @@
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
+/**
+ * @author 26568
+ * @date 2022-10-12 13:57
+ */
+class Person {
+    public int age;
+
+    public Person(int age) {
+        this.age = age;
+    }
+}
+class Intcmp implements Comparator<Integer> {
+    @Override
+    public int compare(Integer o1, Integer o2) {
+        return o2 - o1;
+    }
+}
+public class PriorityQueueText {
+    public static void main(String[] args) {
+      //  PriorityQueue<Person> priorityQueue = new PriorityQueue<>();
+        // 匿名内部类
+//        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(new Comparator<Integer>() {
+//            @Override
+//            public int compare(Integer o1, Integer o2) {
+//                return o2-o1;
+//            }
+//        });
+        // lammbda表达式
+//        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>((x,y)->{return x.compareTo(y);});
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>((x,y)->x.compareTo(y));
+        priorityQueue.offer(10);
+        priorityQueue.offer(5);
+
+//        System.out.println(priorityQueue);// 默认是建小堆
+//         priorityQueue.offer(new Person(10));
+//         priorityQueue.offer(new Person(45));
+
+    }
+}
