@@ -1,0 +1,113 @@
+import java.util.Arrays;
+
+/**
+ * 堆排序
+ * @author 26568
+ * @date 2022-10-09 16:48
+ */
+class Heap {
+    public int[] elem;// 数组
+    public int usedSize;// 有效数据的个数
+    public static final int DEFAULT_SIZE = 10;
+    public Heap(int[] array) {
+        this.elem = new int[DEFAULT_SIZE];
+        for (int i = 0; i < array.length;i++) {
+            this.elem[i] = array[i];
+            usedSize++;
+        }
+    }
+    // 创建大顶堆
+    public void createHeap() {
+        // 代表每次从哪个根节点开始
+        for (int parent = (this.usedSize-1-1)/2;parent >= 0;parent--) {
+            shiftDown(parent,this.usedSize);
+        }
+    }
+
+    /**
+     * 真正的向下调整方法
+     * @param parent 每次调整的根节点
+     * @param len    每棵子树调整的位置   < len
+     */
+    public void shiftDown(int parent,int len) {
+        int child = 2 * parent +1;// 左孩子节点
+        // 不越界才调整
+        while (child < len) {
+            // 拿到左右孩子节点中数据较大的那个下标
+            if (child + 1 < len && elem[child] < elem[child + 1]) {
+                child++;
+            }
+            // 如果孩子节点的值大于根节点的值就交换
+            if (elem[child] > elem[parent]) {
+                int temp = elem[child];
+                elem[child] = elem[parent];
+                elem[parent] = temp;
+                parent = child;
+                child = 2 * parent + 1;// 继续向下调整
+            } else {
+                // 如果不大于说明该树已经调整好了
+                break;
+            }
+        }
+    }
+    // 添加数据
+    public void offer(int val) {
+        // 首先需要判满
+        if (isFull()) {
+            this.elem = Arrays.copyOf(this.elem,2*this.elem.length);
+        }
+        // 然后放在最后usedSize位置
+        this.elem[usedSize] = val;
+        this.usedSize++;
+        // 然后开始向上调整
+        siftUp(usedSize - 1);
+    }
+    // 向上调整
+    public void siftUp(int child) {
+        int parent = (child  - 1) /2;
+        while (child > 0) {
+            if (this.elem[child] > this.elem[parent]) {
+                int temp = this.elem[child];
+                this.elem[child] = this.elem[parent];
+                this.elem[parent] = temp;
+                child = parent;
+                parent = (child - 1) /2;
+            } else {
+                break;
+            }
+        }
+    }
+    // 判满
+    public boolean isFull() {
+        return this.usedSize == this.elem.length;
+    }
+    // 删除堆顶数据
+    public int pop() {
+        // 判空
+        if (isEmpty()) {
+           return -1;
+        }
+        // 然后交换堆顶和最后一个数据
+        int temp = this.elem[0];
+        this.elem[0] = this.elem[usedSize - 1];
+        this.elem[usedSize - 1] = temp;
+        usedSize--;
+        // 从队头开始向下调整
+        shiftDown(0,usedSize);
+        return temp;
+    }
+    public boolean isEmpty() {
+        return this.usedSize == 0;
+    }
+}
+public class TextHeap {
+    public static void main(String[] args) {
+        int[] array = {27,15,19,18,28,34,65,49,25,37};
+        Heap heap = new Heap(array);
+        heap.createHeap();
+        //heap.offer(80);
+        System.out.println(heap.pop());
+        System.out.println(Arrays.toString(heap.elem));
+    }
+}
+
