@@ -1,10 +1,6 @@
 import java.util.Arrays;
 
-/**
- * 堆排序
- * @author 26568
- * @date 2022-10-09 16:48
- */
+
 class Heap {
     public int[] elem;// 数组
     public int usedSize;// 有效数据的个数
@@ -92,12 +88,26 @@ class Heap {
         this.elem[0] = this.elem[usedSize - 1];
         this.elem[usedSize - 1] = temp;
         usedSize--;
-        // 从队头开始向下调整
+        // 从堆头开始向下调整
         shiftDown(0,usedSize);
         return temp;
     }
     public boolean isEmpty() {
         return this.usedSize == 0;
+    }
+    // 堆排序
+    public void heapSort() {
+        int end = usedSize - 1;
+        while (end > 0) {
+            // 首先交换堆头和堆尾数据
+            int temp = elem[0];
+            elem[0] = elem[end];
+            elem[end] = temp;
+            // 然后继续调整成大根堆
+            shiftDown(0,end);
+            end--;
+
+        }
     }
 }
 public class TextHeap {
@@ -105,8 +115,9 @@ public class TextHeap {
         int[] array = {27,15,19,18,28,34,65,49,25,37};
         Heap heap = new Heap(array);
         heap.createHeap();
+ //       heap.heapSort();
         //heap.offer(80);
-        System.out.println(heap.pop());
+//        System.out.println(heap.pop());
         System.out.println(Arrays.toString(heap.elem));
     }
 }
