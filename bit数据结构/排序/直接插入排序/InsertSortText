@@ -1,0 +1,38 @@
+package sort;
+
+import java.util.Arrays;
+
+/**
+ * 直接插入排序
+ * 时间复杂度：O(n^2);等差数列求和： 1+2+3+……+（n-1）
+ * 空间复杂度:O(1)
+ * @author 26568
+ * @date 2022-10-13 13:45
+ */
+public class InsertSortText {
+    public static void main(String[] args) {
+        int[] arr = {1,5,8,6,10,12};
+        long start = System.currentTimeMillis();
+        insertSort(arr);
+        long end = System.currentTimeMillis();
+        System.out.println("耗时"+(end - start));
+        System.out.println(Arrays.toString(arr));
+    }
+    public static void insertSort(int[] arr) {
+        // 默认第一个是有序的
+        for (int i = 1; i < arr.length;i++) {
+            int temp = arr[i];// 保存当前下标数据
+            int j = i - 1;// 从前面下标开始
+            for (;j >= 0;j--) {
+                // 如果此时大于temp就将该数据放到j+1位置
+                if (arr[j] > temp) {
+                    arr[j+1] = arr[j];
+                } else {
+                    break;
+                }
+            }
+            // 此时将temp保存的数据放到j+1即可
+            arr[j+1] = temp;
+        }
+    }
+}
