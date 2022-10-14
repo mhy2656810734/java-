@@ -1,0 +1,80 @@
+package sort;
+
+import java.util.Arrays;
+import java.util.Random;
+
+/**
+ * 选择排序
+ * 时间复杂度：O（n^2） 与数据是否有序无关
+ * 空间复杂度:O(1)
+ * 稳定性：不稳定
+ * @author 26568
+ * @date 2022-10-14 14:54
+ */
+public class SelectSortText {
+    public static void main(String[] args) {
+        int[] arr = {5,9,10,7,3,2,0,20,14,31};
+        selectSort2(arr);
+        System.out.println(Arrays.toString(arr));
+        textSelectSort();
+    }
+    public static  void selectSort(int[] arr) {
+        for (int i = 0; i < arr.length;i++) {
+            int minIndex = i;
+            for (int j = i+1; j < arr.length;j++) {
+                if (arr[j] < arr[minIndex]) {
+                    minIndex = j;
+                }
+            }
+            // 交换
+            if (i != minIndex) {
+                int temp = arr[i];
+                arr[i] = arr[minIndex];
+                arr[minIndex] = temp;
+            }
+        }
+    }
+    public static void textSelectSort() {
+        int[] arr = new int[100000];
+        Random random = new Random();
+        for (int i = 0; i < arr.length;i++) {
+            arr[i] = random.nextInt();
+        }
+        long start = System.currentTimeMillis();
+        selectSort(arr);
+        long end = System.currentTimeMillis();
+        System.out.println("选择排序耗时"+(end - start));
+
+    }
+    public static  void selectSort2(int[] arr) {
+        int left = 0;
+        int right = arr.length-1;
+        while (left < right) {
+            int minIndex = left;
+            int maxIndex = left;
+            for (int j = left + 1; j <= right;j++) {
+                if (arr[j] > arr[maxIndex]) {
+                    maxIndex = j;
+                }
+                if (arr[j] < arr[minIndex]) {
+                    minIndex = j;
+                }
+            }
+            // 找到了最大与最小数据的下标
+            // 交换
+            swap(arr,left,minIndex);
+            // 如果left下标就是最大的数据
+            if (left == maxIndex) {
+                maxIndex = minIndex;
+            }
+            swap(arr,maxIndex,right);
+            left++;
+            right--;
+        }
+    }
+    public static  void swap(int[] arr,int i,int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+}
