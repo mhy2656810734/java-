@@ -1,0 +1,62 @@
+package sort;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Random;
+
+/**
+ * 快速排序
+ * 时间复杂度:O(N*longn)
+ * 空间复杂度:O（logn）
+ * 稳定性：不稳定
+ * @author 26568
+ * @date 2022-10-14 15:55
+ */
+public class QuickSort {
+    public static void main(String[] args) {
+        int[] arr = {5,9,10,7,3,2,0,20,14,31};
+        quickSort(arr,0,arr.length -1);
+        System.out.println(Arrays.toString(arr));
+        textQuickSort();
+    }
+    public  static void quickSort(int[]arr,int start,int end) {
+        if (start >= end) {
+            return;
+        }
+        int pivot = quick(arr,start,end);
+        quickSort(arr,start,pivot - 1);
+        quickSort(arr,pivot+1,end);
+    }
+    public static int quick(int[] arr,int left,int right) {
+        int i = left;
+        int pivot = arr[left];
+        while (left < right) {
+            // 从右往左找小
+            while (left < right && arr[right] >= pivot) {
+                right--;
+            }
+            while (left < right && arr[left] <= pivot) {
+                left++;
+            }
+            swap(arr,left,right);
+        }
+        swap(arr,left,i);
+        return left;
+    }
+    public static void swap(int[] arr, int i,int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+    public static void textQuickSort() {
+        int[] arr = new int[100000];
+        Random random = new Random();
+        for (int i = 0; i < arr.length;i++) {
+            arr[i] = random.nextInt();
+        }
+        long start = System.currentTimeMillis();
+        quickSort(arr,0, arr.length -1);
+        long end = System.currentTimeMillis();
+        System.out.println("快速排序耗时"+(end - start));
+    }
+}
