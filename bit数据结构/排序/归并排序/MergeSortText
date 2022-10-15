@@ -1,0 +1,84 @@
+package sort;
+
+import java.util.Arrays;
+
+/**
+ * 归并排序
+ * 时间复杂度:O(N*logn)
+ * 空间复杂度:O（n）
+ * 稳定性:稳定
+ * @author 26568
+ * @date 2022-10-15 17:13
+ */
+public class MergeSortText {
+    public static void main(String[] args) {
+        int[] arr = {5,9,10,7,3,2,0,20,14,31};
+        //mergeSort(arr);
+        noMergSort(arr);
+        System.out.println(Arrays.toString(arr));
+    }
+    public static void mergeSort(int[] arr) {
+        mergeSort(arr,0,arr.length -1);
+    }
+    public static  void mergeSort(int[] arr,int left,int right) {
+        if (left == right) {
+            return;
+        }
+        int mid = (left + right) / 2;
+        // 向左递归
+        mergeSort(arr,left,mid);
+        // 向右递归
+        mergeSort(arr,mid+1,right);
+        // 归并
+        merge(arr,left,mid,right);
+    }
+    // 归并方法
+    public static void merge(int[] arr,int left,int mid,int right) {
+         int s1 = left;
+         int e1 = mid;
+         int s2 = mid+1;
+         int e2 = right;
+         int[] temp = new int[right - left + 1];
+         int k = 0;// temp下标
+         while ((s1 <= e1) && (s2 <= e2)) {
+             // 然后比较小的先放
+             if (arr[s1] <= arr[s2]) {
+                 temp[k++] = arr[s1++];
+             } else {
+                 temp[k++] = arr[s2++];
+             }
+         }
+         // 如果有不为空的
+        while (s1 <= e1) {
+            temp[k++] = arr[s1++];
+        }
+        while (s2 <= e2) {
+            temp[k++] = arr[s2++];
+        }
+        // 然后将temp中的数据拷贝回原来的数组
+        for (int i = 0; i < k;i++) {
+            arr[i+left] = temp[i];
+        }
+    }
+    // 归并排序非递归实现
+    public static void noMergSort(int[] arr) {
+        int gap = 1;
+        while (gap < arr.length) {
+            for (int i = 0;i < arr.length;i += gap*2) {
+                int left = i;
+                int mid = left + gap - 1;
+                int right = mid+gap;
+                // 判断mid和right是否越界
+                if (mid >= arr.length) {
+                    mid = arr.length - 1;
+                }
+                if (right >= arr.length) {
+                    right = arr.length - 1;
+                }
+                // 开始合并
+                merge(arr,left,mid,right);
+            }
+            gap *= 2;
+        }
+    }
+}
