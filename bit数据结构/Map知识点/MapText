@@ -1,0 +1,34 @@
+import sort.SelectSortText;
+
+import java.util.*;
+
+/**
+ * Map的相关知识点
+ * map是一个接口不能实例化，只能TreeMap或者HashMap
+ * map中存放的key是唯一的，value可以重复
+ * map中的key不能修改，只能删除再重新添加
+ * @author 26568
+ * @date 2022-10-18 16:17
+ */
+public class TextMap {
+    public static void main(String[] args) {
+        Map<String,Integer> map = new TreeMap<>();
+        // K必须可以比较，否则会报错
+        map.put("hello",2);
+        map.put("world",4);
+        Integer s = map.get("hello");
+        System.out.println(s);
+        System.out.println("取出key值进行组织，通过Set");
+        Set<String> set = map.keySet();
+        System.out.println(set);
+        Integer v = map.getOrDefault("hello2",100);// 如果map中有hello2，则返回value 没有就返回设置的100
+        System.out.println(v);
+        Collection<Integer> collections = map.values();
+        System.out.println(collections);
+        // 对于map的遍历使用entrySet
+        Set<Map.Entry<String,Integer>> entrySet = map.entrySet();
+        for (Map.Entry<String,Integer> entry:entrySet ) {
+            System.out.println("key:"+entry.getKey()+" "+"val:"+entry.getValue());
+        }
+    }
+}
