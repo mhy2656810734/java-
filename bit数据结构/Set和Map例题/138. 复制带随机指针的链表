@@ -1,0 +1,38 @@
+/*
+// Definition for a Node.
+class Node {
+    int val;
+    Node next;
+    Node random;
+
+    public Node(int val) {
+        this.val = val;
+        this.next = null;
+        this.random = null;
+    }
+}
+*/
+
+class Solution {
+    // 核心思路：创建一个HashMap，遍历链表，然后每次将旧结点和新结点加入map，
+    //          再遍历一遍map，将新结点构建成新链表
+    public Node copyRandomList(Node head) {
+        HashMap<Node,Node> map = new HashMap<>();
+        Node cur = head;
+        // 第一次遍历加入map中
+        while (cur != null) {
+            Node node = new Node(cur.val);
+            map.put(cur,node);
+            cur = cur.next;
+        }
+        cur = head;
+        // 第二次遍历开始链接新链表
+        while (cur != null) {
+            map.get(cur).next = map.get(cur.next);
+            map.get(cur).random = map.get(cur.random);
+            cur = cur.next;
+        }
+        // head对应的value值就是构建后的新头节点
+        return map.get(head);
+    }
+}
