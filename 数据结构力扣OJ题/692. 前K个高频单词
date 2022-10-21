@@ -1,0 +1,56 @@
+class Solution {
+      public List<String> topKFrequent(String[] words, int k) {
+        HashMap<String,Integer> map = new HashMap<>();
+        // 1.遍历字符串数组，统计出现了多少次
+        for (String word:words) {
+            if (map.get(word) == null) {
+                map.put(word,1);
+            } else {
+                int value = map.get(word);
+                map.put(word,value+1);
+            }
+        }
+        // 2.通过优先级队列，（通过出现频率value）创建小根堆,如果出现频率相同，根据key值创建大堆
+        PriorityQueue<Map.Entry<String,Integer>> priorityQueue = new PriorityQueue<>(k, new Comparator<Map.Entry<String, Integer>>() {
+            @Override
+            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                // 判断频率相等时，根据key值建大堆
+                if (o1.getValue().compareTo(o2.getValue()) == 0) {
+                    return o2.getKey().compareTo(o1.getKey());
+                }
+                // 比较频率，根据频率建小堆
+                return o1.getValue().compareTo(o2.getValue());
+            }
+        });
+        // 遍历map，先将k个数据加入堆，然后将比堆顶出现频率大的加入
+        for (Map.Entry<String,Integer> entry : map.entrySet()) {
+            if (priorityQueue.size() < k) {
+                priorityQueue.offer(entry);
+            } else {
+                // 查看堆顶的数据比较频率,将出现频率多的加入堆
+                Map.Entry<String,Integer> top = priorityQueue.peek();
+                if (top.getValue().compareTo(entry.getValue()) < 0) {
+                    priorityQueue.poll();
+                    priorityQueue.offer(entry);
+                } else {
+                    // 判断频率是否相同，然后将key值小的加入
+                    if (top.getValue().compareTo(entry.getValue()) == 0) {
+                        if (entry.getKey().compareTo(top.getKey()) < 0) {
+                            priorityQueue.poll();
+                            priorityQueue.offer(entry);
+                        }
+                    }
+                }
+            }
+        }
+        // 3.弹出堆中的数据放入集合
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < k;i++) {
+            Map.Entry<String,Integer> top = priorityQueue.poll();
+            String str = top.getKey();
+            list.add(str);
+        }
+        Collections.reverse(list);
+        return list;
+    }
+}
