@@ -1,0 +1,80 @@
+import java.util.Objects;
+
+/**
+ * @author 26568
+ * @date 2022-10-21 15:38
+ */
+class Person1 {
+    public String id;
+
+    public Person1(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person1 person1 = (Person1) o;
+        return Objects.equals(id, person1.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+}
+public class HashBuck <K,V>{
+    static class Node<K,V> {
+        public K key;
+        public V value;
+        public Node<K,V> next;
+
+        public Node(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+    public int usedSize;
+    public Node<K,V> [] array = (Node<K, V>[]) new Node[10];
+    public void put(K key,V value) {
+        Node<K,V> node = new Node<>(key,value);
+        // 根据hashCode确定位置
+        int hash = key.hashCode();
+        int index = hash % array.length;
+        Node<K,V> cur = array[index];
+        while (cur != null) {
+            if (cur.key.equals(key)) {
+                cur.key = key;
+                return;
+            }
+            cur = cur.next;
+        }
+        node.next = array[index];
+        array[index] = node;
+        usedSize++;
+
+    }
+    public V get(K key) {
+        int hash = key.hashCode();
+        int index = hash % array.length;
+        Node<K,V> cur = array[index];
+        while (cur != null) {
+            if (cur.key.equals(key)) {
+                return  cur.value;
+            }
+            cur = cur.next;
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        Person1 person1 = new Person1("123");
+        Person1 person2 = new Person1("123");
+        System.out.println(person1.hashCode());
+        System.out.println(person2.hashCode());
+        HashBuck<Person1,Integer> hashBuck = new HashBuck<>();
+        hashBuck.put(person1,10);
+        System.out.println(hashBuck.get(person2));
+    }
+}
