@@ -1,0 +1,72 @@
+/**
+ *用单链表实现队列
+ * @author 26568
+ * @date 2022-09-24 15:28
+ */
+public class MyQueue {
+    static class ListNode {
+        public int val;
+        public ListNode next;
+        public ListNode(int val) {
+            this.val = val;
+        }
+    }
+    public ListNode head;// 队头
+    public ListNode tail;// 队尾
+    public int usedSize;//记录有效数据个数
+    // 入队列
+    public void offer(int val) {
+        ListNode node = new ListNode(val);
+        // 先判断是不是队列为空
+        if (this.head == null) {
+            this.head = node;
+            this.tail = node;
+        } else {
+            // 不为空就取尾插法插入数据
+            this.tail.next = node;
+            this.tail = node;
+        }
+        usedSize++;
+    }
+    // 出队列
+    public int poll() {
+        if (isEmpty()) {
+            System.out.println("队列为空");
+            return - 1;
+        }
+        int index = this.head.val;
+        this.head = this.head.next;
+        // 判断是否只有一个节点
+        if (this.head == null) {
+            this.tail = null;
+        }
+        usedSize--;
+        return index;
+    }
+    // 判断队列是否为空
+    public boolean isEmpty() {
+        return usedSize == 0;
+    }
+    // 查看队头数据
+    public int peek() {
+        if (isEmpty()) {
+            return -1;
+        }
+        return this.head.val;
+    }
+    // 得到有效数据个数
+    public int size() {
+        return usedSize;
+    }
+
+    public static void main(String[] args) {
+        MyQueue myQueue = new MyQueue();
+        myQueue.offer(1);
+        myQueue.offer(2);
+        myQueue.offer(3);
+        myQueue.offer(4);
+        System.out.println(myQueue.size());
+        System.out.println(myQueue.poll());
+        System.out.println(myQueue.peek());
+    }
+}
