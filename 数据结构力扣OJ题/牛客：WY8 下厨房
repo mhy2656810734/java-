@@ -1,0 +1,19 @@
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        HashSet<String> set = new HashSet<>();
+        while (scanner.hasNextLine()) {
+            String str = scanner.nextLine();
+            String[] strArray = func(str);
+            for (String st : strArray) {
+                set.add(st);
+            }
+        }
+        System.out.println(set.size());
+    }
+    private static String[] func(String str) {
+        String[] arr = str.split(" ");
+        return arr;
+    }
+}
