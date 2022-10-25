@@ -1,0 +1,23 @@
+import java.util.Scanner;
+
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int ret = in.nextInt();
+        int f1 = 0;
+        int f2 = 1;
+        int f3 = 0;
+        while (f3 < ret) {
+            f3 = f1+f2;
+            if (f3 >= ret) {
+                break;
+            }
+            f1 = f2;
+            f2 = f3;
+        }
+        // 此时比较大小
+        int count = Math.abs(ret-f2)<Math.abs(f3-ret)?Math.abs(ret-f2):Math.abs(f3-ret);
+        System.out.println(count);
+    }
+}
