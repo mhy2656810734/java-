@@ -1,0 +1,143 @@
+
+
+import sun.reflect.generics.tree.Tree;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.Stack;
+
+
+public class Exercise {
+    public static void main(String[] args) {
+        int[] arr = {5, 9, 10, 7, 3, 2, 0, 20, 14, 31};
+        noQuickSort(arr);
+        System.out.println(Arrays.toString(arr));
+    }
+    public static void textInsertSort() {
+        int[] arr = new int[100000];
+        Random random = new Random();
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = random.nextInt();
+        }
+        long start = System.currentTimeMillis();
+        quickSort(arr);
+        long end = System.currentTimeMillis();
+        System.out.println("插入排序时间复杂度:"+(end -start));
+    }
+    // 快速排序时间复杂度：O（n^logN） 空间复杂度：0（logN） 不稳定
+    public static void quickSort(int[] arr) {
+        quickSort(arr,0,arr.length-1);
+    }
+    public static void quickSort(int[] arr,int left,int right) {
+        if (left >= right){
+            return;
+        }
+        int mid = midIndex(arr,left,right);
+        swap(arr,left,mid);
+        int pivot = quick3(arr,left,right);
+        quickSort(arr,left,pivot -1);
+        quickSort(arr,pivot+1,right);
+    }
+    // 1.hero法
+    public static int quick(int[] arr,int left,int right) {
+        int i = left;
+        int pivot = arr[left];
+        while (left < right) {
+            // 右到左找小
+            while ((left < right) && (arr[right] >=pivot)) {
+                right--;
+            }
+            // 左到右找大
+            while ((left < right) &&(arr[left] <= pivot)) {
+                left++;
+            }
+            swap(arr,left,right);
+        }
+        swap(arr,i,left);
+        return left;
+    }
+    // 2.挖坑法
+    public static int quick2(int[] arr,int left,int right) {
+        int pivot = arr[left];
+        while (left < right) {
+            while ((left < right) && (arr[right] >= pivot)) {
+                right--;
+            }
+            arr[left] = arr[right];
+            while (left < right && arr[left] < pivot) {
+                left++;
+            }
+            arr[right] = arr[left];
+        }
+        arr[left] = pivot;
+        return left;
+    }
+    // 3.前后指针法
+    public static int quick3(int[] arr,int left,int right) {
+        int prev = left;
+        int cur = left+1;
+        while (cur <= right) {
+            if ((arr[cur] < arr[left])&&(arr[cur] != arr[++prev])) {
+                swap(arr,cur,prev);
+            }
+            cur++;
+        }
+        swap(arr,prev,left);
+        return prev;
+    }
+    // 三数取中法
+    public static int midIndex(int[]arr,int left,int right) {
+        int mid = (left + right)>>1;
+        if (arr[left] < arr[right]) {
+            if (arr[mid] < arr[left]) {
+                return left;
+            } else if (arr[mid] > arr[right]) {
+                return right;
+            } else {
+                return  mid;
+            }
+        } else {
+            if (arr[mid] > arr[left]) {
+                return left;
+            } else if (arr[mid] < arr[right]) {
+                return right;
+            } else {
+                return mid;
+            }
+        }
+    }
+    public static void swap(int[] arr, int i,int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+    // 非递归实现
+    public static void noQuickSort(int[] arr) {
+        int left = 0;
+        int right = arr.length-1;
+        Stack<Integer> stack = new Stack<>();
+        int pivot = quick(arr,left,right);
+        if (left < pivot -1) {
+            stack.push(left);
+            stack.push(pivot-1);
+        }
+        if (right > pivot+1) {
+            stack.push(pivot+1);
+            stack.push(right);
+        }
+        while (!stack.isEmpty()) {
+            right = stack.pop();
+            left = stack.pop();
+            pivot = quick(arr,left,right);
+            if (left < pivot -1) {
+                stack.push(left);
+                stack.push(pivot-1);
+            }
+            if (right > pivot+1) {
+                stack.push(pivot+1);
+                stack.push(right);
+            }
+        }
+    }
+}
