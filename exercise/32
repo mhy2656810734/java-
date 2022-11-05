@@ -1,0 +1,39 @@
+/**
+public class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+
+    public TreeNode(int val) {
+        this.val = val;
+
+    }
+
+}
+*/
+public class Solution {
+    public TreeNode prev;
+    public TreeNode Convert(TreeNode pRootOfTree) {
+        if (pRootOfTree == null) {
+            return null;
+        }
+        createTreee(pRootOfTree);
+        while (pRootOfTree.left != null) {
+            pRootOfTree = pRootOfTree.left;
+        }
+        return pRootOfTree;
+    }
+    public void createTreee(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        createTreee(root.left);
+        // 此时root.left为空
+        root.left = prev;
+        if (prev != null) {
+            prev.right = root;
+        }
+        prev = root;
+        createTreee(root.right);
+    }
+}
