@@ -1,0 +1,91 @@
+/**
+ * 循环队列
+ * @author 26568
+ * @date 2022-09-24 15:43
+ */
+public class MyCircleQueue {
+    private int[] elem;
+    private int front;// 队头
+    private int rear;// 队尾
+    public MyCircleQueue(int k) {
+        elem = new int[k];
+    }
+    // 插入数据
+    public void push(int value) {
+        // 先判满
+        if (isFull()) {
+            System.out.println("队列已满");
+            return;
+        }
+        // 没满就放数据
+        elem[rear] = value;
+        rear = (rear+1)%elem.length;
+    }
+    // 删除队头元素
+    public void pop() {
+        if (isEmpty()) {
+            System.out.println("队列为空");
+            return;
+        }
+        front = (front+1)%elem.length;
+    }
+    // 队头数据
+    public int getFront() {
+        if (isEmpty()) {
+            return -1;
+        }
+        return elem[front];
+    }
+    // 队尾数据
+    public int getRear() {
+        if (isEmpty()) {
+            return -1;
+        }
+        // 要注意rear的位置
+        int index = rear == 0? elem.length-1:rear-1;
+        return elem[index];
+    }
+
+    public boolean isEmpty() {
+        return rear == front;
+    }
+    // 判满
+    public boolean isFull() {
+        if ((rear + 1) % elem.length == front) {
+            return true;
+        }
+        return false;
+    }
+    // 得到有效数据的个数
+    public int size() {
+        return (this.rear - this.front + elem.length) % elem.length;
+    }
+    // 打印队列中的数据
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("队列为空");
+            return;
+        }
+        // 从队头下标开始打印 总共打印 size个数据
+        for (int i = this.front;i < this.front+size();i++) {
+            System.out.print(this.elem[i % elem.length]+" ");// 避免越界
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        MyCircleQueue myCircleQueue = new MyCircleQueue(3);
+        myCircleQueue.push(1);
+        myCircleQueue.push(2);
+        myCircleQueue.push(3);
+        myCircleQueue.display();
+        System.out.println(myCircleQueue.getFront());
+        System.out.println(myCircleQueue.getRear());
+        myCircleQueue.pop();
+        myCircleQueue.display();
+        System.out.println("=========");
+        System.out.println(myCircleQueue.size());
+        myCircleQueue.push(5);
+        myCircleQueue.display();
+    }
+}
