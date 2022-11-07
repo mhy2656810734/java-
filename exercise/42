@@ -1,0 +1,62 @@
+
+
+import sun.reflect.generics.tree.Tree;
+
+import java.lang.reflect.Array;
+class MyStack1 {
+    static class Node {
+        public int val;
+        public Node next;
+
+        public Node(int val) {
+            this.val = val;
+        }
+    }
+    public Node head;
+    public int usedSize;
+    public void push(int val) {
+        Node node = new Node(val);
+        if (this.head == null) {
+            this.head = node;
+        } else {
+            node.next = this.head;
+            this.head = node;
+        }
+        usedSize++;
+    }
+    public int pop() {
+        if (empty()) {
+            System.out.println("栈为空");
+            return -1;
+        }
+        int index = this.head.val;
+        this.head = this.head.next;
+        usedSize--;
+        return index;
+    }
+    public boolean empty() {
+        return this.usedSize == 0;
+    }
+    public int peek() {
+        if (empty()) {
+            System.out.println("栈为空");
+            return -1;
+        }
+        return this.head.val;
+    }
+    public int size() {
+        return this.usedSize;
+    }
+}
+public class Exercise {
+    public static void main(String[] args) {
+       MyStack1 myStack = new MyStack1();
+        myStack.push(1);
+        myStack.push(2);
+        myStack.push(3);
+        myStack.push(4);
+        System.out.println(myStack.size());
+        System.out.println(myStack.pop());
+        System.out.println(myStack.peek());
+    }
+}
