@@ -1,0 +1,67 @@
+
+
+import sun.reflect.generics.tree.Tree;
+
+import java.lang.reflect.Array;
+class MyQueue1 {
+    static class Node {
+        public int val;
+        public Node next;
+
+        public Node(int val) {
+            this.val = val;
+        }
+    }
+    public Node head;
+    public Node tail;
+    public int usedSize;
+    public void offer(int val) {
+        Node node = new Node(val);
+        if (this.head == null) {
+            this.head = node;
+            this.tail = node;
+        } else  {
+            this.tail.next = node;
+            this.tail = node;
+        }
+        usedSize++;
+    }
+    public int poll() {
+        if (isEmpty()) {
+            System.out.println("队列为空");
+            return -1;
+        }
+        int index = this.head.val;
+        this.head = this.head.next;
+        if (this.head == null) {
+            this.tail = null;
+        }
+        usedSize--;
+        return index;
+    }
+    public boolean isEmpty() {
+        return usedSize == 0;
+    }
+    public int peek() {
+        if (isEmpty()) {
+            System.out.println("队列为空");
+            return -1;
+        }
+        return this.head.val;
+    }
+    public int size() {
+        return this.usedSize;
+    }
+}
+public class Exercise {
+    public static void main(String[] args) {
+        MyQueue1 myQueue = new MyQueue1();
+        myQueue.offer(1);
+        myQueue.offer(2);
+        myQueue.offer(3);
+        myQueue.offer(4);
+        System.out.println(myQueue.size());
+        System.out.println(myQueue.poll());
+        System.out.println(myQueue.peek());
+    }
+}
