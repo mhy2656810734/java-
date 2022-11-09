@@ -1,0 +1,38 @@
+class Solution {
+    public int evalRPN(String[] tokens) {
+        // 数字全部入栈，遇到括号弹出数据，然后将计算结果入栈，最后栈内的数据就是最后计算结果
+        Stack<Integer> stack = new Stack<>();
+        for (String ret : tokens) {
+            // 判断是不是字符
+            if (!isOperation(ret)) {
+                // 说明是数字
+                stack.push(Integer.parseInt(ret));
+            } else {
+                // 说明是字符 注意弹出顺序
+                int num2 = stack.pop();
+                int num1 = stack.pop();
+                switch(ret) {
+                    case "+":
+                    stack.push(num1+num2);
+                    break;
+                    case "-":
+                    stack.push(num1-num2);
+                    break;
+                    case "*":
+                    stack.push(num1*num2);
+                    break;
+                    case "/":
+                    stack.push(num1/num2);
+                    break;
+                }
+            }
+        }
+        return stack.pop();
+    }
+    private boolean isOperation(String str) {
+        if (str.equals("+") || str.equals("-") || str.equals("*") || str.equals("/")) {
+            return true;
+        }
+        return false;
+    }
+}
