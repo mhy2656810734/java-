@@ -1,0 +1,100 @@
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
+/**
+ * @author 26568
+ * @date 2022-10-15 9:31
+ */
+class Heap1 {
+    public int[] elem;
+    public int usedSize;
+
+    public Heap1(int[] elem) {
+        this.elem = new int[10];
+        for (int i = 0; i < this.elem.length;i++) {
+            this.elem[i] = elem[i];
+            usedSize++;
+        }
+    }
+    // 创建一个堆
+    public void createHeap() {
+        for (int parent = (this.usedSize -1 -1)/ 2;parent >= 0;parent--) {
+            // 向下调整
+            siftDown(parent,this.usedSize);
+        }
+    }
+    public void siftDown(int parent,int len) {
+        int child = 2*parent+1;
+        while (child < len) {
+            if (child + 1 < len && this.elem[child] < this.elem[child+1]) {
+                child++;
+            }
+            if (this.elem[child] > this.elem[parent]) {
+                int temp = elem[child];
+                elem[child] = elem[parent];
+                elem[parent] = temp;
+                parent = child;
+                child = 2 *parent +1;
+            }  else {
+                break;
+            }
+        }
+    }
+    public void offer(int val) {
+        if (isFull()) {
+            this.elem = Arrays.copyOf(this.elem,2*this.elem.length);
+        }
+        this.elem[usedSize] = val;
+        this.usedSize++;
+        // 向上调整
+        shiftUp(this.usedSize -1);
+    }
+    // 向上调整
+    public void shiftUp(int child) {
+        int parent = (child - 1) / 2;
+        while (child > 0) {
+            if (this.elem[child] > this.elem[parent]) {
+                int temp = elem[child];
+                elem[child] = elem[parent];
+                elem[parent] = temp;
+                child = parent;
+                parent = (child -1)/2;
+            } else {
+                break;
+            }
+        }
+    }
+    // 判满
+    public boolean isFull() {
+        return this.usedSize == this.elem.length;
+    }
+    // 删除堆顶元素
+    public void pop() {
+        // 判空
+        if (isEmpty()) {
+            return;
+        }
+        int end = usedSize-1;
+        int temp = elem[0];
+        elem[0] = elem[end];
+        elem[end] = temp;
+        // 从0位置开始向下调整
+        end--;
+        siftDown(0,end);
+    }
+    public boolean isEmpty() {
+        return this.usedSize == 0;
+    }
+}
+public class Exercise {
+    public static void main(String[] args) {
+        int[] array = {27,15,19,18,28,34,65,49,25,37};
+        Heap1 heap1 = new Heap1(array);
+        heap1.createHeap();
+        System.out.println(Arrays.toString(heap1.elem));
+        heap1.offer(80);
+        System.out.println(Arrays.toString(heap1.elem));
+        heap1.pop();
+        System.out.println(Arrays.toString(heap1.elem));
+    }
+}
