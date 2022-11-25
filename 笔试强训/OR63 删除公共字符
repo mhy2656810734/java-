@@ -1,0 +1,27 @@
+import java.util.*;
+
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Main {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        String str1 = scan.nextLine();
+        String str2 = scan.nextLine();
+        HashMap<Character,Integer> map = new HashMap<>();
+        StringBuilder string = new StringBuilder();
+        for (int i = 0; i < str2.length();i++) {
+            // 如果map中没有就添加,有就+1
+            if (map.get(str2.charAt(i)) == null) {
+                map.put(str2.charAt(i),1);
+            } else {
+                  map.put(str2.charAt(i),map.get(str2.charAt(i))+1);
+            }
+        }
+        // 遍历字符串1将不存在的添加到string里面
+        for (int i = 0; i < str1.length();i++) {
+            if (map.get(str1.charAt(i)) == null) {
+                string.append(str1.charAt(i));
+            }
+        }
+        System.out.println(string.toString());
+    }
+}
