@@ -1,0 +1,23 @@
+import java.util.Scanner;
+
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        String str1 = in.nextLine();
+        String str2 = in.nextLine();
+        int count = 0;
+        for (int i = 0; i <= str1.length();i++) {
+            StringBuilder str = new StringBuilder(str1);
+            // 然后将str2插入到str的每个位置
+            str.insert(i,str2);
+            // 插入以后就需要判断是不是回文串了
+            StringBuilder temp = new StringBuilder(str);
+            str.reverse();
+            if (temp.toString().equals(str.toString())) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}
