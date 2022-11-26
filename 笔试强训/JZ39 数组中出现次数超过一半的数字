@@ -1,20 +1,56 @@
 import java.util.*;
 public class Solution {
     public int MoreThanHalfNum_Solution(int [] array) {
-        HashMap<Integer,Integer> map = new HashMap<>();
-        for (int i = 0; i <array.length;i++) {
-            if (map.get(array[i]) == null) {
-                // 第一次出现
-                map.put(array[i],1);
+        if (array == null || array.length == 0) {
+            return 0;
+        }
+        // 解法一:
+        // HashMap<Integer,Integer> map = new HashMap<>();
+        // for (int i = 0; i <array.length;i++) {
+        //     if (map.get(array[i]) == null) {
+        //         // 第一次出现
+        //         map.put(array[i],1);
+        //     } else {
+        //         map.put(array[i],1+map.get(array[i]));
+        //     }
+        // }
+        // for (Map.Entry<Integer,Integer> entry:map.entrySet()) {
+        //     if (entry.getValue() > array.length/2) {
+        //         return entry.getKey();
+        //     }
+        // }
+        // return -1;
+        // 解法二:
+        // Arrays.sort(array);
+        // return array[array.length/2];
+        // 解法三:众数消去非众数
+        int time = 1;// 默认一个数字出现一次
+        int result = array[0];
+        for (int i = 1; i < array.length;i++) {
+            // 此时通过判断time来分情况讨论
+            if (time != 0) {
+                // 此时判断当前数组下标的值和result中的值是否相等
+                if (array[i] != result) {
+                    time--;
+                } else {
+                    time++;
+                }
             } else {
-                map.put(array[i],1+map.get(array[i]));
+                // 更新result 和 time
+                result = array[i];
+                time = 1;
             }
         }
-        for (Map.Entry<Integer,Integer> entry:map.entrySet()) {
-            if (entry.getValue() > array.length/2) {
-                return entry.getKey();
+        // 此时遍历数组,看看result中存放的数字长度是否超过数组长度一半
+        time = 0;
+        for (int i = 0; i < array.length;i++) {
+            if (array[i] == result) {
+                time++;
             }
         }
-        return -1;
+        if (time > array.length/2) {
+            return result;
+        }
+        return 0;
     }
 }
