@@ -1,0 +1,21 @@
+import java.util.*;
+
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+            int a = in.nextInt();
+            int b = in.nextInt();
+            int c = in.nextInt();
+            int d = in.nextInt();
+            int x = (a+c)/2;
+            int y1 = (c - a)/2;
+            int y2 = (b+d)/2;
+            int z = (d-b)/2;
+            if (y1 == y2) {
+                System.out.print(x+" "+y1+" "+z);
+            } else {
+                System.out.print("No");
+            }
+    }
+}
