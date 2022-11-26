@@ -1,0 +1,29 @@
+import java.util.Scanner;
+
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        String str = in.next();
+        String ret = "";
+        String cur = "";
+        for (int i = 0; i <str.length();i++) {
+            char ch = str.charAt(i);
+            if (ch >= '0' && ch <= '9') {
+                ret = ret+ch+"";
+            } else {
+                // 不是数字,此时判断与cur的长度
+                if (cur.length() < ret.length()) {
+                    cur = ret;
+                    ret = "";
+                } else {
+                    ret = "";
+                }
+            }
+        }
+        if (cur.length() < ret.length()) {
+            cur = ret;
+        }
+        System.out.println(cur);
+    }
+}
