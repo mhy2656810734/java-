@@ -1,0 +1,30 @@
+import java.util.*;
+
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        // 注意 hasNext 和 hasNextLine 的区别
+        int count = 0;// 统计蛋糕块
+        // 通过平方根所得 [i][j] 放蛋糕则[i+2][j]和[i][j+2]位置不能放蛋糕
+        int w = in.nextInt();
+        int h = in.nextInt();
+        int[][] arr = new int[w][h];
+        for (int i = 0; i < w;i++) {
+            for (int j = 0; j < h;j++) {
+                if (arr[i][j] == 0) {
+                    // 说明可以放蛋糕.但是要把[i+2][j]和[i][j+2]位置设置为1不能放蛋糕
+                    count++;
+                      if (i+2 < w) {
+                    arr[i+2][j] = 1;
+                }
+                if (j+2 < h) {
+                    arr[i][j+2] = 1;
+                }
+                }
+              
+            }
+        }
+        System.out.println(count);
+    }
+}
