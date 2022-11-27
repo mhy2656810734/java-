@@ -1,0 +1,31 @@
+import java.util.*;
+public class Solution {
+    public int StrToInt(String str) {
+        // 字符串转换成数组
+        char[] arr = str.toCharArray();
+        if (arr == null || arr.length == 0) {
+            return 0;
+        }
+        // 判断是不是正数或者负数
+        int flag = 1;
+        if (arr[0] == '-') {
+            flag = -1;
+            // 设置成字符0 参与运算无影响
+            arr[0] = '0';
+        } else if (arr[0] == '+') {
+            flag = 1;
+            arr[0] = '0';
+        }
+        // 开始遍历字符数字求和
+        int sum = 0;
+        for (int i = 0; i < arr.length;i++) {
+            char ch = arr[i];
+            if (ch < '0' || ch > '9') {
+                sum = 0;
+                break;
+            }
+            sum = sum*10+arr[i]-'0';
+        }
+        return flag*sum;
+    }
+}
