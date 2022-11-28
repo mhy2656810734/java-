@@ -1,0 +1,59 @@
+import java.util.*;
+
+public class Parenthesis {
+    public boolean chkParenthesis(String A, int n) {
+         if (n % 2 == 1) {
+            return false;
+        }
+//        // 方法一:使用栈
+//        Stack<Character> stack = new Stack<>();
+//        for (int i = 0; i < n;i++) {
+//            char ch = A.charAt(i);
+//            if (ch == '('){
+//                stack.push(ch);
+//            } else if (ch == ')'){
+//                // 先出现右括号,则为空
+//                if (stack.isEmpty()){
+//                    return false;
+//                }
+//                stack.pop();
+//            } else {
+//                return false;
+//            }
+//        }
+//        // 最后如果栈空为true 不空 则false
+//        return stack.isEmpty();
+        // 方法二:使用HashMap
+        HashMap<Character,Integer> map = new HashMap<>();
+        for (int i = 0; i < n;i++) {
+            char ch = A.charAt(i);
+//            if (ch == '('){
+//                if (map.get(ch) == null) {
+//                    map.put(ch,1);
+//                } else {
+//                    map.put(ch,map.get(ch)+11);
+//                }
+//            } else if (ch == ')'){
+//                if (map.get(ch) == null) {
+//                    map.put(ch,1);
+//                } else {
+//                    map.put(ch,map.get(ch)+11);
+//                }
+//            } else {
+//                return false;
+//            }
+            if (ch != '(' && ch !=')') {
+                return false;
+            }
+            if (map.get(ch) == null) {
+                map.put(ch,1);
+            } else {
+                map.put(ch,map.get(ch)+1);
+            }
+        }
+        // 比较左右括号出现的次数即可
+        int x = map.get('(');
+        int y = map.get(')');
+        return x == y;
+    }
+}
