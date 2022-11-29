@@ -69,6 +69,8 @@ public class HashBuck <K,V>{
     }
 
     public static void main(String[] args) {
+    // 理论上这是一个人,因为身份证号相同,但是自定义类型,如果不重写hashCode,当加入哈希表时,由于hashCode值不同,都会放进去
+    // 所以说 自定义类型 一定要重写hashCode
         Person1 person1 = new Person1("123");
         Person1 person2 = new Person1("123");
         System.out.println(person1.hashCode());
