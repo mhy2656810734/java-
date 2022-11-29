@@ -1,0 +1,153 @@
+import java.util.*;
+
+
+/**
+ * 继承Thread,重写run
+ * @author 26568
+ * @date 2022-11-23 15:21
+ */
+class BinarySearchTree2 {
+    static class Node{
+        public int val;
+        public Node left;
+        public Node right;
+        public Node(int val) {
+            this.val = val;
+        }
+    }
+    public Node root = null;
+    // 中序遍历
+    public void inorder(Node root) {
+        if (root == null) {
+            return;
+        }
+        // 向左递归
+        inorder(root.left);
+        System.out.print(root.val+" ");
+        inorder(root.right);
+    }
+    // 查找val值
+    public Node search(int val) {
+        Node cur = this.root;
+        while (cur != null) {
+            if (cur.val < val) {
+                cur = cur.right;
+            } else if (cur.val > val) {
+                cur = cur.left;
+            } else {
+                return cur;
+            }
+        }
+        return null;
+    }
+    // 添加节点
+    public boolean insert (int val) {
+        Node node = new Node(val);
+        if (this.root == null) {
+            this.root = node;
+            return true;
+        }
+        // 此时开始判断 每次需要记录上一次的节点
+        Node cur = this.root;
+        Node prev = null;
+        while (cur != null) {
+            if (cur.val < val) {
+                prev = cur;
+                cur = cur.right;
+            } else if (cur.val > val) {
+                prev = cur;
+                cur = cur.left;
+            } else {
+                // 说明二叉搜索树中有与该值大小相等的结点
+                System.out.println("插入失败,已经有该值节点");
+                return false;
+            }
+        }
+        // 此时循环结束以后 cur 已经为空了,此时需要判断要插入到prev的左孩子节点还是右孩子结点
+        if (val < prev.val) {
+            prev.left = node;
+        } else {
+            prev.right = node;
+        }
+        return true;
+    }
+    // 删除节点
+    public void remove(int key) {
+        if (this.root == null) {
+            System.out.println("二叉排序树为空");
+            return;
+        }
+        Node parent = null;
+        Node cur = root;
+        while (cur != null) {
+            if (cur.val < key) {
+                parent = cur;
+                cur = cur.right;
+            } else if (cur.val > key) {
+                parent = cur;
+                cur = cur.left;
+            } else {
+                // 此时开始删除这个节点
+                removeNode(parent,cur);
+                return;
+            }
+        }
+        // 说明一直没找到这个节点
+        System.out.println("没有要删除的节点");
+    }
+    public void removeNode(Node parent,Node cur) {
+        // 此时cur就是要删除的节点
+        // 首先 根据 cur的左右子树是否为空开始删除
+        if (cur.left == null) {
+            // 先判断cur是不是根节点
+            if (cur == this.root) {
+                this.root = this.root.right;
+                // cur 如果是parent的左子树
+            } else if (cur == parent.left) {
+                parent.left = cur.right;
+            } else {
+                parent.right = cur.right;
+            }
+        } else if (cur.right == null) {
+            if (cur == this.root) {
+                this.root = this.root.left;
+            } else if (cur == parent.left) {
+                parent.left = cur.left;
+            } else {
+                parent.right = cur.left;
+            }
+        } else {
+            // 此时说明cur的左右子树都不为空
+            // 删除方法:替罪羊删除法   要交换的那个节点值是cur的左子树的最大值 或者 cur的右子树的最小值
+            // 这里选择 cur的右子树的最小值
+            Node target = cur.right;
+            Node targetParent = cur;
+            while (target.left != null) {
+                targetParent = target;
+                target = target.left;
+            }
+            // 此时target.val就是cur的右子树的最小值
+            // 修改cur的值
+            cur.val = target.val;
+            if (target == targetParent.right) {
+                // 这种情况说明了,cur的右孩子节点没有左子树
+                targetParent.right = target.right;
+            } else {
+                // 这种情况说明,target是tatgetParent的左孩子节点
+                targetParent.left = target.right;
+            }
+        }
+    }
+}
+public class Exercise {
+    public static void main(String[] args) {
+        int[] arr = {5,3,4,1,7,8,2,6,0,9};
+        BinarySearchTree2 binarySearchTree = new BinarySearchTree2();
+        for (int i = 0; i < arr.length; i++) {
+            binarySearchTree.insert(arr[i]);
+        }
+        binarySearchTree.inorder(binarySearchTree.root);
+        binarySearchTree.remove(7);
+        binarySearchTree.inorder(binarySearchTree.root);
+    }
+}
