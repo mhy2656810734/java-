@@ -1,0 +1,55 @@
+import java.util.*;
+
+/*
+public class ListNode {
+    int val;
+    ListNode next = null;
+
+    ListNode(int val) {
+        this.val = val;
+    }
+}*/
+public class PalindromeList {
+    public boolean chkPalindrome(ListNode A) {
+// write code here
+        // 1.找到中间节点
+        // 2.从中间节点开始翻转
+        // 3.判断是不是回文链表
+        ListNode fast = A;
+        ListNode slow = A;
+        if (A == null) {
+            return false;
+        }
+        // 只有一个结点的情况下
+        if (A.next == null) {
+            return true;
+        }
+        while ((fast != null) && (fast.next != null)) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        // 此时从slow开始翻转
+        ListNode prev = slow;
+        ListNode cur = slow.next;
+        while (cur != null) {
+            ListNode curNext = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = curNext;
+        }
+        // 此时开始判断即可
+
+        while (A != prev) {
+            if (A.val != prev.val) {
+                return false;
+            }
+            if (A.next == prev) {
+                return true;
+            }
+            A = A.next;
+            prev = prev.next;
+        }
+        return true;
+
+    }
+}
