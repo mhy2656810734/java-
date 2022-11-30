@@ -1,0 +1,54 @@
+/**
+ * @author 26568
+ * @date 2022-09-29 16:20
+ */
+import java.util.Scanner;
+class TreeNode{
+    public char val;
+    public TreeNode left; // 左孩子节点
+    public TreeNode right;// 右孩子节点
+
+    public TreeNode(char val) {
+        this.val = val;
+    }
+}
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        // 注意 hasNext 和 hasNextLine 的区别
+        while (in.hasNextLine()) { // 注意 while 处理多个 case
+            String str = in.nextLine();
+            TreeNode root = createTree(str);
+            inOrder(root);
+        }
+    }
+    // 中序遍历
+    public static void inOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        inOrder(root.left);
+        System.out.print(root.val + " ");
+        inOrder(root.right);
+    }
+    private static int i = 0;// 用来指向字符串中的字符
+    // 创建二叉树
+    private static TreeNode createTree(String str) {
+        TreeNode root = null;
+        // 判断此时i下标的字符是不是 #
+        if (str.charAt(i) != '#') {
+            // 此时创建节点
+            root = new TreeNode(str.charAt(i));
+            i++;
+            // 开始递归创建左子树和右子树
+            root.left = createTree(str);
+            root.right = createTree(str);
+        } else {
+            // 是 # 就直接跳过
+            i++;
+        }
+        return root;
+    }
+
+}
