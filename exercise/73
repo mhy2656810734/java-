@@ -1,0 +1,55 @@
+import java.util.*;
+
+/*
+public class ListNode {
+    int val;
+    ListNode next = null;
+
+    ListNode(int val) {
+        this.val = val;
+    }
+}*/
+public class Partition {
+    public ListNode partition(ListNode pHead, int x) {
+        // write code here
+        if (pHead == null) {
+            return null;
+        }
+        //创建两个链表
+        ListNode s1 = null;
+        ListNode s2 = null;
+        ListNode end1 = null;
+        ListNode end2 = null;
+        while (pHead != null) {
+            if (pHead.val < x) {
+                if (s1 == null) {
+                    s1 = pHead;
+                    end1  = s1;
+                } else {
+                    end1.next = pHead;
+                    end1 = pHead;
+                }
+            } else {
+                if (s2 == null) {
+                    s2 = pHead;
+                    end2  = s2;
+                } else {
+                    end2.next = pHead;
+                    end2 = pHead;
+                }
+            }
+            pHead = pHead.next;
+        }
+
+        if (s1 == null) {
+            return s2;
+        }
+        if (s2 == null) {
+            return s1;
+        }
+        // 开始链接这两个链表
+        end2.next = null;
+        end1.next = s2;
+        return s1;
+    }
+}
