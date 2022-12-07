@@ -1,0 +1,150 @@
+import java.io.OutputStream;
+import java.lang.reflect.Array;
+import java.util.*;
+
+
+/**
+ * 继承Thread,重写run
+ * @author 26568
+ * @date 2022-11-23 15:21
+ */
+
+public class Exercise {
+    public static void main(String[] args) {
+        int[] arr = {5,9,10,7,3,2,0,20,14,31};
+//        bubbleSort(arr);
+//        System.out.println(Arrays.toString(arr));
+//        textBubbleSort();
+//        heapSort(arr);
+//        System.out.println(Arrays.toString(arr));
+//        textHeapSort();
+        insertSort(arr);
+        System.out.println(Arrays.toString(arr));
+        textInsertSort();
+    }
+    // 冒泡排序
+    // 时间复杂度: O(N^2)  空间复杂度 O(1)  稳定
+    public static void bubbleSort(int[] arr) {
+        // 趟数
+        for (int i = 0; i < arr.length-1; i++) {
+            boolean flag = true;// 判断是否发生交换
+            // 对数
+            for (int j = 0; j < arr.length - 1 -i; j++) {
+                if (arr[j] > arr[j+1]) {
+                    int temp = arr[j];
+                    arr[j] = arr[j+1];
+                    arr[j+1] = temp;
+                    flag = false;
+                }
+            }
+            if (flag == true) {
+                break;
+            }
+        }
+    }
+    public static void textBubbleSort() {
+        int[] arr = new int[100000];
+        Random random = new Random();
+        for (int i = 0; i < 100000; i++) {
+            arr[i] = random.nextInt();
+        }
+        long begin = System.currentTimeMillis();
+        bubbleSort(arr);
+        long end = System.currentTimeMillis();
+        System.out.println("冒泡排序耗时:"+(end - begin));
+    }
+    // 堆排序
+    // 时间复杂度:O(N*logN)     空间复杂度:O(1)     不稳定
+    public static void heapSort(int[] arr) {
+        // 第一步创建堆
+        createBigHeap(arr);
+        // 然后开始交换堆顶和堆尾
+        int end = arr.length-1;
+        while (end > 0) {
+            int temp = arr[0];
+            arr[0] = arr[end];
+            arr[end] = temp;
+            // 然后调整成大根堆
+            shiftDown(arr,0,end);
+            end--;
+        }
+    }
+    // 建堆
+    public static void createBigHeap(int[] arr) {
+        // 从最后一个非叶子节点开始向下调整
+        for (int parent = ((arr.length - 1 -1)/2); parent >= 0 ; parent--) {
+            // 向下调整
+            shiftDown(arr,parent,arr.length);
+        }
+    }
+    public static void shiftDown(int[] arr,int parent,int len) {
+        int child = 2*(parent) +1;
+        while (child < len) {
+            // 拿到孩子节点中较大的值
+            if (child+1 < len && arr[child] < arr[child+1]) {
+                child++;
+            }
+            if (arr[child] > arr[parent]) {
+                // 孩子节点值比父节点值大就交换
+                int temp = arr[child];
+                arr[child] = arr[parent];
+                arr[parent] = temp;
+                parent = child;
+                child = 2*(parent)+1;
+            } else {
+                // 说明这个节点已经调整好了
+                break;
+            }
+        }
+    }
+    public static void textHeapSort() {
+        int[] arr = new int[100000];
+        Random random = new Random();
+        for (int i = 0; i < 100000; i++) {
+            arr[i] = random.nextInt();
+        }
+        long begin = System.currentTimeMillis();
+        heapSort(arr);
+        long end = System.currentTimeMillis();
+        System.out.println("堆排序耗时"+(end - begin));
+    }
+    // 插入排序
+    // 时间复杂度   空间复杂度    稳定
+    public static void insertSort(int[] arr) {
+        // 将第一个当做有序的
+        for (int i = 1; i < arr.length-1; i++) {
+            int j = i - 1;
+            int temp = arr[i];
+            for(;j >= 0;j--) {
+                if (arr[j] > temp) {
+                    arr[j+1] = arr[j];
+                } else {
+                    break;
+                }
+            }
+            // 此时,将temp放在j+1 的位置 因为 j的位置比temp小或者等于
+            arr[j+1] = temp;
+        }
+    }
+    // 直接插入排序
+    // 时间复杂度:O(N^2)  空间复杂度:O(1) 稳定
+    public static void textInsertSort( ) {
+        int[] arr = new int[100000];
+        Random random = new Random();
+        for (int i = 0; i < 100000; i++) {
+            arr[i] = random.nextInt();
+        }
+        long begin = System.currentTimeMillis();
+        insertSort(arr);
+        long end = System.currentTimeMillis();
+        System.out.println("直接插入排序耗时"+(end - begin));
+    }
+    // 归并排序
+    // 时间复杂度O(N*logN)     空间复杂度O(N)   稳定
+    public static void mergeSort(int[] arr) {
+        mergeSort(arr,0,arr.length-1);
+    }
+    public static void mergeSort(int[] arr,int left,int right) {
+
+    }
+}
