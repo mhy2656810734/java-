@@ -1,0 +1,361 @@
+import java.io.OutputStream;
+import java.lang.reflect.Array;
+import java.util.*;
+
+
+/**
+ * 继承Thread,重写run
+ * @author 26568
+ * @date 2022-11-23 15:21
+ */
+
+public class Exercise {
+    public static void main(String[] args) {
+        int[] arr = {5,9,10,7,3,2,0,20,14,31};
+//        bubbleSort(arr);
+//        System.out.println(Arrays.toString(arr));
+//        textBubbleSort();
+//        heapSort(arr);
+//        System.out.println(Arrays.toString(arr));
+//        textHeapSort();
+//        insertSort(arr);
+//        System.out.println(Arrays.toString(arr));
+//        textInsertSort();
+//        noMergeSort(arr);
+//        System.out.println(Arrays.toString(arr));
+//        textMergeSort();
+        noQuickSort(arr);
+        System.out.println(Arrays.toString(arr));
+       // textQuickSort();
+    }
+    // 冒泡排序
+    // 时间复杂度: O(N^2)  空间复杂度 O(1)  稳定
+    public static void bubbleSort(int[] arr) {
+        // 趟数
+        for (int i = 0; i < arr.length-1; i++) {
+            boolean flag = true;// 判断是否发生交换
+            // 对数
+            for (int j = 0; j < arr.length - 1 -i; j++) {
+                if (arr[j] > arr[j+1]) {
+                    int temp = arr[j];
+                    arr[j] = arr[j+1];
+                    arr[j+1] = temp;
+                    flag = false;
+                }
+            }
+            if (flag == true) {
+                break;
+            }
+        }
+    }
+    public static void textBubbleSort() {
+        int[] arr = new int[100000];
+        Random random = new Random();
+        for (int i = 0; i < 100000; i++) {
+            arr[i] = random.nextInt();
+        }
+        long begin = System.currentTimeMillis();
+        bubbleSort(arr);
+        long end = System.currentTimeMillis();
+        System.out.println("冒泡排序耗时:"+(end - begin));
+    }
+    // 堆排序
+    // 时间复杂度:O(N*logN)     空间复杂度:O(1)     不稳定
+    public static void heapSort(int[] arr) {
+        // 第一步创建堆
+        createBigHeap(arr);
+        // 然后开始交换堆顶和堆尾
+        int end = arr.length-1;
+        while (end > 0) {
+            int temp = arr[0];
+            arr[0] = arr[end];
+            arr[end] = temp;
+            // 然后调整成大根堆
+            shiftDown(arr,0,end);
+            end--;
+        }
+    }
+    // 建堆
+    public static void createBigHeap(int[] arr) {
+        // 从最后一个非叶子节点开始向下调整
+        for (int parent = ((arr.length - 1 -1)/2); parent >= 0 ; parent--) {
+            // 向下调整
+            shiftDown(arr,parent,arr.length);
+        }
+    }
+    public static void shiftDown(int[] arr,int parent,int len) {
+        int child = 2*(parent) +1;
+        while (child < len) {
+            // 拿到孩子节点中较大的值
+            if (child+1 < len && arr[child] < arr[child+1]) {
+                child++;
+            }
+            if (arr[child] > arr[parent]) {
+                // 孩子节点值比父节点值大就交换
+                int temp = arr[child];
+                arr[child] = arr[parent];
+                arr[parent] = temp;
+                parent = child;
+                child = 2*(parent)+1;
+            } else {
+                // 说明这个节点已经调整好了
+                break;
+            }
+        }
+    }
+    public static void textHeapSort() {
+        int[] arr = new int[100000];
+        Random random = new Random();
+        for (int i = 0; i < 100000; i++) {
+            arr[i] = random.nextInt();
+        }
+        long begin = System.currentTimeMillis();
+        heapSort(arr);
+        long end = System.currentTimeMillis();
+        System.out.println("堆排序耗时"+(end - begin));
+    }
+    // 插入排序
+    // 时间复杂度   空间复杂度    稳定
+    public static void insertSort(int[] arr) {
+        // 将第一个当做有序的
+        for (int i = 1; i < arr.length-1; i++) {
+            int j = i - 1;
+            int temp = arr[i];
+            for(;j >= 0;j--) {
+                if (arr[j] > temp) {
+                    arr[j+1] = arr[j];
+                } else {
+                    break;
+                }
+            }
+            // 此时,将temp放在j+1 的位置 因为 j的位置比temp小或者等于
+            arr[j+1] = temp;
+        }
+    }
+    // 直接插入排序
+    // 时间复杂度:O(N^2)  空间复杂度:O(1) 稳定
+    public static void textInsertSort( ) {
+        int[] arr = new int[100000];
+        Random random = new Random();
+        for (int i = 0; i < 100000; i++) {
+            arr[i] = random.nextInt();
+        }
+        long begin = System.currentTimeMillis();
+        insertSort(arr);
+        long end = System.currentTimeMillis();
+        System.out.println("直接插入排序耗时"+(end - begin));
+    }
+    // 归并排序
+    // 时间复杂度O(N*logN)     空间复杂度O(N)   稳定
+    public static void mergeSort(int[] arr) {
+        mergeSort(arr,0,arr.length-1);
+    }
+    public static void mergeSort(int[] arr,int left,int right) {
+        if (left == right) {
+            return;
+        }
+        int mid = (left + right) /2;
+        mergeSort(arr,left,mid);
+        mergeSort(arr,mid+1,right);
+        // 归到最后了 此时开始合并两个数组
+        merge(arr,left,mid,right);
+    }
+    public static void merge(int[] arr,int left, int mid,int right){
+        int s1 = left;
+        int e1 = mid;
+        int s2 = mid+1;
+        int e2 = right;
+        int[] temp = new int[right-left+1];
+        int k = 0;
+        while ((s1 <= e1) && (s2 <= e2)) {
+            if (arr[s1] <= arr[s2] ) {
+                temp[k++] = arr[s1++];
+            } else {
+                temp[k++] = arr[s2++];
+            }
+        }
+        // 如果有不为空的,需要继续拼接
+        while (s1 <= e1) {
+            temp[k++] = arr[s1++];
+        }
+        while (s2 <= e2) {
+            temp[k++] = arr[s2++];
+        }
+        // 拷贝回原数组
+        for (int i = 0; i < temp.length; i++) {
+            arr[i+left] = temp[i];
+        }
+    }
+    public static void textMergeSort() {
+        int[] arr = new int[100000];
+        Random random = new Random();
+        for (int i = 0; i < 100000; i++) {
+            arr[i] = random.nextInt();
+        }
+        long begin = System.currentTimeMillis();
+        mergeSort(arr);
+        long end = System.currentTimeMillis();
+        System.out.println("归并排序时间耗时"+(end - begin));
+    }
+    // 非递归实现
+    public static void noMergeSort(int[] arr) {
+        int gap = 1;
+        while (gap < arr.length) {
+            for (int i = 0; i < arr.length; i += 2*gap) {
+                int left = i;
+                int mid = left + gap -1;
+                int right = mid+gap;
+                // 判断mid 和 right是否越界
+                if (mid >= arr.length-1) {
+                    mid = arr.length-1;
+                }
+                if (right >= arr.length) {
+                    right = arr.length-1;
+                }
+                // 合并数组
+                merge(arr,left,mid,right);
+            }
+            gap *= 2;
+        }
+    }
+    // 快速排序
+    // 时间复杂度:O(N*logN)     空间复杂度O(logN)    不稳定
+    public static void quickSort(int[] arr) {
+        quickSort(arr,0,arr.length-1);
+    }
+    // 三数取中
+    public static int findMid(int[] arr,int left,int right) {
+        int mid = (left + right)>>1;
+        // 如果左比右大
+        if (arr[left] < arr[right]) {
+            if (arr[mid] < arr[left]) {
+                return left;
+            } else if (arr[mid] > arr[right]) {
+                return right;
+            } else {
+                return mid;
+            }
+        } else {
+            if (arr[mid] < arr[right]) {
+                return right;
+            } else if (arr[left] < arr[mid]) {
+                return left;
+            } else {
+                return mid;
+            }
+        }
+    }
+    public static void quickSort(int[] arr,int left,int right) {
+        if (left >= right) {
+            return;
+        }
+        // 三数取中
+        int index = findMid(arr,left,right);
+//        // 然后交换第一个和中间这个数据
+        swap(arr,index,left);
+        int pivot = quick3(arr,left,right);
+        quickSort(arr,left,pivot);
+        quickSort(arr,pivot+1,right);
+    }
+    // hero 法
+    public static int quick(int[] arr,int left,int right) {
+        int i = left;
+        int pivot = arr[left];
+        while (left < right) {
+            // 从右往左找小
+            while ((left < right) &&(arr[right] >= pivot)) {
+                right--;
+            }
+            // 从左往右找大
+            while ((left < right) &&(arr[left] <= pivot)) {
+                left++;
+            }
+            // 交换
+            swap(arr,left,right);
+        }
+        // 最后再将保存的i 下标 和相遇点交换
+        swap(arr,i,left);
+        return left;
+    }
+    // 挖坑法
+    public static int quick2(int[] arr,int left, int right) {
+        int pivot = arr[left];
+        int i = left;
+        while (left < right) {
+            while ((left < right) && (arr[right] >= pivot)) {
+                right--;
+            }
+            // 将找到的大的放在left坑位
+            arr[left] = arr[right];
+            while ((left < right) && (arr[left] <= pivot)) {
+                left++;
+            }
+            arr[right] = arr[left];
+        }
+        // 最后将原来的数据放在当前坑位
+        arr[left] = pivot;
+        return left;
+    }
+    public static void swap(int[] arr,int i,int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+    public static void textQuickSort() {
+        int[] arr = new int[100000000];
+        Random random = new Random();
+        for (int i = 0; i < 100000000; i++) {
+            arr[i] = random.nextInt();
+        }
+        long begin = System.currentTimeMillis();
+        quickSort(arr);
+        long end = System.currentTimeMillis();
+        System.out.println("快速排序耗时"+(end - begin));
+    }
+    // 3.前后指针法
+    public static int quick3(int[] arr,int left,int right) {
+        int prev = left;
+        int cur = left+1;
+        while (cur <= right) {
+            if (arr[cur] < arr[left] && (arr[++prev] != arr[cur])) {
+                swap(arr,prev,cur);
+            }
+            cur++;
+        }
+        swap(arr,prev,left);
+        return prev;
+    }
+    // 非递归实现
+    public static void noQuickSort(int[] arr) {
+        Stack<Integer> stack = new Stack<>();
+        int left = 0;
+        int right = arr.length-1;
+        int pivot = quick(arr,left,right);
+        // 判断左边是否只有一个元素,一个就不用加入栈
+        if (left < pivot -1) {
+            stack.push(left);
+            stack.push(pivot);
+        }
+        // 判断右边是否只有一个元素,一个就不用加入栈
+        if (pivot < right -1) {
+            stack.push(pivot+1);
+            stack.push(right);
+        }
+        // 取出栈中数据重新赋值
+        while (!stack.isEmpty()) {
+            right = stack.pop();
+            left = stack.pop();
+            pivot = quick(arr,left,right);
+            // 判断左边是否只有一个元素,一个就不用加入栈
+            if (left < pivot -1) {
+                stack.push(left);
+                stack.push(pivot);
+            }
+            // 判断右边是否只有一个元素,一个就不用加入栈
+            if (pivot < right -1) {
+                stack.push(pivot+1);
+                stack.push(right);
+            }
+        }
+    }
+}
