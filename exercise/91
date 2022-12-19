@@ -1,0 +1,146 @@
+import sort.SelectSortText;
+
+import java.util.*;
+
+/**
+ * Map的相关知识点
+ * map是一个接口不能实例化，只能TreeMap或者HashMap
+ * map中存放的key是唯一的，value可以重复
+ * map中的key不能修改，只能删除再重新添加
+ * @author 26568
+ * @date 2022-10-18 16:17
+ */
+class BinarySearchTree1 {
+    static class TreeNode {
+        public int val;
+        public TreeNode left;
+        public TreeNode right;
+
+        public TreeNode(int val) {
+            this.val = val;
+        }
+    }
+    public TreeNode root = null;
+    // 查找
+    public TreeNode search(int val) {
+        TreeNode cur = root;
+        while (cur != null) {
+            if (cur.val < val) {
+                cur = cur.right;
+            } else if (cur.val > val) {
+                cur = cur.left;
+            } else {
+                return cur;
+            }
+        }
+        return  null;
+    }
+    public void inOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        inOrder(root.left);
+        System.out.print(root.val+" ");
+        inOrder(root.right);
+    }
+    // 添加节点
+    public boolean insert(int key) {
+        if (root == null) {
+            root = new TreeNode(key);
+            return true;
+        }
+        TreeNode parent = null;
+        TreeNode cur = root;
+        while (cur != null) {
+            if (cur.val < key) {
+                parent = cur;
+                cur = cur.right;
+            } else  if (cur.val > key) {
+                parent = cur;
+                cur = cur.left;
+            } else {
+                return false;
+            }
+        }
+        // 判断插入要parent左右
+        TreeNode node = new TreeNode(key);
+        if (parent.val < key) {
+            parent.right= node;
+        } else {
+            parent.left = node;
+        }
+        return true;
+    }
+    // 删除节点
+    public void remove(int key) {
+        TreeNode cur = root;
+        TreeNode parent = null;
+        while (cur != null) {
+            if (cur.val == key) {
+                removeNode(parent,cur);
+            } else if (cur.val < key) {
+                parent = cur;
+                cur = cur.right;
+            } else {
+                parent = cur;
+                cur = cur.left;
+            }
+        }
+    }
+    public void removeNode(TreeNode parent,TreeNode cur) {
+        // 根据左右子树是否为空，分三种情况
+        if (cur.left == null) {
+            // 判断是不是根节点
+            if (cur == root) {
+                root = cur.right;
+            } else {
+                // 判断cur是parent的哪个节点
+                if (cur == parent.left) {
+                    parent.left = cur.right;
+                } else {
+                    parent.right = cur.right;
+                }
+            }
+        } else if (cur.right == null) {
+            // 判断是不是根节点
+            if (cur == root) {
+                root = cur.left;
+            } else {
+                // 判断cur是parent的哪个节点
+                if (cur == parent.left) {
+                    parent.left = cur.left;
+                } else {
+                    parent.right = cur.left;
+                }
+            }
+        } else {
+            // 说明左右都不为空，此时删除有两种，左子树找最大值，右子树找最小值
+            TreeNode targetParent = cur;
+            TreeNode target = cur.right;
+            while (target.left != null) {
+                targetParent = target;
+                target = target.left;
+            }
+            // 先修改cur的值
+            cur.val = target.val;
+            // 需要判断是不是只有一个节点
+            if (target == targetParent.left) {
+                targetParent.left = target.right;
+            } else {
+                targetParent.right = target.right;
+            }
+        }
+    }
+}
+public class TextMap {
+    public static void main(String[] args) {
+        int[] arr = {5,3,4,1,7,8,2,6,0,9};
+        BinarySearchTree1 binarySearchTree = new BinarySearchTree1();
+        for (int i = 0; i < arr.length; i++) {
+            binarySearchTree.insert(arr[i]);
+        }
+        binarySearchTree.inOrder(binarySearchTree.root);
+        binarySearchTree.remove(7);
+        binarySearchTree.inOrder(binarySearchTree.root);
+        }
+}
