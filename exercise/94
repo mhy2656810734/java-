@@ -1,0 +1,97 @@
+import java.util.*;
+
+
+/**
+ * 继承Thread,重写run
+ * @author 26568
+ * @date 2022-11-23 15:21
+ */
+class HashTable {
+    static class Node {
+        public int Key;
+        public int Value;
+        public Node next;
+        public Node (int key,int value) {
+            this.Key = key;
+            this.Value = value;
+        }
+    }
+    public int usedSize;
+    public Node[] array;
+    public HashTable() {
+        this.array = new Node[8];
+    }
+    // 放入数据
+    public void put(int key,int value) {
+        Node node = new Node(key,value);
+        // 除留余数法:对key进行操作
+        int index = key % this.array.length;
+        Node cur = this.array[index];
+        // 此时先判断在  this.array[index] 这条链表中的key值节点是否重复,如果重复就替换掉
+        while (cur != null) {
+            if (cur.Key == key) {
+                cur.Value = value;
+                return;
+            }
+            cur = cur.next;
+        }
+        // 然后采用头插法将该节点插入到  this.array[index] 这条链表头
+        node.next = this.array[index];
+        this.array[index] = node;
+        usedSize++;
+        // 此时需要判断是否达到哈希表的默认负载因子值,达到的话就需要扩容
+        if (loadFacter() > 0.75f) {
+            resize();
+        }
+    }
+    public float loadFacter() {
+        return this.usedSize *1.0f / this.array.length;
+    }
+    // 扩容
+    public void resize() {
+        // 扩两倍
+        Node[] newArray = new Node[this.array.length * 2];
+        // 此时需要将array原来每个下标的链表都重新放到新的数组中
+        for (int i = 0; i < this.array.length; i++) {
+            // 首先拿到原来下标的链表
+            Node cur = this.array[i];
+            while (cur != null) {
+                // 保存下一个节点
+                Node curNext = cur.next;
+                // 通过除留余数法定位到新的链表数组中
+                int newIndex = cur.Key % newArray.length;
+                // 然后采用头插法
+                cur.next = newArray[newIndex];
+                newArray[newIndex] = cur;
+                cur = curNext;
+            }
+            array = newArray;
+        }
+    }
+    // 查找K值
+    public int get(int key) {
+        // 先找到数组下标的那个链表
+        int index = key % this.array.length;
+        Node cur = this.array[index];
+        while (cur != null) {
+            if (cur.Key == key) {
+                return cur.Value;
+            }
+            cur = cur.next;
+        }
+        return -1;
+    }
+}
+public class Exercise {
+    public static void main(String[] args) {
+        HashTable hashMap = new HashTable();
+        hashMap.put(1,11);
+        hashMap.put(9,11);
+        hashMap.put(3,11);
+        hashMap.put(8,11);
+        hashMap.put(10,11);
+        hashMap.put(13,11);
+        hashMap.put(16,11);
+        System.out.println(hashMap.get(11));
+    }
+}
