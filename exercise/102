@@ -1,0 +1,202 @@
+
+
+import sun.reflect.generics.tree.Tree;
+
+import java.lang.reflect.Array;
+import java.util.*;
+
+class BinaryTree {
+    static class TreeNode {
+        public char val;
+        public TreeNode left;
+        public TreeNode right;
+
+        public TreeNode(char val) {
+            this.val = val;
+        }
+    }
+    // 创建二叉树
+    public TreeNode createTree() {
+        TreeNode A = new TreeNode('A');
+        TreeNode B = new TreeNode('B');
+        TreeNode C = new TreeNode('C');
+        TreeNode D = new TreeNode('D');
+        TreeNode E = new TreeNode('E');
+        TreeNode F = new TreeNode('F');
+        TreeNode G = new TreeNode('G');
+        TreeNode H = new TreeNode('H');
+        A.left = B;
+        A.right = C;
+        B.left = D;
+        B.right = E;
+        C.left = F;
+        C.right = G;
+        E.right = H;
+        return A;
+    }
+    // 前序遍历
+    public void preOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        System.out.print(root.val+" ");
+        preOrder(root.left);
+        preOrder(root.right);
+    }
+    // 中序遍历
+    public void inOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        inOrder(root.left);
+        System.out.print(root.val+" ");
+        inOrder(root.right);
+    }
+    // 后序遍历
+    public void postOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        postOrder(root.left);
+        postOrder(root.right);
+        System.out.print(root.val+" ");
+    }
+    // 1.遍历查询节点个数
+    public static int nodeSize = 0;
+    public int size(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        nodeSize++;
+        size(root.left);
+        size(root.right);
+        return nodeSize;
+    }
+    // 2.子问题查询结点个数
+    public int size2(TreeNode  root) {
+        if (root == null) {
+            return 0;
+        }
+        int leftNode = size2(root.left);
+        int rightNode = size2(root.right);
+        return leftNode+rightNode+1;
+    }
+    // 求叶子节点的个数
+    // 1.递归查找
+    public static int leafNodeCount = 0;
+    public void getLeafNodeCount(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        if ((root.left == null) && (root.right == null)) {
+            leafNodeCount++;
+        }
+        getLeafNodeCount(root.left);
+        getLeafNodeCount(root.right);
+    }
+    // 2.子问题查找
+    public int getLeafNodeCount2(TreeNode root) {
+        if  (root == null) {
+            return 0;
+        }
+        if (root.left == null && root.right == null) {
+            return 1;
+        }
+        return getLeafNodeCount2(root.left) + getLeafNodeCount2(root.right);
+    }
+    // 获取根节点的第k层节点的个数
+    // 实际就是根节点的左子树的k-1层 + 右子树的k-1层
+    public int getKLevelNodeCount(TreeNode root, int k) {
+        if (root == null || k == 0) {
+            return 0;
+        }
+        if (k == 1) {
+            return 1;
+        }
+        return getKLevelNodeCount(root.left,k-1) + getKLevelNodeCount(root.right,k-1);
+    }
+    // 求二叉树的高度
+    public int height(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int leftHeight = height(root.left);
+        int rightHeight = height(root.right);
+        return leftHeight > rightHeight ? leftHeight+1:rightHeight+1;
+    }
+    // 在二叉树中查找value值的数据
+    public TreeNode search(TreeNode root,char value) {
+        if (root == null) {
+            return null;
+        }
+        if (root.val == value) {
+            return root;
+        }
+        TreeNode ret1 = search(root.left,value);
+        if (ret1 != null) {
+            return ret1;
+        }
+        TreeNode ret2 = search(root.right,value);
+        if (ret2 != null) {
+            return ret2;
+        }
+        return null;
+    }
+    // 层序遍历
+    public void levelOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            TreeNode cur = queue.poll();
+            System.out.print(cur.val+" ");
+            if (cur.left != null) {
+                queue.offer(cur.left);
+            }
+            if (cur.right != null) {
+                queue.offer(cur.right);
+            }
+        }
+    }
+    // 判断是不是完全二叉树
+    public boolean isCompleteTree(TreeNode root) {
+        if (root == null) {
+            return false;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            TreeNode cur = queue.poll();
+            if (cur != null) {
+                queue.offer(cur.left);
+                queue.offer(cur.right);
+            } else {
+                break;
+            }
+        }
+        while (!queue.isEmpty()) {
+            TreeNode cur = queue.poll();
+            if (cur != null) {
+                return false;
+            }
+        }
+        return true;
+    }
+ }
+public class Exercise {
+    public static void main(String[] args) {
+        BinaryTree binaryTree = new BinaryTree();
+        BinaryTree.TreeNode root = binaryTree.createTree();
+        System.out.println(binaryTree.size2(root));
+        binaryTree.getLeafNodeCount(root);
+        System.out.println(BinaryTree.leafNodeCount);
+        System.out.println(binaryTree.getLeafNodeCount2(root));
+        System.out.println(binaryTree.getKLevelNodeCount(root,3));
+        System.out.println("二叉树的高度"+binaryTree.height(root));
+        binaryTree.levelOrder(root);
+        System.out.println();
+        System.out.println(binaryTree.isCompleteTree(root));
+    }
+}
