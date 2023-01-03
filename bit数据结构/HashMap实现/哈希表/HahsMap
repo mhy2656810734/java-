@@ -30,7 +30,7 @@ class HashMap1 {
         // 如果有相同的值先替换
         while (cur != null) {
             if (cur.key == key) {
-                cur.key = key;
+                cur.val = val;
                 return;
             }
             cur = cur.next;
