@@ -45,7 +45,7 @@ public class HashBuck <K,V>{
         Node<K,V> cur = array[index];
         while (cur != null) {
             if (cur.key.equals(key)) {
-                cur.key = key;
+                cur.value = value;
                 return;
             }
             cur = cur.next;
