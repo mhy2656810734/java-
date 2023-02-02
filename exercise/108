@@ -1,0 +1,75 @@
+
+
+import sun.reflect.generics.tree.Tree;
+
+import java.lang.reflect.Array;
+import java.util.*;
+class HashMap2<K,V> {
+    static class Node<K,V> {
+        public K key;
+        public V value;
+        public Node<K,V> next;
+
+        public Node(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+    public Node<K,V>[] array =(Node<K, V>[]) new Node[8];
+    public int usedSize;
+    // 放入数据
+    public void put(K key,V value) {
+        int hash = key.hashCode();
+        int index = hash % array.length;
+        Node<K,V> cur = array[index];
+        while (cur != null) {
+            if (cur.key == key) {
+                cur.value = value;
+                return;
+            }
+            cur = cur.next;
+        }
+        // 开始放入数据
+        Node<K,V> node = new Node<>(key, value);
+        node.next = array[index];
+        array[index] = node;
+        usedSize++;
+    }
+    // 负载因子
+    public float loadFactor() {
+        return this.usedSize*1.0f/this.array.length;
+    }
+    public void reverSize() {
+        Node[] newArray = new Node[2*array.length];
+        // 遍历原来所有数据加入新数组
+        for (int i = 0; i < array.length;i++) {
+            Node cur = array[i];
+            while (cur != null) {
+                Node curNext = cur.next;
+                int newIndex = cur.Key % newArray.length;
+                cur.next = newArray[newIndex];
+                newArray[newIndex] = cur;
+                cur = curNext;
+            }
+        }
+        array = newArray;
+    }
+    public V get(K key) {
+        int hash = key.hashCode();
+        int index = hash % array.length;
+        Node<K,V> cur = array[index];
+        while (cur != null) {
+            if (cur.key.equals(key) ) {
+                return cur.value;
+            }
+            cur = cur.next;
+        }
+        return null;
+    }
+}
+
+public class Exercise {
+    public static void main(String[] args) {
+
+    }
+}
