@@ -1,0 +1,101 @@
+package network;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+/**
+ * TCP 版本的回显服务器
+ * @author 26568
+ * @date 2023-01-14 20:05
+ */
+public class TcpEchoServer {
+    private ServerSocket socket = null;
+    public TcpEchoServer(int port) throws IOException {
+        socket = new ServerSocket(port);
+    }
+    // 启动服务器的方法
+    public void start() throws IOException {
+        System.out.println("启动服务器");
+        // 线程池版本
+        // 此处使用 CacheThreadPool 使用FixThreadPool不太合适(线程数不应该是固定的)
+        ExecutorService threadPool = Executors.newCachedThreadPool();
+        while (true) {
+            // 使用client和具体的客户端进行交流  一个客户端创建一个
+            Socket clientSocket = socket.accept();
+            // 通过这个方法来交流
+            //  processConnection(clientSocket);
+            //  使用多线程  主线程accept  新线程执行processConnetion
+            //  Thread t = new Thread(() -> {
+            //  processConnection(clientSocket);
+//            });
+//            t.start();
+             //使用线程池
+            threadPool.submit(()-> {
+                processConnection(clientSocket);
+            });
+        }
+    }
+    // 使用这个方法来处理一个连接
+    // 这一个连接对应到一个客户端,这里可能涉及到多次交互
+    private void processConnection(Socket clientSocket) {
+        System.out.printf("[%s:%d] 客户端上线!\n",clientSocket.getInetAddress().toString(),clientSocket.getPort());
+        // 基于上述clientSocket对象和客户端进行通信
+        // try() 这个语法被称为 try with resource  不是随便一个对象放到try中就被自动释放
+        // 实现了Closeable 这个接口的类才可以放到 try()中自动关闭,这个接口提供的就是close() 方法
+        try(InputStream inputStream = clientSocket.getInputStream();
+            OutputStream  outputStream = clientSocket.getOutputStream()) {
+            // 处理多次请求和响应
+            while (true) {
+                // 1.获取请求并解析
+                Scanner scanner = new Scanner(inputStream);
+                // 判断是否有下一个数据
+                if (!scanner.hasNext()) {
+                    // 没有下一个请求了,说明读完了,(客户端关闭了连接)
+                    System.out.printf("[%s:%d]  客户端下线\n",clientSocket.getInetAddress().toString(),clientSocket.getPort());
+                    break;
+                }
+                // next() 遇到空格/换行/其他空白符停止读取
+                String request = scanner.next();
+                // 2.根据请求构造响应
+                String response = process(request);
+                // 3.返回客户端
+                // outputStream 没有write String这样的功能,可以把String里面的字节数组拿出来,进行写入
+                // 也可以通过字符流转换一下
+                PrintWriter printWriter = new PrintWriter(outputStream);
+                // 此处使用println来发送数据 会在发送的数据后面自动带上\n 换行  方便客户端解析
+                printWriter.println(response);
+                // 使用flush刷新缓冲区 保证当前写入的数据发送出去了
+                printWriter.flush();
+                System.out.printf("[%s:%d], req:%s; resp:%s\n",clientSocket.getInetAddress().toString(),clientSocket.getPort(),
+                        request,response);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            // 保证一定执行close操作
+            try {
+                clientSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    // 根据请求计算响应
+    public String process(String request) {
+        return request;
+    }
+
+    public static void main(String[] args) throws IOException {
+        TcpEchoServer server = new TcpEchoServer(9091);
+        server.start();
+    }
+}
+
