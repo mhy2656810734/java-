@@ -1,0 +1,54 @@
+class Solution {
+     public List<String> topKFrequent(String[] words, int k) {
+    // 1.在map中统计出现次数
+        HashMap<String,Integer> map = new HashMap<>();
+        for (String str:words) {
+            if (map.get(str) == null) {
+                map.put(str,1);
+            } else {
+                int val = map.get(str);
+                map.put(str,val+1);
+            }
+        }
+        // 2.创建优先级队列 ，将前k个加入优先级队列
+        PriorityQueue<Map.Entry<String,Integer>> minHeap = new PriorityQueue<>(k, new Comparator<Map.Entry<String, Integer>>() {
+            @Override
+            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                // 如果频率一样，建立大根堆
+                if (o1.getValue().compareTo(o2.getValue()) == 0) {
+                    return o2.getKey().compareTo(o1.getKey());
+                }
+                return o1.getValue().compareTo(o2.getValue());
+            }
+        });
+        for (Map.Entry<String,Integer> entry:map.entrySet()) {
+            if (minHeap.size() < k) {
+                minHeap.offer(entry);
+            } else {
+                // 先判断频率
+                Map.Entry<String,Integer> top = minHeap.peek();
+                if (top.getValue().compareTo(entry.getValue()) < 0) {
+                    minHeap.poll();
+                    minHeap.offer(entry);
+                } else {
+                    // 判断频率是否相同
+                    if (top.getValue().compareTo(entry.getValue()) == 0) {
+                        // 频率相等，将key值小的输出
+                        if (top.getKey().compareTo(entry.getKey()) > 0) {
+                            minHeap.poll();
+                            minHeap.offer(entry);
+                        }
+                    }
+                }
+            }
+        }
+        // 3.将优先级队列中的数据加入集合中
+        List<String> list = new ArrayList<>();
+        while (!minHeap.isEmpty()) {
+            Map.Entry<String,Integer> top = minHeap.poll();
+            list.add(top.getKey());
+        }
+        Collections.reverse(list);
+        return list;
+    }
+}
