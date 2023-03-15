@@ -1,0 +1,19 @@
+class Solution {
+    public boolean threeConsecutiveOdds(int[] arr) {
+          int count = 0;
+        // 让count统计出现的是不是奇数
+        for (int i = 0; i < arr.length;i++) {
+            if (arr[i] % 2 == 1) {
+                count++;
+                // 如果count 已经为3 说明有
+                if (count == 3) {
+                    return true;
+                }
+            } else {
+                // 只要不是奇数 让count继续从0开始统计
+                count = 0;
+            }
+        }
+        return false;
+    }
+}
