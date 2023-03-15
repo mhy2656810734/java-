@@ -1,0 +1,33 @@
+import java.util.*;
+
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Main {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        int m = scan.nextInt();
+        int n = scan.nextInt();
+        // 最小公倍数等于 m*n / 最大公约数
+        // 最大公约数使用辗转相除法计算
+        int ret = func(m,n);
+        System.out.println( m*n/ ret);
+    }
+    public static int func(int m, int n) {
+        if (m == n) {
+            return m;
+        }
+        // 让m 是最大的数
+        if (m < n) {
+            int temp = m;
+            m = n;
+            n = temp;
+        }
+        // 辗转相除
+        int r = m % n;
+        while (r != 0) {
+            m = n;
+            n = r;
+            r = m %n;
+        }
+        return n;
+    }
+}
