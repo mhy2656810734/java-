@@ -1,0 +1,24 @@
+import java.util.*;
+
+public class UnusualAdd {
+    // 使用位运算来计算
+    // 如果两个数 &(按位与) 然后左移1位,得到的数为0
+    // 那么这两个数 ^(按位异或) 得到的结果就是这两个数的和
+    // (A & B) << 1  == 0  那么  A + B = A ^ B
+    // 如果 & <<1 得到的结果sum 不是 0 ,那么就将这个值给 A
+    // 然后将 ^ 的结果给 B,继续重复上述操作,直到B为0,然后A就是最后的和
+    public int addAB(int A, int B) {
+      if (B == 0) {
+        return A;
+      }
+      int sum = 0;
+      int count = 0;
+      while (B != 0) {
+        sum = A ^ B;
+        count = (A & B) <<1;
+        A = sum;
+        B = count;
+      }
+      return A;
+    }
+}
