@@ -1,0 +1,23 @@
+import java.util.*;
+
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        // 注意 hasNext 和 hasNextLine 的区别
+        int a = in.nextInt();
+        int b = in.nextInt();
+         System.out.println(func(a,b));
+    }
+    // 使用递归来计算
+    public static int func(int a,int b) {
+        // 如果 行数或者列数有一个等于1
+        // 那么 总路径 = a+b;
+        // 如果 行数或者 列数都大于 1 
+        // 那么 总路径就是:func(a,b-1)+func(a-1,b);
+        if ((a == 1 && b >= 1) || (a >= 1 && b == 1)) {
+            return a+b;
+        }
+        return func(a,b-1)+func(a-1,b);
+    }
+}
