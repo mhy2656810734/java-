@@ -1,0 +1,49 @@
+import java.util.*;
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        // 为了提高效率
+        //  BufferedReader 从字符流中读取文本并缓存
+        //  InputStreamReader 将字节流 转换为字符流
+        //  System.in  字节输入流
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        // 读取整数
+        int n = Integer.parseInt(reader.readLine());
+        // 读取字符串并放到字符串数组中
+        String[] arr = new String[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = reader.readLine();
+        }
+        if (isLengthSort(arr) && isSort(arr)) {
+            System.out.println("both");
+        } else if (isLengthSort(arr) && !isSort(arr)) {
+            System.out.println("lengths");
+        } else if (!isLengthSort(arr) && isSort(arr)) {
+            System.out.println("lexicographically");
+        } else {
+            System.out.println("none");
+        }
+    }
+    // 判断是不是按照长度排序
+    public static boolean isLengthSort(String[] arr) {
+        // 遍历整个数组,如果乱序就错误
+        for (int i = 0; i < arr.length - 1; i++) {
+            // 如果前面的比后面长就错
+            if (arr[i].length() > arr[i + 1].length()) {
+                return false;
+            }
+        }
+        return true;
+    }
+    // 判断是不是按照字典排序
+    public static boolean isSort(String[] arr) {
+        // 如果前面的字符串比后面大,就乱序
+        for (int i = 0; i < arr.length - 1; i++) {
+            if (arr[i].compareTo(arr[i + 1]) > 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
