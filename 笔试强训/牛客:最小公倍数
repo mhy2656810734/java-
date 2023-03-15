@@ -31,3 +31,20 @@ public class Main {
         return n;
     }
 }
+方法二
+import java.util.Scanner;
+
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Main {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        long m = scan.nextInt();
+        long n = scan.nextInt();
+        long a = 1;
+        while ((m*a)%n != 0) {
+            a++;
+        }
+        long sum = m*a;
+        System.out.println(sum);
+    }
+}
