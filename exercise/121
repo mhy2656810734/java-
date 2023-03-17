@@ -1,0 +1,73 @@
+package exercise;
+
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Objects;
+import java.util.Scanner;
+
+/**
+ * @author 26568
+ * @date 2023-03-13 7:50
+ */
+class Father{
+    public int age = 0;
+    static{
+        System.out.println("这是父类的静态代码块");
+    }
+    {
+        System.out.println("这是父类的实例代码块");
+    }
+    public Father(int age) {
+        this.age =age;
+        System.out.println("这是父类的构造方法");
+    }
+}
+class Son extends Father{
+    public int age = 0;
+    static {
+        System.out.println("这是子类的静态代码块");
+    }
+    {
+        System.out.println("这是子类的实例代码块");
+    }
+    public Son(int age) {
+        super(age);
+        this.age = age;
+        System.out.println("这是子类的构造方法");
+    }
+
+
+}
+public class textExercise {
+    public static void main(String[] args) {
+//        Son son1 = new Son(18);
+//        Son son2 = new Son(18);
+//        System.out.println(son1.hashCode());
+//        System.out.println(son2.hashCode());
+//          String str = "123";
+//          StringBuffer stringBuffer = new StringBuffer(str);
+        System.out.println(func(3));
+    }
+    public static int func(int input) {
+        int m = input;
+        // 记录连续1的次数
+        int max = 0;
+        int count = 0;
+        for (int i = 31; i >= 0;i--) {
+            int a =  (m >> i);
+            if (a == 1) {
+                count++;
+            } else {
+                // 判断此时count和max谁大
+                if (max < count) {
+                    max = count;
+                }
+                // 继续从0开始记录
+                count = 0;
+            }
+        }
+        return max;
+    }
+}
