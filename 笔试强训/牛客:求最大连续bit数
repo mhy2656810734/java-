@@ -1,0 +1,26 @@
+import java.util.Scanner;
+
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+      // 注意 while 处理多个 case
+        while (in.hasNextInt()) { 
+            int count = 0;
+            int maxCount = 0;
+            int input = in.nextInt();
+            while (input != 0) {
+                if ((input&1) == 1) {
+                    count++;
+                    // 让maxcount记录最大的值
+                    maxCount = Math.max(count,maxCount);
+                } else {
+                    count = 0;
+                }
+                input >>= 1;
+            }
+            System.out.println(maxCount);
+         }
+        
+    }
+}
