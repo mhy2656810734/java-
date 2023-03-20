@@ -1,0 +1,56 @@
+import java.util.*;
+
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Main {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        int n = scan.nextInt();
+        int m = scan.nextInt();
+        // 申请一个数组,用来记录步数
+        int[] step = new int[m + 1];
+        // 先将所有元素的值设为最大值,用来筛选约数能不能到达
+        for (int i = 0; i < m+1;i++) {
+            step[i] = Integer.MAX_VALUE;
+        }
+        // 当前石板为初始位置
+        step[n] = 0;
+        for (int i = n; i < m ; i++) {
+            // 如果当前石板没法到达就直接到下一个能到达的石板
+            if (step[i] == Integer.MAX_VALUE) {
+                continue;
+            }
+            // 得到 i的所有约数
+            List<Integer> list = div(i);
+            // 然后遍历这个约数集合 
+            // 记录跳到后续的石板上的步数
+            for(int j:list) {
+                if (i+j <= m && step[i+j] != Integer.MAX_VALUE) {
+                    // 说明不是第一次跳到这个下标的石板了,找最小的步数
+                    step[i+j] = Math.min(step[i+j],step[i]+1);
+                } else if (i + j <= m){
+                    // 说明是第一次跳到,让前面的步数+1即可
+                    step[i+j] = step[i]+1;
+                }
+            }
+        }
+        if (step[m] == Integer.MAX_VALUE) {
+            // 说明到不了这个石板
+            System.out.println(-1);
+        } else {
+            System.out.println(step[m]);
+        }
+    }
+    public static List<Integer> div(int m) {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 2;i*i <= m;i++) {
+            if (m % i == 0) {
+                list.add(i);
+                // 避免添加自身
+                if (m / i != i) {
+                    list.add(m / i);
+                }
+            }
+        }
+        return list;
+    }
+}
