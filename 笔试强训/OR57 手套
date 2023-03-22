@@ -1,0 +1,33 @@
+import java.util.*;
+
+public class Gloves {
+    public int findMinimum(int n, int[] left, int[] right) {
+        int leftSum = 0;
+        int rightSum = 0;
+        int leftMin = Integer.MAX_VALUE;
+        int rightMin = Integer.MAX_VALUE;
+        // 统计 左右手出现0,而对应手不为0的情况
+        int sum = 0;
+        // 每次将最小颜色的手套数减去,然后+1
+        // 总公式: sum+min(leftSum-leftMin+1,rightSum-rightSum+1) +1(另外一只手)
+        for (int i = 0; i < n;i++) {
+            // 先判断是否为0
+            if (left[i] * right[i] == 0) {
+                sum += left[i]+right[i];
+            } else {
+                leftSum += left[i];
+                rightSum += right[i];
+                // 拿到最小的手套数
+                if (leftMin > left[i]) {
+                    leftMin = left[i];
+                }
+                if (rightMin > right[i]) {
+                    rightMin = right[i];
+                }
+            }
+            
+        }
+        // 开始返回最终值
+        return Math.min(leftSum-leftMin+1,rightSum-rightMin+1)+1+sum;
+    }
+}
