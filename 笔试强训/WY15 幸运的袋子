@@ -1,0 +1,40 @@
+import java.util.*;
+
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Main {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        int n = scan.nextInt();
+        int[] arr = new int[n];
+        for (int i = 0; i < n;i++) {
+            arr[i] = scan.nextInt();
+        }
+        Arrays.sort(arr);
+        System.out.println(func(arr,n,0,0,1));
+    }
+    public static int func(int[] a,int n,int pos,int sum,int acc) {
+        // 用于统计多少个袋子数
+        int count = 0;
+        for (int i = pos;i < n;i++) {
+            sum += a[i];
+            acc *= a[i];
+            if (sum > acc) {
+                // 递归向后判断 后面是否满足条件
+                count = count +1 + func(a,n,i+1,sum,acc);
+            } else if (a[i] == 1) {
+                // 特殊情况.如果当前为1 后续还要继续判断
+                count = count + func(a,n,i+1,sum,acc);
+            } else {
+                break;
+            }
+            // 循环结束以后,需要减去当前的号码值,然后继续向后判断
+            sum -= a[i];
+            acc /= a[i];
+            // 判断是否相等
+            while (i < n-1 && a[i] == a[i+1]) {
+                i++;
+            }            
+        }
+        return count;
+    }
+}
