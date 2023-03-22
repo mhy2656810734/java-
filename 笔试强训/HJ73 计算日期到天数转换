@@ -1,0 +1,26 @@
+import java.util.Scanner;
+
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Main {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        // 注意 hasNext 和 hasNextLine 的区别
+        while (scan.hasNext()) {
+            int year = scan.nextInt();
+            int month = scan.nextInt();
+            int day = scan.nextInt();
+            // 
+            int[] sum = {0,31,59,90,120,151,181,212,243,273,304,334};
+            int count = sum[month -1];
+            // 判断是不是闰年
+            if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
+                // 避免二月重复加
+                if (month > 2)  {
+                    count++;
+                }
+            }
+            count += day;
+            System.out.println(count);
+        }
+    }
+}
