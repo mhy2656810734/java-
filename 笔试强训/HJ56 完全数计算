@@ -1,0 +1,31 @@
+import java.util.*;
+
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Main {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        int n = scan.nextInt();
+        // 统计完全数
+        int count = 0;
+        // 第一个完全数是6,从6开始 前面的没必要算
+        for (int i = 6; i <= n;i++) {
+            if(isFunc(i)) {
+                count++;
+            }
+        }        
+        System.out.println(count);
+    }
+    public static boolean isFunc(int i) {
+        // 计算除自身外的所有约数
+        int sum = 0;
+        for (int j = 1; j < i;j++) {
+            if (i % j == 0) {
+                sum += j;
+            }
+        }
+        if (sum == i) {
+            return true;
+        }
+        return false;
+    }
+}
