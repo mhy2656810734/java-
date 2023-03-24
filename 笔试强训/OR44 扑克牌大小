@@ -1,0 +1,36 @@
+import java.util.*;
+
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Main {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        String string = scan.nextLine();
+        // 先将字符串分割成两手牌
+        String[] str = string.split("-");
+        // 然后再将两手牌里面的通过空格分割
+        String[] str1 = str[0].split(" ");
+        String[] str2 = str[1].split(" ");
+        // 为了判断后续 两手牌长度一样 时, 比较第一张牌出现顺序
+        String replace = "34567891JQKA2";
+        // 先判断是否有对王
+        if (str[0].equals("joker JOKER") || str[1].equals("joker JOKER")) {
+            System.out.println("joker JOKER");
+            // 比较顺子 单子 对子 三子的情况
+        } else if (str1.length == str2.length) {
+            if (replace.indexOf(str1[0].substring(0,
+                                                  1)) > replace.indexOf(str2[0].substring(0, 1))) {
+                System.out.println(str[0]);
+            } else {
+                System.out.println(str[1]);
+            }
+            // 长度不一样,看看是否有 炸弹
+        } else if (str1.length == 4) {
+             System.out.println(str[0]);
+        } else if (str2.length == 4) {
+              System.out.println(str[1]);
+        } else {
+            // 错误情况
+              System.out.println("ERROR");
+        }
+    }
+}
