@@ -1,0 +1,30 @@
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        while (scan.hasNext()) {
+            int n = scan.nextInt();
+            if (n != 0) {
+                 System.out.println(func(n));
+            }
+        }
+    }
+    public static int func(int n) {
+        // 喝的汽水数
+        int sum = 0;
+        // 记录剩余的空瓶数
+        int empty =  n;
+        // 只要空瓶数大于等于 3 就可以一直换
+        while (empty >= 3) {
+            // 可以直接换的汽水数
+            int count = empty / 3;
+            sum += count;
+            empty = count + empty % 3;
+        }
+        // 如果空瓶书是2个,还可以换一拼
+        if (empty == 2) {
+            sum++;
+        }
+        return sum;
+    }
+}
