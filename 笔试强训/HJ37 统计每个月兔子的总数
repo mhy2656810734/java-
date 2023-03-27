@@ -1,0 +1,24 @@
+import java.util.Scanner;
+
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        // 注意 hasNext 和 hasNextLine 的区别
+        while (in.hasNextInt()) { // 注意 while 处理多个 case
+            int m = in.nextInt();
+            System.out.println(Fib(m));
+        }
+    }
+    public static int Fib(int m) {
+        int first = 1;
+        int second = 1;
+        int sum = 0;
+        for (int i = 3; i <= m;i++) {
+            sum = second + first;
+            first = second;
+            second = sum;
+        }
+        return sum;
+    }
+}
