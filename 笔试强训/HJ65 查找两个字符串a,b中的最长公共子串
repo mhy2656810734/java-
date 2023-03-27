@@ -1,46 +1,38 @@
-import java.util.Scanner;
-
-// 注意类名必须为 Main, 不要有任何 package xxx 信息
+import java.util.*;
 public class Main {
     public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        // 注意 hasNext 和 hasNextLine 的区别
-        while (in.hasNextInt()) { // 注意 while 处理多个 case
-            String str1 = in.nextLine();
-            String str2 = in.nextLine();
-            if (str1.length() < str2.length()) {
-                System.out.println(func(str1,str2));
-            } else {
-                System.out.println(func(str2,str1));
-            }
+        Scanner scan = new Scanner(System.in);
+        String str1 = scan.nextLine();
+        String str2 = scan.nextLine();
+        if (str1.length() < str2.length()) {
+            System.out.println(func(str1, str2));
+        } else {
+            System.out.println(func(str2, str1));
         }
     }
-    // str1是较短的字符串
-    public static String func(String str1,String str2) {
-        // 先将两个字符串转成数组
+    public static String func(String str1, String str2) {
+        // 全部转成数组
         char[] arr1 = str1.toCharArray();
         char[] arr2 = str2.toCharArray();
         int len1 = arr1.length;
         int len2 = arr2.length;
-        // 最长公共子串的起始位置
-        int start = 0;
         // 最长公共子串的长度
         int maxLen = 0;
-        // 创建一个二维数组来保存公共子串的长度
-        int[][] maxSulen = new int[len1+1][len2+1];
-        for (int i = 1; i <= len1;i++) {
-            for (int j = 1; j <= len2;j++) {
-                // 判断当前两个字符是否相等
-                // 相等就累加, 不相等为0
-                if (arr1[i-1] == arr2[j-1]) {
-                    maxSulen[i][j] = maxSulen[i-1][j-1]+1;
-                        // 更新子串长度等
-                    if (maxLen < maxSulen[i][j]) {
-                        maxLen = maxSulen[i][j];
-                        start = i-maxLen;
+        // 最长公共子串的起始位置
+        int start = 0;
+        int[][] maxSubstr = new int[len1 + 1][len2 + 1];
+        for (int i = 1; i <= len1; i++) {
+            for (int j = 1; j <= len2; j++) {
+                // 判断当前两个字符是否相等,如果相等就累加
+                // 如果不相等就赋值为0
+                if (arr1[i - 1] == arr2[j - 1]) {
+                    maxSubstr[i][j] = maxSubstr[i - 1][j - 1] + 1;
+                    // 更新最长公共子串的长度
+                    if (maxLen < maxSubstr[i][j]) {
+                        maxLen = maxSubstr[i][j];
+                        start = i - maxLen;
                     }
                 }
-               
             }
         }
         return str1.substring(start,start+maxLen);
