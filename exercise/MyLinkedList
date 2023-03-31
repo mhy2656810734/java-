@@ -1,0 +1,198 @@
+package structure;
+
+import java.util.ArrayList;
+
+/**
+ * @author 26568
+ * @date 2023-03-30 18:22
+ */
+// 模拟实现单链表
+class Node {
+    public int data;// 数据域
+    public Node next;// 指针域
+    public Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+public class MyLinkedList {
+    // 单链表的头结点
+    public Node head;
+    // 头插法
+    public void addFirst(int data) {
+        Node node = new Node(data);
+        // 首先判断头结点是否为空
+        if (this.head == null) {
+            this.head = node;
+            return;
+        }
+        // 直接插入到头结点的前面
+        node.next = this.head;
+        this.head = node;
+    }
+    // 尾插法
+    public void addLast(int data) {
+        Node node = new Node(data);
+        if (this.head == null) {
+            this.head = node;
+            return;
+        }
+        // 遍历找到尾
+        Node cur = this.head;
+        while (cur.next != null) {
+            cur = cur.next;
+        }
+        cur.next = node;
+    }
+    // 打印单链表
+    public void display() {
+        if (this.head == null) {
+            System.out.println("当前单链表为空不能打印");
+            return;
+        }
+        Node cur = this.head;
+        while (cur != null) {
+            System.out.println(cur.data+" ");
+            cur = cur.next;
+        }
+        System.out.println();
+    }
+    // 查询数据
+    public boolean contains(int data) {
+        if (this.head == null) {
+           throw new RuntimeException("当前单链表为空,不能查询");
+        }
+        Node cur = this.head;
+        while (cur != null) {
+            if (cur.data == data) {
+                return true;
+            }
+            cur = cur.next;
+        }
+        return false;
+    }
+    // 求单链表的个数
+    public int size() {
+        if (this.head == null) {
+            throw new RuntimeException("当前单链表为空,不能查询");
+        }
+        int count = 0;
+        Node cur = this.head;
+        while (cur != null) {
+            count++;
+            cur = cur.next;
+        }
+        return count;
+    }
+    // 在index 位置插入数据 第一个为0位置
+    public void addIndex(int index,int data) {
+        // 头插
+        if (index == 0) {
+            this.addFirst(data);
+            return;
+        }
+        // 尾插
+        if (index == this.size()) {
+            addLast(data);
+        }
+        // 开始找index位置的前一个结点
+        Node prev = searchPrev(index);
+        Node node = new Node(data);
+        node.next = prev.next;
+        prev.next = node;
+    }
+    // 找结点
+    public Node search(int key) {
+        Node cur = this.head;
+        while (cur.next != null) {
+            if (cur.next.data == key) {
+                return cur;
+            } else {
+                cur = cur.next;
+            }
+        }
+        return null;
+    }
+    // 删除第一次出现的数据key
+    public void remove(int key) {
+        if (this.head == null) {
+            throw new RuntimeException("当前单链表为空,不能删除结点");
+        }
+        // 判断是不是删除头结点
+        if (this.head.data == key) {
+            this.head = this.head.next;
+            return;
+        }
+        // 找到key数据的前一个结点
+        Node prev = search(key);
+        if (prev == null) {
+            System.out.println("你要删除的数据不存在");
+            return;
+        }
+        prev.next = prev.next.next;
+    }
+    // 删除所有key数据
+    public void removeAll(int key) {
+        // 最后处理头节点
+        if (this.head == null) {
+            throw new RuntimeException("当前单链表为空,不能删除结点");
+        }
+        // 前后指针法删除
+        Node prev = this.head;
+        Node cur = this.head.next;
+        while (cur != null) {
+            if (cur.data == key) {
+                prev.next = cur.next;
+            } else {
+                prev = cur;
+            }
+            cur = cur.next;
+        }
+        if (this.head.data == key) {
+            this.head = this.head.next;
+        }
+    }
+    // 释放链表
+    public void clear() {
+        this.head = null;
+    }
+    public Node searchPrev(int index) {
+        // 判断合法性
+        if (index < 0 || index > this.size()) {
+            throw new RuntimeException("index位置不合法");
+        }
+        index--;
+        Node cur = this.head;
+        while (index > 0) {
+            cur = cur.next;
+            index--;
+        }
+        return cur;
+    }
+    public static void main(String[] args) {
+        MyLinkedList myLinkedList = new MyLinkedList();
+//        for(int i=0;i<10;i++) {
+//            myLinkedList.addLast(i);
+//        }
+        myLinkedList.addLast(1);
+        myLinkedList.addLast(2);
+        myLinkedList.addLast(1);
+        myLinkedList.addLast(3);
+        myLinkedList.addLast(1);
+        myLinkedList.addLast(4);
+        myLinkedList.addLast(1);
+        myLinkedList.addLast(5);
+        myLinkedList.addLast(6);
+        myLinkedList.addLast(1);
+        System.out.println(myLinkedList.contains(9));
+        System.out.println("单链表长度为："+myLinkedList.size());
+        myLinkedList.addIndex(9,10);
+        myLinkedList.display();
+        myLinkedList.remove(10);
+        myLinkedList.remove(9);
+        myLinkedList.remove(5);
+//        myLinkedList.removeAll(1);
+//        myLinkedList.display();
+//        myLinkedList.clear();
+    }
+}
