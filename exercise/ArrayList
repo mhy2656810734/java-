@@ -1,0 +1,142 @@
+package structure;
+
+import java.util.Arrays;
+
+/**
+ * @author 26568
+ * @date 2023-03-30 17:08
+ */
+// 这是顺序表
+public class ArrayList {
+    public int[] elem; // 数组
+    public static final int initCapacity = 10;// 初始容量
+    public int usedSize = 0;// 有效数据的个数
+    // 对数据进行初始化
+    public ArrayList() {
+        this.elem = new int[initCapacity];
+        this.usedSize = 0;
+    }
+    // 检查容量
+    public boolean isFull() {
+        return this.usedSize == this.elem.length;
+    }
+    // 判空
+    public boolean isEmpty() {
+        return this.elem.length == 0;
+    }
+    // 检查pos位置的合法性
+    public boolean checkPos(int pos) {
+        if (pos < 0 || pos > this.usedSize) {
+            throw new RuntimeException("pos的位置有问题");
+        }
+        return true;
+    }
+    // 在pos位置插入数据
+    public void add(int pos,int data) {
+        // 先判满
+        if (isFull()) {
+            // 进行扩容
+            this.elem = Arrays.copyOf(this.elem,2*this.elem.length);
+        }
+        // 检查pos合法性
+        checkPos(pos);
+        // 先移动pos位置后面的数据
+        for (int i = this.usedSize-1;i>=pos;i--) {
+            this.elem[i+1] = this.elem[i];
+        }
+        this.elem[pos] = data;
+        this.usedSize++;
+    }
+    // 打印顺序表
+    public void display() {
+        // 判空
+        if (isEmpty()) {
+            throw new RuntimeException("顺序表为空不能打印");
+        }
+        for (int i = 0; i < this.usedSize;i++) {
+            System.out.printf(this.elem[i]+" ");
+        }
+        System.out.println();
+    }
+    // 查找数据是否存在
+    public boolean contains(int toFind) {
+        for (int i = 0; i < this.usedSize; i++) {
+            if (this.elem[i] == toFind) {
+                return true;
+            }
+        }
+        return false;
+    }
+    // 返回数据的下标
+    public int search(int toFind) {
+        for (int i = 0; i < this.usedSize; i++) {
+            if (this.elem[i] == toFind) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    // 返回pos位置的元素
+    public int getPos(int pos) {
+        if (isEmpty()) {
+            throw new RuntimeException("顺序表为空不能打印");
+        }
+        // 检查pos合法性
+        if (pos < 0 || pos >= this.usedSize) {
+            System.out.println("pos位置不合法");
+            return -1;
+        }
+
+        return this.elem[pos];
+    }
+    // 求顺序表长度
+    public int size() {
+        return this.usedSize;
+    }
+    // 删除第一次出现的数据data
+    public void remove(int data) {
+        if (isEmpty()) {
+            throw new RuntimeException("顺序表为空不能打印");
+        }
+        // 先找大data数据的位置
+        int pos = search(data);
+        if (pos == -1) {
+            System.out.println("该数据不存在");
+        } else {
+            // 从pos位置开始向从后往前覆盖
+            for (int i = pos; i < this.usedSize -1; i++) {
+                this.elem[i] = this.elem[i+1];
+            }
+            this.usedSize--;
+        }
+    }
+    // 情况顺序表
+    public void clear() {
+        this.usedSize = 0;
+    }
+    // 修改数据
+    public void setPos(int pos,int data) {
+        checkPos(pos);
+        this.elem[pos] = data;
+    }
+    public static void main(String[] args) {
+        ArrayList myArrayList = new ArrayList();
+        for(int i=0;i<10;i++) {
+            myArrayList.add(i,i);
+        }
+        if(myArrayList.contains(8)){
+            System.out.println("存在");
+        } else {
+            System.out.println("不存在");
+        }
+        //myArrayList.remove(0);
+        System.out.println("下标为："+myArrayList.search(8));
+        System.out.println("长度为："+myArrayList.size());
+        System.out.println(myArrayList.getPos(0));
+        myArrayList.setPos(4,20);
+        myArrayList.display();
+        System.out.println("=========");
+        myArrayList.clear();
+        myArrayList.display();
+    }
+}
