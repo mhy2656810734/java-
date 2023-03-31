@@ -1,0 +1,196 @@
+package structure;
+
+/**
+ * @author 26568
+ * @date 2023-03-30 19:06
+ */
+// 双向链表
+class Nod {
+    public int data;// 数据域
+    public Nod next;// 后继指针
+    public Nod prev;// 前驱指针
+    public Nod(int data) {
+        this.data = data;
+    }
+}
+public class LinkedList {
+    public Nod head;// 头节点
+    public Nod tail;// 尾节点
+    // 头插法
+    public void addFirst(int data) {
+        Nod nod = new Nod(data);
+        if (this.head == null) {
+            this.head = nod;
+            this.tail = nod;
+        } else{
+            nod.next = this.head;
+            this.head.prev = nod;
+            this.head = nod;
+        }
+    }
+    // 尾插法
+    public void addLast(int data) {
+        Nod nod = new Nod(data);
+        if (this.head == null) {
+            this.head = nod;
+            this.tail = nod;
+        } else{
+            this.tail.next = nod;
+            nod.prev = this.tail;
+            this.tail = nod;
+        }
+    }
+    // 打印双向链表
+    public void display() {
+        if (this.head == null) {
+            throw new RuntimeException("双向链表为空");
+        }
+        Nod cur = this.head;
+        while (cur != null) {
+            System.out.println(cur.data+" ");
+            cur = cur.next;
+        }
+        System.out.println();
+    }
+    // 查询数据
+    public boolean contains(int data) {
+        if (this.head == null) {
+            throw new RuntimeException("双向链表为空");
+        }
+        Nod cur = this.head;
+        while (cur != null) {
+            if (cur.data == data) {
+                return true;
+            }
+            cur = cur.next;
+        }
+        return false;
+    }
+    // 长度
+    public int size() {
+        if (this.head == null) {
+            throw new RuntimeException("双向链表为空");
+        }
+        Nod cur = this.head;
+        int count = 0;
+        while (cur != null) {
+            count++;
+            cur = cur.next;
+        }
+        return count;
+    }
+    public Nod search(int index) {
+        if (index < 0 || index > this.size()) {
+            throw new RuntimeException("index位置不合法");
+        }
+        Nod cur = this.head;
+        while (index > 0) {
+            index--;
+            cur = cur.next;
+        }
+        return cur;
+    }
+    // 随机插入 第一个位置 0
+    public void addIndex(int index,int data) {
+        if (index == 0) {
+            this.addFirst(data);
+            return;
+        }
+        if (index == this.size()) {
+            this.addLast(data);
+            return;
+        }
+        // 找到inidex下标
+        Nod cur = search(index);
+        Nod nod = new Nod(data);
+        nod.prev = cur.prev;
+        nod.next = cur;
+        cur.prev.next = nod;
+        cur.prev = nod;
+    }
+    // 删除第一次出现的key
+    public void remove(int key) {
+        Nod cur = this.head;
+        while (cur != null) {
+            if (cur.data == key) {
+                // 判断是不是头节点
+                if (cur == this.head) {
+                    this.head = this.head.next;
+                    this.head.prev = null;
+                    return;
+                } else {
+                    // 注意这里要删除的是否是最后一个节点
+                    cur.prev.next = cur.next;
+                    if (cur.next != null) {
+                        cur.next.prev = cur.prev;
+                    } else {
+                        this.tail = cur.prev;
+                    }
+                }
+                break;
+            }
+            cur = cur.next;
+        }
+    }
+    // 删除所有的key
+    public void removeAll(int key) {
+        Nod cur = this.head;
+        while (cur != null) {
+            if (cur.data == key) {
+                // 判断是不是头节点
+                if (cur == this.head) {
+                    this.head = this.head.next;
+                    this.head.prev = null;
+                } else {
+                    // 注意这里要删除的是否是最后一个节点
+                    cur.prev.next = cur.next;
+                    if (cur.next != null) {
+                        cur.next.prev = cur.prev;
+                    } else {
+                        this.tail = cur.prev;
+                    }
+                }
+            }
+            cur = cur.next;
+        }
+    }
+    // 清除链表
+    public void clear() {
+        while (this.head != null) {
+            Nod cur = this.head.next;
+            this.head.next = null;
+            this.head.prev = null;
+            this.head = cur;
+        }
+        this.tail = null;
+    }
+    public static void main(String[] args) {
+        LinkedList myLinkedList = new LinkedList();
+        for(int i=0;i<10;i++) {
+            myLinkedList.addLast(i+1);;
+        }
+        myLinkedList.display();
+        System.out.println( myLinkedList.contains(3));
+        System.out.println(myLinkedList.size());
+        myLinkedList.addIndex(10,10);
+        myLinkedList.remove(9);
+//        myLinkedList.addFirst(0);
+//        myLinkedList.addFirst(0);
+//        myLinkedList.addFirst(0);
+//        myLinkedList.addFirst(0);
+        myLinkedList.addIndex(8,0);
+        myLinkedList.addIndex(8,0);
+        myLinkedList.addIndex(8,0);
+        myLinkedList.addIndex(8,0);
+        myLinkedList.addLast(0);
+        myLinkedList.addLast(0);
+        myLinkedList.addLast(0);
+        myLinkedList.addLast(0);
+        myLinkedList.addLast(0);
+        myLinkedList.display();
+        myLinkedList.remove(0);
+        myLinkedList.display();
+        // myLinkedList.clear();
+        System.out.println("12345");
+    }
+}
