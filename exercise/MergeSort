@@ -1,0 +1,78 @@
+package sort;
+
+import java.util.Arrays;
+
+/**
+ * 归并排序
+ * 时间复杂度:O(N*logN)
+ * 空间复杂度:O(N)
+ * 稳定性:稳定
+ * @author 26568
+ * @date 2023-04-04 21:52
+ */
+public class MergeSort {
+    public static void main(String[] args) {
+        int[] arr = {1,6,7,5,9,10,8,2,3};
+        noMergeSort(arr);
+        System.out.println(Arrays.toString(arr));
+    }
+    public static void mergeSort(int[] arr,int left,int right) {
+        if (left == right) {
+            return;
+        }
+        // 先递归 再合并
+        int mid = (left+right) / 2;
+        mergeSort(arr,left,mid);
+        mergeSort(arr,mid+1,right);
+        // 开始合并
+        merge(arr,left,mid,right);
+    }
+    public static void merge(int[] arr,int left,int mid,int right) {
+        int s1 = left;
+        int e1 = mid;
+        int s2 = mid+1;
+        int e2 = right;
+        int k = 0;
+        int[] temp = new int[right - left+1];
+        while ((s1 <= e1) && (s2 <= e2)) {
+            // 先添加小的
+            if (arr[s1] <= arr[s2]) {
+                temp[k++] = arr[s1++];
+            } else {
+                temp[k++] = arr[s2++];
+            }
+        }
+        // 有不空的直接添加即可
+        while (s1 <= e1) {
+            temp[k++] = arr[s1++];
+        }
+        while (s2 <= e2) {
+            temp[k++] = arr[s2++];
+        }
+        // 然后将数组拷贝回原来的数组即可
+        for (int i = 0; i < k; i++) {
+            arr[i+left] = temp[i];
+        }
+    }
+    // 递归排序非递归实现
+    public static void noMergeSort(int[] arr) {
+        int gap = 1;
+        while (gap < arr.length) {
+            for (int i = 0; i < arr.length; i += gap*2) {
+                int left =i;
+                int mid = left+gap-1;
+                int right = mid + gap;
+                //判断mid 和 right是否越界
+                if (mid >= arr.length) {
+                    mid = arr.length - 1;
+                }
+                if (right >= arr.length) {
+                    right = arr.length -1;
+                }
+                // 开始合并
+                merge(arr,left,mid,right);
+            }
+            gap *= 2;
+        }
+    }
+}
