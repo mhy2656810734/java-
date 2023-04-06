@@ -1,0 +1,94 @@
+package sort;
+
+import java.util.Arrays;
+
+/**
+ * 堆排序
+ * 时间复杂度:O(N*logN)
+ * 空间复杂度:O(1)
+ * 稳定性:不稳定
+ * @author 26568
+ * @date 2023-04-05 13:05
+ */
+public class HeapSort {
+    public static void main(String[] args) {
+        int[] arr = {1,6,7,5,9,10,8,2,3};
+        heapSort(arr);
+        System.out.println(Arrays.toString(arr));
+    }
+//    public static void heapSort(int[] arr) {
+//        // 首先建立一个大根堆
+//        createBigHeap(arr);
+//        int len = arr.length - 1;
+//        while (len > 0) {
+//            // 先交换首尾元素
+//            int temp = arr[0];
+//            arr[0] = arr[len];
+//            arr[len] = temp;
+//            shifUp(arr,0,len);
+//            len--;
+//        }
+//    }
+//    // 创建大根堆
+//    public static void createBigHeap(int[] arr) {
+//        for (int parent = (arr.length-1-1)/2;parent >= 0 ; parent--) {
+//            shifUp(arr,parent,arr.length);
+//        }
+//    }
+//    // 向下调整
+//    public static void shifUp(int[] arr,int parent,int len) {
+//        int child = 2*(parent)+1;
+//        while (child < len) {
+//            // 拿到左右孩子节点中较大的那个值
+//            if (child+1 < len && arr[child] < arr[child+1]) {
+//                child++;
+//            }
+//            // 判断是否需要调整
+//            if (arr[child] > arr[parent]) {
+//                int temp = arr[child];
+//                arr[child] = arr[parent];
+//                arr[parent] = temp;
+//                parent = child;
+//                child = 2*parent+1;
+//            } else {
+//                break;
+//            }
+//        }
+//    }
+    public static void heapSort(int[] arr) {
+        // 先创建大根堆
+        createBigHeap(arr);
+        int len = arr.length - 1;
+        while (len > 0) {
+            int temp = arr[0];
+            arr[0] = arr[len];
+            arr[len] = temp;
+            // 调整 0 - len-1 为大根堆
+            shifUp(arr,0,len);
+            len--;
+        }
+    }
+    public static void createBigHeap(int[] arr) {
+        // 从最后一个非叶子节点开始调整
+        for(int parent = (arr.length -1 -1)/2;parent >= 0;parent--) {
+            shifUp(arr,parent,arr.length);
+        }
+    }
+    public static void shifUp(int[] arr,int parent,int len) {
+        int child = 2*parent+1;
+        while (child < len) {
+            if (child +1 < len && arr[child+1] > arr[child]) {
+                child++;
+            }
+            if (arr[child] > arr[parent]) {
+                int temp = arr[child];
+                arr[child] = arr[parent];
+                arr[parent] = temp;
+                parent = child;
+                child = 2*parent+1;
+            } else {
+                break;
+            }
+        }
+    }
+}
