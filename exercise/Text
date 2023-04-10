@@ -1,0 +1,53 @@
+package thread;
+
+import java.util.concurrent.Semaphore;
+
+/**
+ * @author 26568
+ * @date 2023-04-06 20:27
+ */
+class Count {
+    public int count = 0;
+    public void add() {
+        this.count++;
+    }
+}
+public class Text {
+    public static void main(String[] args) throws InterruptedException {
+        Semaphore semaphore = new Semaphore(1);
+        Count count = new Count();
+        Thread t1 = new Thread(() -> {
+            System.out.println("线程1申请资源");
+            try {
+                semaphore.acquire();
+                System.out.println("线程1申请到资源");
+                for (int i = 0; i < 50000; i++) {
+                    count.add();
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("线程1释放资源");
+            semaphore.release();
+        });
+        Thread t2 = new Thread(() -> {
+            System.out.println("线程2申请一个资源");
+            try {
+                semaphore.acquire();
+                System.out.println("线程2申请到资源");
+                for (int i = 0; i < 50000; i++) {
+                    count.add();
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("线程2释放一个资源");
+            semaphore.release();
+        });
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
+        System.out.println(count.count);
+    }
+}
