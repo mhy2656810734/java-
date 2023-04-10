@@ -1,0 +1,19 @@
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        while (scan.hasNext()) {
+            StringBuilder sBuilder = new StringBuilder();
+            String str = scan.nextLine();
+            for (int i = 0; i < str.length(); i++) {
+                char ch = str.charAt(i);
+                if (ch == ' ') {
+                    sBuilder.append(" ");
+                } else {
+                    sBuilder.append((char)(ch > 'E' ? ch - 5 : ch + 21));
+                }
+            }
+            System.out.println(sBuilder);
+        }
+    }
+}
