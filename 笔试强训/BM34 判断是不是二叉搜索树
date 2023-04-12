@@ -1,0 +1,41 @@
+import java.util.*;
+
+/*
+ * public class TreeNode {
+ *   int val = 0;
+ *   TreeNode left = null;
+ *   TreeNode right = null;
+ *   public TreeNode(int val) {
+ *     this.val = val;
+ *   }
+ * }
+ */
+
+public class Solution {
+    /**
+     * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+     *
+     * 
+     * @param root TreeNode类 
+     * @return bool布尔型
+     */
+     public static int prev = Integer.MIN_VALUE; // 记录前驱节点的值
+    public boolean isValidBST (TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        // 递归判断左子树是不是二叉搜索树
+        if (!isValidBST(root.left)) {
+            // 不是二叉搜索树
+            return false;
+        }
+        // 判断当前结点值是不是小于前驱结点值
+        if (root.val < prev) {
+            return false;
+        }
+        // 更新当前前驱节点的值
+        prev = root.val;
+        // 再去递归判断右子树是不是二叉搜索树
+        return isValidBST(root.right);
+    }
+}
