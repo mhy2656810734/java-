@@ -1,0 +1,35 @@
+import java.util.*;
+
+public class Solution {
+    public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
+        if (input.length == 0 || k == 0) {
+            return new ArrayList<Integer>();
+        }
+        // 建立小根堆
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>
+        (new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2 - o1;
+            }
+        });
+        // 然后将数组前k个数据插入优先级队列
+        for (int i = 0; i < k;i++) {
+            priorityQueue.offer(input[i]);
+        }
+        // 然后遍历数组剩下的数据,调整优先级队列即可
+        for (int i = k;i < input.length;i++) {
+            int val = priorityQueue.peek();
+            if (val > input[i]) {
+                priorityQueue.poll();
+                priorityQueue.offer(input[i]);
+            }
+        }
+        // 弹出堆中的数据就是要求的所有数据
+        ArrayList<Integer> list = new ArrayList<>();
+        while (!priorityQueue.isEmpty()) {
+            list.add(priorityQueue.poll());
+        }
+        return list;
+    }
+}
