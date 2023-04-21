@@ -1,0 +1,33 @@
+import java.util.*;
+
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        while (in.hasNextInt()) { // 注意 while 处理多个 case
+            int n = in.nextInt();
+            int[] arr = new int[n];
+            for (int i = 0; i < n;i++) {
+                arr[i] = in.nextInt();
+            }
+            System.out.println(LIS(arr,n));
+        }
+    }
+    public static int LIS(int[] arr,int n) {
+        int[] dp = new int[n];
+        dp[0] = 1;
+        int ret = 1;
+        for (int i = 1; i < n;i++) {
+            dp[i] = 1;
+            // 让当前的数据依次和之前的数据相比较
+            // 如果大就拼接,然后拿到最大值
+            for (int j = 0; j < i;j++) {
+                if (arr[i] > arr[j]) {
+                    dp[i] = Math.max(dp[i],dp[j]+1); 
+                }
+            }
+            ret = Math.max(ret,dp[i]);
+        }
+        return ret;
+    }
+}
