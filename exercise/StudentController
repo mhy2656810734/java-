@@ -1,0 +1,19 @@
+package com.spring.demo;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Controller;
+
+/**
+ * @author 26568
+ * @date 2023-04-22 10:50
+ */
+@Controller
+public class StudentController {
+    @Bean({"u1","use2","user3"})
+    public User user() {
+        User user = new User();
+        user.setId(1);
+        user.setName("张三");
+        return user;
+    }
+}
