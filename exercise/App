@@ -1,0 +1,14 @@
+public class App {
+    public static void main(String[] args) {
+        // 使用 ClassPathXmlApplicationContext 原因是因为 ApplicationContext没有销毁方法
+        // 1.获取 spring 上下文对象
+        ClassPathXmlApplicationContext context =
+                new ClassPathXmlApplicationContext("spring-config.xml");
+        // 2.获取指定 Bean
+        BeanComponent beanComponent = context.getBean("beanComponent",BeanComponent.class);
+        // 3.使用 Bean
+        beanComponent.sayHi();
+        // 执行销毁方法
+        context.destroy();
+    }
+}
