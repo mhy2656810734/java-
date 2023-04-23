@@ -1,0 +1,55 @@
+package com.spring.demo.component;
+ 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.stereotype.Component;
+ 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+ 
+/**
+ * @author 26568
+ * @date 2023-04-23 14:18
+ */
+/**
+ * 实现了 BeanNameAware 通知   BeanPostProcessor 为了实现 前置方法和后置方法
+ */
+@Component
+public class BeanComponent implements BeanNameAware, BeanPostProcessor {
+ 
+    @Override
+    public void setBeanName(String s) {
+        System.out.println("执行了通知 BeanName->:"+s);
+    }
+    /**
+     *  注解方式的初始化
+     */
+    @PostConstruct
+    public void doPostConstruct() {
+        System.out.println("执行了注解的初始化方法");
+    }
+    public void sayHi() {
+        System.out.println("执行普通方法");
+    }
+    /**
+     * 使用注解的方式执行销毁方法
+     */
+    @PreDestroy
+    public void doDestory() {
+        System.out.println("执行了销毁方法");
+    }
+    // 前置方法
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        System.out.println("执行前置方法");
+        return bean;
+    }
+    // 后置方法
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        System.out.println("执行后置方法");
+        return bean;
+    }
+}
