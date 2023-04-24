@@ -1,0 +1,63 @@
+import java.util.*;
+// 用这个类表示每个下标以及到达当前下标已经走的步数
+class Point{
+    int x = 0;
+    int y = 0;
+    int step = 0;
+    public Point(int x,int y,int step) {
+        this.x = x;
+        this.y = y;
+        this.step = step;
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        while (scan.hasNext()) {
+            String[] map = new String[10];
+            for (int i = 0; i < 10;i++) {
+                map[i] = scan.next();
+            }
+            // 拿到地图以后开始遍历求职
+            System.out.println(count(map,10,10));
+        }
+    }
+    public static int count(String[] map,int n,int m) {
+        // 迷宫的入口和出口
+        Point enter = new Point(0,1,0);
+        Point out = new Point(9,8,0);
+        // 二维数组表示每个位置可以走的方向
+        // 下 右 左 上
+        int[][] desc = {{1,0},{0,1},{0,-1},{-1,0}};
+        // 标记每个位置是否已经走过
+        boolean[][] flag = new boolean[n][m];
+        // 用队列来进行广度优先遍历
+        Queue<Point> queue = new LinkedList<>();
+        queue.offer(enter);
+        // 遍历队列
+        while (!queue.isEmpty()) {
+            // 取出对头元素
+            Point cur = queue.poll();
+            // 判断是不是已经到达出口了
+            if (cur.x == out.x && cur.y == out.y) {
+                return cur.step;
+            }
+            // 标记当前位置已经走过了
+            flag[cur.x][cur.y] = true;
+            // 然后循环将它的四个方向的坐标加进去
+            for (int i = 0; i < 4;i++) {
+                // 根据 下右左上来进行添加
+                Point next = new Point(cur.x+desc[i][0],
+                cur.y+desc[i][1],cur.step+1);
+                // 判断当前构造好的下一个位置是不是合法
+                // 如果合法并且没有走过 就添加进队列
+                if (next.x >=0 && next.x < n && 
+                next.y >= 0 && next.y < m && !flag[next.x][next.y] &&
+                map[cur.x].charAt(cur.y) == '.'){
+                    queue.offer(next);
+                }
+            }
+        }
+        return 0;
+    }
+}
