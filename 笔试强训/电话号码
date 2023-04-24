@@ -1,0 +1,53 @@
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        // 先设置对应关系
+        String str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String number = "22233344455566677778889999";
+        char[] arr1 = str.toCharArray();
+        char[] arr2 = number.toCharArray();
+        // 数字和字母的映射关系
+        HashMap<Character,Character> map = new HashMap<>();
+        // set进行去重排序
+        TreeSet<String> set = new TreeSet<>();
+        for (int i = 0; i < str.length();i++) {
+            map.put(arr1[i],arr2[i]);
+        }
+        while (scan.hasNext()) {
+            set.clear();
+            int n = scan.nextInt();
+            for (int i = 0; i < n;i++) {
+                String str1 = scan.next();
+                // 根据字符进行拼接
+                StringBuilder strBuilder = new StringBuilder();
+                for (int j = 0;j < str1.length();j++) {
+                    char ch = str1.charAt(j);
+                    // 如果是数字直接拼接,如果是字母找映射关系
+                    if (isDigit(ch)) {
+                        strBuilder.append(ch);
+                    } else if (isUpper(ch)) {
+                        strBuilder.append(map.get(ch));
+                    }
+                }
+                // 然后再拼接 -
+                String str2 = strBuilder.substring(0,3)+"-"+strBuilder.
+                substring(3);
+                set.add(str2);
+            }
+            // 遍历set 进行输出
+            for(String s:set) {
+                System.out.println(s);
+            }
+            System.out.println();
+        }
+    }
+    // 判断是不是数字
+    public static boolean isDigit(char ch) {
+        return '0' <= ch && ch <= '9';
+    }
+    // 判断是不是大写字母
+    public static boolean isUpper(char ch) {
+        return 'A'<=ch && ch <= 'Z'; 
+    }
+}
