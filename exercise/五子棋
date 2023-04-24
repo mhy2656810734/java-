@@ -1,0 +1,59 @@
+import java.util.*;
+public class Main {
+    public static final int N = 20;
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        while (scan.hasNext()) {
+            String[] table = new String[N];
+            for (int i = 0; i < N;i++) {
+                table[i] = scan.next();
+            }
+            // 通过一个方法来统计
+            System.out.println(sover(table)?"Yes":"No");
+        }
+    }
+    public static boolean sover(String[] table) {
+        for (int i = 0; i < N;i++) {
+            for (int j = 0; j < N;j++) {
+                // 如果当前位置是棋子的话开始统计
+                if (table[i].charAt(j) == '+' || table[i].charAt(j)=='*'){
+                    if (count(table,i,j,table[i].charAt(j)) >= 5) {
+                        return true;
+                    }
+                } 
+            }
+        }
+        return false;
+    }
+    public static int count(String[] table,int x,int y,char ch) {
+        // 根据当前位置 可以按照四个大的方向进行扫描: 
+        //横 竖 撇 捺
+        // 每个大的方向又可以分成两个小的方向: 横:先左后右竖:上 下...
+        int[][][] direct = {
+            {{0,-1},{0,1}}, // 横:先左后右
+            {{-1,0},{1,0}}, // 竖:先上后下
+            {{-1,-1},{1,1}},// 捺:左上到右下
+            {{-1,1},{1,-1}},// 撇:右上到左下
+        };
+        int result = 0;
+        // 方向
+        for (int i = 0; i < 4;i++) {
+            int c = 0;
+            // 统计单个方向的棋子数(只有两个方向)
+            for (int j = 0; j < 2;j++) {
+                // 将一个大方向分成两个小方向去遍历
+                int nx = x;
+                int ny = y;
+                // 避免越界
+                while (nx>=0&&nx<N&&
+                ny>=0&&ny<N&&table[nx].charAt(ny)==ch) {
+                    c++;
+                    nx = nx + direct[i][j][0];
+                    ny = ny + direct[i][j][1];
+                }
+            }
+            result = c > result?c:result;
+        }
+        return result-1;
+    }
+}
