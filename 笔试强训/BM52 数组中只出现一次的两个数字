@@ -1,0 +1,42 @@
+import java.util.*;
+
+
+public class Solution {
+    /**
+     * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+     *
+     *
+     * @param array int整型一维数组
+     * @return int整型一维数组
+     */
+    public int[] FindNumsAppearOnce (int[] array) {
+        // write code here
+        // 使用HashMap记录
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < array.length; i++) {
+            if (!map.containsKey(array[i])) {
+                map.put(array[i], 1);
+            } else {
+                map.put(array[i], map.get(array[i]) + 1);
+            }
+        }
+        int[] arr = new int[2];
+        int i = 0;
+        // 遍历hashmap
+        // for (Integer input : map.keySet()) {
+        //     // 根据key值获得value
+        //     if (map.get(input) == 1) {
+        //         arr[i++] = input;
+        //     }
+        // }
+        // 遍历map
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            // 根据key值获得value
+            if (entry.getValue() == 1) {
+                arr[i++] = entry.getKey();
+            }
+        }
+        Arrays.sort(arr);
+        return arr;
+    }
+}
