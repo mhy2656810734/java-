@@ -1,0 +1,45 @@
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        // 用来记录错误记录 出现的次数
+        HashMap<String, Integer> map = new HashMap<>();
+        // 用来保存出现的所有错误
+        ArrayList<String> list = new ArrayList<>();
+        while (scan.hasNext()) {
+            // 文件名
+            String str1 = scan.next();
+            // 行号
+            String str2 = scan.next();
+            // 根据 \\ 划分
+            String[] strArr = str1.split("\\\\");
+            // 拿到最后一个字符串
+            str1 = strArr[strArr.length - 1];
+            // 判断长度是否超过16
+            if (str1.length() > 16) {
+                // 进行截取
+                str1 = str1.substring(str1.length() - 16);
+            }
+            // 拼接行号
+            str1 = str1 + " " + str2;
+            // 然后判断当前是否已经存在
+            if (!map.containsKey(str1)) {
+                // map中不包含 则直接加入map和list
+                map.put(str1, 1);
+                list.add(str1);
+            } else {
+                // 已经存在map了 只让出现次数+1即可
+                map.put(str1, map.get(str1) + 1);
+            }
+        }
+        // 打印最后8条记录
+        int start = 0;
+        if (list.size() > 8) {
+            start = list.size() - 8;
+        }
+        // 开始打印错误记录
+        for (; start < list.size(); start++) {
+            System.out.println(list.get(start) + " " + map.get(list.get(start)));
+        }
+    }
+}
