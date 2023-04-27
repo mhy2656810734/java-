@@ -1,0 +1,42 @@
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        while (scan.hasNext()) {
+            int m = scan.nextInt();
+            String[] strArr = new String[m];
+            for (int i = 0; i < m;i++) {
+                strArr[i] = scan.next();
+            }
+            String str = scan.next();
+            int k = scan.nextInt();
+            List<String> list = new ArrayList<>();
+            // 遍历字符串 将兄弟单词加进去
+            for(int i = 0; i < m;i++) {
+                String s = strArr[i];
+                if (s.equals(str)) {
+                    // 如果相等,结束当前循环
+                    continue;
+                }
+                // 如果不相等 则要判断每个位置的字符是否一致
+                char[] arr1 = s.toCharArray();
+                char[] arr2 = str.toCharArray();
+                Arrays.sort(arr1);
+                Arrays.sort(arr2);
+                String s1 = new String(arr1);
+                String s2 = new String(arr2);
+                // 如果相等 说明是兄弟单词
+                if (s1.equals(s2)) {
+                    // 放入集合
+                    list.add(s);
+                }
+            }
+            // 对集合进行排序
+            Collections.sort(list);
+            System.out.println(list.size());
+            if (k <= list.size()) {
+                System.out.println(list.get(k-1));
+            }
+        }
+    }
+}
