@@ -1,0 +1,74 @@
+public class Test {
+    public static void main(String[] args) {
+       int[] arr = {3,2,1};
+        System.out.println(minNumberDisappeared(arr));
+    }
+    public static int minNumberDisappeared (int[] nums) {
+        // write code here
+        // 采用快排直接进行排序
+        quickSort(nums,0,nums.length-1);
+        // 然后将所有非0的数字全部换为1
+        boolean flag = true;
+        for(int i = 0; i < nums.length;i++) {
+            if (nums[i] < 1) {
+                nums[i] = 1;
+                flag = false;
+            } else {
+                break;
+            }
+        }
+        if (!flag) {
+            return 1;
+        }
+        if (nums[0] > 1) {
+            return 1;
+        }
+        // 解决中间顺序不对的问题
+        // 使用map开始对应
+        HashMap<Integer,Integer> map = new HashMap<>();
+        int num = nums[0];
+        for (int i = 0;i < nums.length;i++) {
+            map.put(nums[i],num++);
+        }
+        // 然后遍历map 确定是不是有没有对应上的
+        // for (Integer intput:map.keySet()) {
+        //     if (intput != map.get(intput)) {
+        //         return map.get(intput);
+        //     }
+        // }
+        for (Map.Entry<Integer,Integer> entry:map.entrySet()) {
+            if (!entry.getKey().equals(entry.getValue()) ) {
+                return entry.getValue();
+            }
+        }
+        return nums[0]+1;
+    }
+    public static void quickSort(int[] nums,int left,int right) {
+        if (left >= right) {
+            return;
+        }
+        int pivot = quick(nums,left,right);
+        quickSort(nums,left,pivot-1);
+        quickSort(nums,pivot+1,right);
+    }
+    // 挖坑法
+    public static int quick(int[] arr,int left,int right) {
+        int pivot = arr[left];
+        while (left < right) {
+            // 从右往左找小
+            while (left < right && arr[right] >= pivot) {
+                right--;
+            }
+            // 找到小的,放在坑位
+            arr[left] = arr[right];
+            // 左到右找大
+            while (left < right && arr[left] <= pivot) {
+                left++;
+            }
+            arr[right] = arr[left];
+        }
+        // 放在最后的位置
+        arr[left] = pivot;
+        return left;
+    }
+}
