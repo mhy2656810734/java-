@@ -1,0 +1,35 @@
+import java.util.*;
+
+
+public class Solution {
+    /**
+     * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+     *
+     * 
+     * @param m int整型 背包容量
+     * @param weights int整型一维数组 物品质量
+     * @param values int整型一维数组 物品价值
+     * @param n int整型 物品数量
+     * @return int整型
+     */
+    public int function (int m, int[] weights, int[] values, int n) {
+        int[][] maxValue = new int[n+1][m+1];
+        // i 表示物品编号
+        // j 表示背包容量
+        for (int i = 1; i <= n;i++) {
+            for (int j = 1; j <= m;j++) {
+                // 先比较当前j容量能否放下当前这个物品
+                if (weights[i-1] <= j) {
+                    // 可以放下
+                    // 有两种操作:放进去和不放进去
+                    // 比较不放进去和放进去的值,选最大
+                    maxValue[i][j] = Math.max(maxValue[i-1][j],maxValue[i-1][j-weights[i-1]]+values[i-1]);
+                } else {
+                    // 放不进去 
+                    maxValue[i][j] = maxValue[i-1][j]; 
+                }
+            }
+        }
+        return maxValue[n][m];
+    }
+}
