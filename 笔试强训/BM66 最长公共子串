@@ -1,0 +1,41 @@
+import java.util.*;
+
+
+public class Solution {
+    /**
+     * longest common substring
+     * @param str1 string字符串 the string
+     * @param str2 string字符串 the string
+     * @return string字符串
+     */
+    public String LCS (String str1, String str2) {
+        // write code here
+        int n = str1.length();
+        int m = str2.length();
+        String[][] arr = new String[n+1][m+1];
+        // 初始化
+        for (int i = 0; i <= n;i++) {
+            arr[i][0] = "";
+        }
+        for (int i = 1; i <= m;i++) {
+            arr[0][i] = "";
+        }
+        // 记录最长公共子串
+        String maxStr = "";
+        for (int i = 1; i <= n;i++) {
+            for (int j = 1; j <= m;j++) {
+                // 如果当前字符一样
+                if (str1.charAt(i-1) == str2.charAt(j-1)) {
+                   arr[i][j] = arr[i-1][j-1] +str1.charAt(i-1);
+                   // 更新最长公共子串
+                   if (arr[i][j].length() > maxStr.length()) {
+                    maxStr = arr[i][j];
+                   }
+                } else {
+                    arr[i][j] = "";
+                }
+            }
+        }
+        return maxStr;
+    }
+}
