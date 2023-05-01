@@ -1,0 +1,38 @@
+public class ThreadDem {
+    public static void main(String[] args) {
+        // 创建两个实例:jiangyou和cu
+        Object jiangyou = new Object();
+        Object cu = new Object();
+        // 创建两个线程
+        Thread t1 = new Thread(() -> {
+            // 先拿到cu
+            synchronized (cu) {
+                try {
+                    // 为了让t2拿到jiangyou
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                synchronized (jiangyou) {
+                    System.out.println("小马拿到了醋和酱油");
+                }
+            }
+        });
+        Thread t2 = new Thread(() -> {
+            // 先拿到cu
+            synchronized (jiangyou) {
+                try {
+ 
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                synchronized (cu) {
+                    System.out.println("女朋友拿到了醋和酱油");
+                }
+            }
+        });
+        t1.start();
+        t2.start();
+    }
+}
