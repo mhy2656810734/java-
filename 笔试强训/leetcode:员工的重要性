@@ -1,0 +1,20 @@
+class Solution {
+    public int DFS(Map<Integer,Employee> map,int id) {
+        // 得到当前员工
+        Employee cur = map.get(id);
+        // 遍历当前员工的所有下属，累加重要度
+        int sum = 0;
+        sum += cur.importance;
+        for (Integer emId:cur.subordinates) {
+            sum += DFS(map,emId);
+        }
+        return sum;
+    }
+    public int getImportance(List<Employee> employees, int id) {
+        Map<Integer,Employee> map = new HashMap<>();
+        for (Employee cur:employees) {
+            map.put(cur.id,cur);
+        }
+        return DFS(map,id);
+    }
+}
