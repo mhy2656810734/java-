@@ -1,0 +1,101 @@
+package exercise;
+
+import java.util.*;
+
+/**
+ * @author 26568
+ * @date 2023-04-27 9:12
+ */
+public class Exer {
+    public static void main(String[] args) {
+       int[] arr = {1,3,0,5,4,8,7,6,9,2};
+       shellSort(arr);
+        System.out.println(Arrays.toString(arr));
+    }
+    public static void selectSort(int[] arr) {
+        for (int i = 0; i < arr.length;i++) {
+            int minIndex = i;
+            for (int j = i+1; j < arr.length;j++) {
+                if (arr[j] < arr[minIndex]) {
+                    minIndex = j;
+                }
+            }
+            if (minIndex != i) {
+                int temp = arr[minIndex];
+                arr[minIndex] = arr[i];
+                arr[i] = temp;
+            }
+        }
+    }
+    public static void shellSort(int[] arr) {
+        // 确定步长，每次让步长 /2
+        int gap = arr.length / 2;
+        while (gap > 0) {
+            shell(arr,gap);
+            gap /= 2;
+        }
+    }
+    public static void shell(int[] arr,int gap) {
+        // 从 gap位置开始
+        for (int i = gap; i < arr.length;i++) {
+            int temp = arr[i];
+            int j = i -gap;
+            for (;j >= 0; j -= gap) {
+
+                if (arr[j] >= temp) {
+                    arr[j + gap] = arr[j];
+                } else {
+                    break;
+                }
+            }
+            arr[j+gap] = temp;
+        }
+    }
+}
+class MyCompo implements Comparator<int[]> {
+    @Override
+    public int compare(int[] o1, int[] o2) {
+        return 0;
+    }
+}
+class Solution {
+    /**
+     * 先用map映射所有数字和字母的对应关系  然后用index遍历源字符串的每个位置,得到映射以后的字符串，然后使用cur进行拼接
+     * 当 index已经超过原来字符串长度时结束递归
+     * @param digits 源字符串
+     * @param list   最终返回字符串集合
+     * @param cur    用来拼接字符串
+     * @param index  源字符串的下标
+     */
+    public void DFS(String digits,List<String> list,String cur,int index,Map<String,String> map) {
+        if (index >= digits.length()) {
+            list.add(cur);
+            return;
+        }
+        // 得到当前下标数字的映射字符串
+        String strMap = map.get(digits.charAt(index)+"");
+        // 遍历这个映射字符串
+        for (int i = 0; i < strMap.length();i++) {
+            char ch = strMap.charAt(i);
+            DFS(digits,list,cur+ch,index+1,map);
+        }
+    }
+    public List<String> letterCombinations(String digits) {
+        Map<String, String> phoneMap = new HashMap<String, String>() {{
+            put("2", "abc");
+            put("3", "def");
+            put("4", "ghi");
+            put("5", "jkl");
+            put("6", "mno");
+            put("7", "pqrs");
+            put("8", "tuv");
+            put("9", "wxyz");
+        }};
+        List<String> list = new ArrayList<>();
+        if (digits.length() == 0) {
+            return list;
+        }
+        DFS(digits,list,"",0,phoneMap);
+        return list;
+    }
+}
