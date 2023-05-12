@@ -1,0 +1,24 @@
+import java.util.*;
+
+public class Solution {
+    public ArrayList<ArrayList<Integer>> permute(int[] num) {
+        ArrayList<ArrayList<Integer>> ans=new ArrayList<>();
+        ArrayList<Integer> tmp=new ArrayList<>();
+        build(num,tmp,ans);
+        return ans;
+    }
+    public void build(int[] num,ArrayList<Integer> tmp,ArrayList<ArrayList<Integer>> ans){
+        if(tmp.size()==num.length){
+            ans.add(new ArrayList<>(tmp));
+            return;
+        }
+        for(int i=0;i<num.length;i++){//i从0开始计数
+            if(tmp.contains(num[i])){
+                continue;
+            }
+            tmp.add(num[i]);
+            build(num,tmp,ans);
+            tmp.remove(tmp.size()-1);
+        }
+    }
+}
