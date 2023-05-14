@@ -1,0 +1,191 @@
+package sort;
+
+import javax.swing.plaf.nimbus.State;
+import java.util.Arrays;
+import java.util.Stack;
+
+/**
+ * 快速排序
+ * 时间复杂度:O(Nlogn)
+ * 空间复杂度:O(1)
+ * 稳定性:不稳定
+ * @author 26568
+ * @date 2023-04-05 10:16
+ */
+public class QSort {
+    public static void main(String[] args) {
+        int[] arr = {1,6,7,5,9,10,8,2,3};
+        //quickSort(arr,0,arr.length-1);
+        noQuickSort(arr);
+        System.out.println(Arrays.toString(arr));
+    }
+//    // 挖坑法
+//    public static void quickSort1(int[] arr,int start,int end) {
+//        if (start >= end) {
+//            return;
+//        }
+//        int pivot = quick1(arr,start,end);
+//        quickSort1(arr,start,pivot);
+//        quickSort1(arr,pivot+1,end);
+//    }
+//    public static int quick1(int[] arr,int left,int right) {
+//        // 首先记录当前left位置的值
+//        int pivot = arr[left];
+//        while (left < right) {
+//            // 从右边找小
+//            while ((left < right) &&(arr[right] >= pivot)) {
+//                right--;
+//            }
+//            // 找大比pivot小的
+//            arr[left] = arr[right];
+//            // 从左找比pivot大的
+//            while ((left < right) &&(arr[left] <= pivot)) {
+//                left++;
+//            }
+//            // 找到比pivot大的
+//            arr[right] = arr[left];
+//        }
+//        // 将原来数据放到最后的坑位
+//        arr[left] = pivot;
+//        return left;
+//   }
+    // 挖坑法
+    public static void quickSort1(int[] arr,int start,int end) {
+        // 结束递归条件
+        if (start >= end) {
+            return;
+        }
+        // 中间位置
+        int mid = finMidIndex(arr,start,end);
+        swap(arr,start,mid);
+        int pivot = quick(arr,start,end);
+        // 左递归
+        quickSort1(arr,start,pivot);
+        // 右递归
+        quickSort1(arr,pivot+1,end);
+    }
+    public static int quick(int[] arr,int left,int right) {
+        int pivot = arr[left];
+        while (left < right) {
+            while ((left < right) &&(arr[right] >= pivot)) {
+                right--;
+            }
+            arr[left] = arr[right];
+            while ((left < right) &&(arr[left] <= pivot)) {
+                left++;
+            }
+            arr[right] = arr[left];
+        }
+        arr[left] = pivot;
+        return left;
+    }
+    // 三数取中法
+    public static int finMidIndex(int[] arr,int left,int right) {
+        int mid  = (left+right) >>1;
+        if (arr[left] < arr[right]) {
+            if (arr[left] > arr[mid]) {
+                return left;
+            } else if (arr[mid] > arr[right]) {
+                return right;
+            } else {
+                return mid;
+            }
+        } else {
+            if (arr[right] > arr[mid]) {
+                return right;
+            } else if (arr[left] < arr[mid]) {
+                return left;
+            } else {
+                return mid;
+            }
+        }
+    }
+    public static void swap(int[] arr,int x,int y) {
+        int temp = arr[x];
+        arr[x] = arr[y];
+        arr[y] = temp;
+    }
+    // 2.hero 方法 左右指针法
+    public static void quickSort2(int[] arr,int start,int end) {
+        if (start >= end) {
+            return;
+        }
+        int mid = finMidIndex(arr,start,end);
+        swap(arr,start,mid);
+        int pivot = quick2(arr,start,end);
+        quickSort2(arr,start,pivot);
+        quickSort2(arr,pivot+1,end);
+    }
+    public static int quick2(int[] arr,int left,int right) {
+        int i = left;
+        int pivot = arr[left];
+        while (left < right) {
+            while ((left < right) && (arr[right] >= pivot)) {
+                right--;
+            }
+            while ((left<right) &&(arr[left] <= pivot))  {
+                left++;
+            }
+            swap(arr,left,right);
+        }
+        swap(arr,i,left);
+        return left;
+    }
+    public static void quickSort(int[] arr,int left,int right) {
+        if (left >= right) {
+            return;
+        }
+        int mid = finMidIndex(arr,left,right);
+        swap(arr,left,mid);
+        int pivot = quick3(arr,left,right);
+        quickSort(arr,left,pivot);
+        quickSort(arr,pivot+1,right);
+    }
+    // 3.前后指针法
+    public static int quick3(int[] arr,int left,int right) {
+        int prev = left;
+        int cur = left+1;
+        while (cur <= right) {
+            if (arr[cur] < arr[left] && arr[++prev] != arr[cur]) {
+                swap(arr,prev,cur);
+            }
+            cur++;
+        }
+        swap(arr,left,prev);
+        return prev;
+    }
+    // 非递归实现快排
+    public static void noQuickSort(int[] arr) {
+        Stack<Integer> stack = new Stack<>();
+        int start = 0;
+        int end = arr.length-1;
+        // 先排序一次
+        int pivot = quick2(arr,start,end);
+        // 判断左边是不是只有一个元素
+        if (start < pivot-1) {
+            // 将范围加入
+            stack.push(start);
+            stack.push(pivot-1);
+        }
+        if (pivot+1 < end) {
+            stack.push(pivot+1);
+            stack.push(end);
+        }
+        // 开始重新赋值继续排序
+        while (!stack.isEmpty()) {
+            end = stack.pop();
+            start = stack.pop();
+            pivot = quick2(arr,start,end);
+            // 判断左边是不是只有一个元素
+            if (start < pivot-1) {
+                // 将范围加入
+                stack.push(start);
+                stack.push(pivot-1);
+            }
+            if (pivot+1 < end) {
+                stack.push(pivot+1);
+                stack.push(end);
+            }
+        }
+    }
+}
