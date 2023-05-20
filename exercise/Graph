@@ -1,0 +1,191 @@
+package graph;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+
+/**
+ * 图
+ */
+public class Graph {
+    private ArrayList<String> vetexList;// 存储顶点集合
+    private int[][] edges;// 存储图对应的邻接矩阵
+    private int numOfEdges;// 表示边的数目
+    private boolean[] isVisited;// 用来标记是否被访问过
+
+    public static void main(String[] args) {
+        int n = 8;
+        String[] str = {"1","2","3","4","5","6","7","8"};
+        // 创建图的对象
+        Graph graph = new Graph(n);
+        // 循环添加结点
+        for (String str1:str) {
+            graph.insertVertex(str1);
+        }
+        // 添加边
+        graph.insertEdge(0,1,1);
+        graph.insertEdge(0,2,1);
+        graph.insertEdge(1,3,1);
+        graph.insertEdge(1,4,1);
+        graph.insertEdge(3,7,1);
+        graph.insertEdge(4,7,1);
+        graph.insertEdge(2,5,1);
+        graph.insertEdge(2,6,1);
+        graph.insertEdge(5,6,1);
+        // 展示矩阵
+        graph.show();
+        System.out.println("深度优先遍历");
+        graph.dfs();
+//        System.out.println("广度优先遍历");
+//        graph.bfs();
+    }
+
+    /**
+     * 构造器
+     *
+     * @param n 结点的个数
+     */
+    public  Graph(int n) {
+        vetexList = new ArrayList<>(n);
+        edges = new int[n][n];
+        isVisited = new boolean[n];
+    }
+
+    // 添加结点
+    public void insertVertex(String str) {
+        vetexList.add(str);
+    }
+
+    /**
+     * 设置边
+     *
+     * @param v1     下标
+     * @param v2     下标
+     * @param weight 权值
+     */
+    public void insertEdge(int v1, int v2, int weight) {
+        edges[v1][v2] = weight;
+        edges[v2][v1] = weight;
+        numOfEdges++;
+    }
+
+    // 得到边的数目
+    public int getNumOfEdges() {
+        return numOfEdges;
+    }
+
+    // 得到结点个数
+    public int getNumofVertex() {
+        return vetexList.size();
+    }
+
+    // 返回下标 i 对应的结点值
+    public String getValue(int i) {
+        return vetexList.get(i);
+    }
+    // 返回下标 v1 v2对应的权值
+    public int getWeight(int v1,int v2) {
+        return edges[v1][v2];
+    }
+    // 显示图对应的矩阵
+    public void show() {
+        for (int[] arr:edges) {
+            System.out.println(Arrays.toString(arr));
+        }
+    }
+    // 得到第一个邻接结点的下标w
+    public int getFirstNeighboor(int index) {
+        for (int i = 0; i < vetexList.size();i++) {
+            if (edges[index][i] > 0) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    // 根据前一个邻接节点的下标来获取下一个邻接节点的下标
+    public int getNextNeighboor(int v1,int v2) {
+        for (int i = v2 + 1; i < vetexList.size();i++) {
+            if (edges[v1][i] > 0) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 深度优先遍历
+     * @param isVisited 标记是否被访问过
+     * @param index 下标
+     */
+    public void dfs(boolean[] isVisited,int index) {
+        // 首先打印i下标的结点值
+        System.out.print(getValue(index)+"->");
+        // 然后标记为已经访问过
+        isVisited[index] = true;
+        // 然后的到i下标的邻接节点
+        int w = getFirstNeighboor(index);
+        // 如果存在
+        while (w != -1) {
+            // 判断该结点是否被访问过
+            if (!isVisited[w]) {
+                // 递归访问
+                dfs(isVisited,w);
+            }
+            // 如果当前w结点已经被访问过了，就得到下一个邻接节点
+            w = getNextNeighboor(index,w);
+        }
+    }
+    // 重载dfs算法，对所有节点进行遍历
+    public void dfs() {
+        for (int i = 0; i < vetexList.size();i++) {
+            if (!isVisited[i]) {
+                dfs(isVisited,i);
+            }
+        }
+    }
+
+    /**
+     * 广度优先遍历
+     * @param isVisited 标记是否被访问过
+     * @param i  下标
+     */
+    private void bfs(boolean[] isVisited,int i) {
+        int u; // 表示队列的头结点对应的下标
+        int w;// 邻接节点
+        // 使用队列，记录结点的访问顺序
+        LinkedList queue = new LinkedList();
+        // 访问结点 输出结点信息
+        System.out.print(getValue(i)+"->");
+        // 标记为已经访问
+        isVisited[i] = true;
+        // 将结点下标加入队列
+        queue.addLast(i);
+        // 队列不为空就进行循环
+        while (!queue.isEmpty()) {
+            // 取出头结点的下标
+            u = (Integer)queue.removeFirst();
+            // 得到第一个邻接节点
+            w = getFirstNeighboor(u);
+            // 如果该结点存在
+            while (w != -1) {
+                // 先判断是否被访问过
+                if (!isVisited[w]) {
+                    System.out.print(getValue(w)+"->");
+                    isVisited[w] = true;
+                    // 入队列
+                    queue.addLast(w);
+                }
+                // 如果已经被访问过 找w后面的邻接节点
+                w = getNextNeighboor(u,w);
+            }
+        }
+    }
+    // 重载bfs方法
+    public void bfs() {
+        for (int i = 0; i < getNumofVertex();i++) {
+            if (!isVisited[i]) {
+                bfs(isVisited,i);
+            }
+        }
+    }
+}
