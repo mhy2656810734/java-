@@ -1,0 +1,163 @@
+
+
+import sun.reflect.generics.tree.Tree;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Random;
+
+
+public class Sort {
+    public static void main(String[] args) {
+        int[] arr = {5,9,10,7,3,2,0,20,14,31};
+       // insertSort(arr);
+        //mergeSort(arr);
+        noMergeSort(arr);
+        System.out.println(Arrays.toString(arr));
+        //textInsertSort();
+        textMergeSort();
+    }
+    // 堆排序 时间复杂度:O(nlogN)  空间复杂度：O（1） 不稳定
+    public static void heapSort(int[] arr) {
+        createHeap(arr);
+        int end = arr.length-1;
+        while (end > 0) {
+            int temp = arr[0];
+            arr[0] = arr[end];
+            arr[end] = temp;
+            siftDown(arr,0,end);
+            end--;
+        }
+    }
+    // 先建堆
+    public static void createHeap(int[] arr) {
+        for(int parent = (arr.length - 1)/2;parent >= 0; parent--) {
+            siftDown(arr,parent,arr.length);
+        }
+    }
+    public static void siftDown(int[] arr,int parent,int len) {
+        int child = 2 * parent +1;
+        while (child < len) {
+            if ((child + 1 < len) && (arr[child + 1] > arr[child])) {
+                child++;
+            }
+            if (arr[child] > arr[parent]) {
+                int temp = arr[child];
+                parent = child;
+                child = 2 * parent + 1;
+            } else {
+                break;// 已经调整好；
+            }
+        }
+    }
+    public static void textHeapSort() {
+        int[] arr = new int[100000];
+        Random random = new Random();
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = random.nextInt();
+        }
+        long start = System.currentTimeMillis();
+        heapSort(arr);
+        long end = System.currentTimeMillis();
+        System.out.println("堆排序时间复杂度:"+(end -start));
+    }
+    // 直接插入排序  时间复杂度:O(n^2)  空间复杂度：O（1） 稳定
+    public static void insertSort(int[] arr) {
+        // 默认第一个是有序的
+        for (int i = 1; i < arr.length;i++) {
+            int j = i-1;
+            int temp = arr[i];
+            for (; j >= 0; j--) {
+                if (arr[j] > temp) {
+                    arr[j+1] = arr[j];
+                } else {
+                    break;
+                }
+            }
+            arr[j+1] = temp;
+        }
+    }
+    public static void textInsertSort() {
+        int[] arr = new int[100000];
+        Random random = new Random();
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = random.nextInt();
+        }
+        long start = System.currentTimeMillis();
+        insertSort(arr);
+        long end = System.currentTimeMillis();
+        System.out.println("插入排序时间复杂度:"+(end -start));
+    }
+    // 归并排序  时间复杂度:O(N^logn)  空间复杂度:O(n)  稳定
+    public static void mergeSort(int[] arr) {
+        mergeSort(arr,0, arr.length-1);
+    }
+    public static void mergeSort(int[] arr,int left,int right) {
+        if (left == right) {
+            return;
+        }
+        int mid = (left+right)/2;
+        mergeSort(arr,left,mid);
+        mergeSort(arr,mid+1,right);
+        // 开始合并
+        merge(arr,left,mid,right);
+    }
+    public static void merge(int[] arr,int left,int mid,int right) {
+        // 开始合并两个数组
+        int s1 = left;
+        int e1 = mid;
+        int s2 = mid+1;
+        int e2 = right;
+        int[] temp = new int[right - left +1];
+        int k = 0;
+        while ((s1 <= e1) &&(s2 <= e2)) {
+            if (arr[s1] <= arr[s2]) {
+                temp[k++] = arr[s1++];
+            } else {
+                temp[k++] = arr[s2++];
+            }
+        }
+        while (s1 <= e1) {
+            temp[k++] = arr[s1++];
+        }
+        while(s2 <= e2) {
+            temp[k++] = arr[s2++];
+        }
+        // 拷贝回原来的数组
+        for (int i = 0; i < k;i++) {
+            arr[i+left] = temp[i];
+        }
+    }
+    public static void textMergeSort() {
+        int[] arr = new int[100000];
+        Random random = new Random();
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = random.nextInt();
+        }
+        long start = System.currentTimeMillis();
+        mergeSort(arr);
+        long end = System.currentTimeMillis();
+        System.out.println("归并排序时间复杂度:"+(end -start));
+    }
+    // 归并排序非递归实现
+    public static void noMergeSort(int[] arr) {
+        int gap = 1;// gap代表步长
+        while (gap < arr.length) {
+            // 分组并对每一组进行排序
+            for (int i = 0; i < arr.length;i += gap*2) {
+                int left = i;
+                int mid = i+gap-1;
+                int right = mid+gap;
+                // 避免范围越界
+                if (mid >= arr.length) {
+                    mid = arr.length-1;
+                }
+                if (right >= arr.length) {
+                    right = arr.length-1;
+                }
+                merge(arr,left,mid,right);
+            }
+            gap *= 2;
+        }
+    }
+}
