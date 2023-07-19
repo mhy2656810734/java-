@@ -1,0 +1,292 @@
+package exercise;
+
+import java.util.*;
+import java.util.concurrent.FutureTask;
+
+
+
+import java.util.Scanner;
+
+public class totalSort {
+    public static void main(String[] args) {
+        int[] arr = {5,1,2,7,9,3,0,1};
+        heapSort(arr);
+        System.out.println(Arrays.toString(arr));
+    }
+    /**
+     * 冒泡排序时间复杂度：o(n^2)
+     * 空间复杂度:O(1)
+     * 稳定
+     * @author 26568
+     * @date 2023-04-27 9:12
+     */
+    public static void bubbleSort(int[] arr) {
+        boolean flag = true;
+        for (int i = 0; i < arr.length - 1; i++) {
+            for (int j = 0; j < arr.length - 1 - i; j++) {
+                if (arr[j] > arr[j+1]) {
+                    int temp = arr[j+1];
+                    arr[j+1] = arr[j];
+                    arr[j] = temp;
+                    flag = false;
+                }
+            }
+            if (false) {
+                break;
+            }
+        }
+    }
+
+    /**
+     * 希尔排序时间复杂度:O(N^1.3)  空间复杂度O(1) 不稳定
+     * @param arr
+     */
+    public static void shellSort(int[] arr) {
+        int gap = arr.length/2;
+        while (gap > 0) {
+            shell(arr,gap);
+            gap /= 2;
+        }
+    }
+    public static void shell(int[] arr,int gap) {
+        // 从 gap位置开始排序
+        for (int i = gap; i < arr.length;i++) {
+            int temp = arr[i];
+            int j = i-gap;
+            for (; j >= 0;j -= gap) {
+                if (arr[j] >= temp) {
+                    arr[j+gap] = arr[j];
+                } else {
+                    break;
+                }
+            }
+            arr[j+gap] = temp;
+        }
+    }
+
+    /**
+     * 选择排序的时间复杂度 O(N^2)  与数据是否有序无关
+     * 空间复杂度O(1)
+     *  不稳定
+     * @param arr
+     */
+    public static void selectSort(int[] arr) {
+        int left = 0;
+        int right = arr.length - 1;
+        while (left < right) {
+            // 先假设最大最小时都是left下标
+            int minIndex = left;
+            int maxIndex = left;
+            for (int i = left+1; i <= right ; i++) {
+                if (arr[maxIndex] < arr[i]) {
+                    maxIndex = i;
+                }
+                if(arr[minIndex] > arr[i]) {
+                    minIndex = i;
+                }
+            }
+            // 此时minIndex 和maxIndex 记录着最小和最大值 分别和两个边界值 right和left交换
+            swap(arr,left,minIndex);
+            // 注意maxIndex 可能一直是left
+            if (maxIndex == left) {
+                maxIndex = minIndex;
+            }
+            swap(arr,right,maxIndex);
+            left++;
+            right--;
+        }
+    }
+
+    /**
+     * 快排的时间复杂度:0(N*log(N))  最坏情况下O(N^2)   空间复杂度O(1)  不稳定
+     * @param arr
+     * @param left
+     * @param right
+     */
+    public static void quickSort(int[] arr,int left,int right) {
+        if (left >= right) {
+            return;
+        }
+        // TODO 三数取中法
+        int mid = findMiddle(arr,left,right);
+        swap(arr,left,mid);
+        int pivot = quick2(arr,left,right);
+        quickSort(arr,left,pivot);
+        quickSort(arr,pivot+1,right);
+    }
+    // 三数取中法
+    public static int findMiddle(int[] arr,int left,int right) {
+        int mid = (left + right) >> 1;
+        if (arr[left] < arr[right]) {
+            if (arr[mid] < arr[left]) {
+                return left;
+            } else if (arr[mid] > arr[right]) {
+                return right;
+            } else {
+                return mid;
+            }
+        } else {
+            if (arr[mid] <arr[right]) {
+                return right;
+            } else if (arr[mid] > arr[left]) {
+                return left;
+            } else {
+                return mid;
+            }
+        }
+    }
+    // 挖坑法
+    public static int quick(int[] arr,int left,int right) {
+        // 首先保存left下标的数据
+        int pivot = arr[left];
+        while (left < right) {
+            // 从右往左找小
+            while ((left < right) && (arr[right] >= pivot)) {
+                right--;
+            }
+            // 找到了比pivot小的
+            arr[left] = arr[right];
+            // 从左到右找大
+            while ((left < right) && (arr[left] <= pivot)) {
+                left++;
+            }
+            // 找到比pivot大的
+            arr[right] = arr[left];
+        }
+        // 将pivot 放到最后位置上
+        arr[left] = pivot;
+        return left;
+    }
+    // 左右指针法
+    public static int quick2(int[] arr,int left,int right) {
+        int index = left;
+        int pivot = arr[left];
+        while (left < right) {
+            while (left < right && arr[right] >= pivot) {
+                right--;
+            }
+            while (left < right && arr[left] <= pivot) {
+                left++;
+            }
+            // 找到大的和小的进行交换
+            swap(arr,left,right);
+        }
+        // 交接点和index交换
+        swap(arr,index,left);
+        return left;
+    }
+
+    /**
+     * 归并排序时间复杂度O(N*logN) 空间复杂度：O(N)  稳定
+     * @param arr
+     * @param left
+     * @param right
+     */
+    public static void mergeSort(int[] arr,int left,int right) {
+        if (left >= right) {
+            return;
+        }
+        // 先递归
+        int mid = (left+right) >> 1;
+        mergeSort(arr,left,mid);
+        mergeSort(arr,mid+1,right);
+        // 后合并
+        merge(arr,left,mid,right);
+    }
+    public static void merge(int[] arr,int left,int mid,int right) {
+        int s1 = left;
+        int e1 = mid;
+        int s2 = mid+1;
+        int e2 = right;
+        int k = 0;
+        int[] temp = new int[right -  left+1];
+        while ((s1 <= e1) && (s2 <= e2)) {
+            // 先插入小的
+            if (arr[s1] <= arr[s2]) {
+                temp[k++] = arr[s1++];
+            } else {
+                temp[k++] = arr[s2++];
+            }
+        }
+        // 如果有不为空的继续拼接
+        while (s1 <= e1) {
+            temp[k++] = arr[s1];
+            s1++;
+        }
+        while (s2 <= e2) {
+            temp[k++] = arr[s2++];
+        }
+        // 遍历拷贝回原数组
+        for (int i = 0; i < k; i++) {
+            arr[i+left] = temp[i];
+        }
+    }
+    public static void swap(int[] arr,int x,int y) {
+        int temp = arr[x];
+        arr[x] = arr[y];
+        arr[y] = temp;
+    }
+
+    /**
+     * 直接插入排序时间复杂度 O(N^2) 空间复杂度O（1）  稳定   数据不多趋于有序的时候非常快
+     * @param arr
+     */
+    public static void insertSort(int[] arr) {
+        // 默认第一个有序，从第二个开始排序
+        for (int i = 1; i < arr.length; i++) {
+            int j = i-1;
+            int temp = arr[i];
+            for (;j >= 0;j--) {
+                if (arr[j] > temp) {
+                    // 如果当前位置的数据比i下标的数据大，就往后移动
+                    arr[j+1] = arr[j];
+                } else {
+                    break;
+                }
+            }
+            // 此时说明j上位置已经比i位置的要小了，将i位置temp放在j+1即可
+            arr[j+1] = temp;
+        }
+    }
+
+    /**
+     * 堆排序 时间复杂度：O（N*logN）  空间复杂度:O(1)  不稳定
+     * @param arr
+     */
+    public static void heapSort(int[] arr) {
+        // 升序需要建立大根堆
+        createBig(arr);
+        // 交换最后一个和第一个元素
+        int len = arr.length -1;
+        while (len > 0) {
+            swap(arr,0,len);
+            // 调整 0 - len之间的元素为大根堆
+            shifUp(arr,0,len);
+            len--;
+        }
+    }
+    // 创建大根堆
+    public static void createBig(int[] arr) {
+        // 从最后一个非叶子节点开始向下调整
+        for (int parent = (arr.length -1 -1) / 2; parent >= 0 ; parent--) {
+            shifUp(arr,parent,arr.length);
+        }
+    }
+    public static void shifUp(int[] arr,int parent,int len) {
+        int child = 2 * parent +1;
+        while (child < len) {
+            // 拿到左右孩子节点的较大值
+            if (child + 1 < len && (arr[child + 1] > arr[child])) {
+                child++;
+            }
+            // 如果孩子节点大于父节点就进行交换
+            if (arr[child] > arr[parent]) {
+                swap(arr,parent,child);
+                parent = child;
+                child = 2 * parent +1;
+            } else {
+                break;
+            }
+        }
+    }
+}
