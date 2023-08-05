@@ -1,0 +1,48 @@
+package exercise;
+
+/**
+ * @author 26568
+ * @date 2023-08-05 17:16
+ */
+public class Count {
+    public static void main(String[] args) {
+        String str = "::";
+        String[] strs = str.split(":");
+        if(strs.length == 3 && strs[0] == null) {
+            System.out.println("你好");
+        }
+    }
+    public static String solve (String IP) {
+        // write code here
+        if (isFour(IP)) {
+            return "IPv4";
+        }
+        if (isSix(IP)) {
+            return "IPv6";
+        }
+        return "";
+    }
+    public static boolean isFour(String str) {
+        // 首先 根据 . 分成四个字符串数组
+        String[] strs = str.split(".");
+        // 遍历每个字符串 看看失败否满足条件
+        if (strs.length != 4) {
+            return false;
+        }
+        for (int i = 0; i < 4;i++) {
+            String s = strs[i];
+            // 先判断是不是在 0-255
+            if (Integer.parseInt(s) < 0 || Integer.parseInt(s) > 255) {
+                return false;
+            }
+            // 然后判断每个字符串是不是有0开头的
+            if (s.length() > 2 && s.charAt(0) == '0' && s.charAt(1) != '0') {
+                return false;
+            }
+        }
+        return true;
+    }
+    public static boolean isSix(String str) {
+        return true;
+    }
+}
