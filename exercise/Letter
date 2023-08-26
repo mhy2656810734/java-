@@ -1,0 +1,60 @@
+class Letter{
+    List<String> retList;
+    public List<String> letterCasePermutation(String s) {
+        // 使用递归
+        // 1.画决策树 2.设计代码 全局变量  dfs  细节问题: 回溯  剪枝  函数的出口
+        // 全局变量 retList 表示最终返回的集合
+        //        StringBuilder path当做参数传入用来拼接字符串
+        // 函数体：对于某个字符 有两种操作 变大（小）写 或者不变大小写  从0下标开始
+        // 函数的出口：如果path的长度已经等于字符串长度，就加入retList
+
+        retList = new ArrayList<>();
+        StringBuilder path = new StringBuilder();
+        dfs(s,0,path);
+        return retList;
+    }
+    public void dfs(String s,int pos,StringBuilder path) {
+        if (path.length() == s.length()) {
+            retList.add(path.toString());
+            return;
+        }
+        // 判断是不是数字
+        if (s.charAt(pos) >= '0'&& s.charAt(pos) <= '9') {
+            // 是数字，直接拼接
+            path.append(s.charAt(pos));
+            // 递归
+             dfs(s,pos+1,path);
+            // 回溯，恢复现场
+            path.deleteCharAt(path.length() -1);
+        } else {
+            // 是字符
+            if (s.charAt(pos) >= 'a' && s.charAt(pos) <= 'z') {
+                // 变大写
+                char ch = s.charAt(pos);
+                ch -= 32;
+                path.append(ch);
+                dfs(s,pos+1,path);
+                // 回溯 恢复现场
+                path.deleteCharAt(path.length() -1);
+                // 不变大写
+                path.append(s.charAt(pos));
+                dfs(s,pos+1,path);
+                // 回溯 恢复现场
+                path.deleteCharAt(path.length() -1);
+            } else {
+                // 变小写
+                char ch = s.charAt(pos);
+                ch += 32;
+                path.append(ch);
+                dfs(s,pos+1,path);
+                // 回溯 恢复现场
+                path.deleteCharAt(path.length() -1);
+                // 不变小写
+                path.append(s.charAt(pos));
+                dfs(s,pos+1,path);
+                // 回溯 恢复现场
+                path.deleteCharAt(path.length() -1);
+            }
+        }
+    }
+}
