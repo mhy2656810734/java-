@@ -1,0 +1,33 @@
+class Solution {
+    boolean[][] CheckRow;
+    boolean[][] CheckCol;
+    boolean[][][] grid;
+    public boolean isValidSudoku(char[][] board) {
+        // 解题思路：
+        // CheckRow[9][10] 用来记录0~8行的0~9哪个数字在这一行中出现了
+        // CheckCol[9][10] 用来记录0~8列的0~9哪个数字在这一列中出现了
+        // 用一个 grid[3][3][10] 大小的数组，表示将行和列 3 3 分组 并且在这个组里面有没有出现数字0~9
+        // 比如 0~2行中的任意数字除以3都是0   3~5 任意数字除以3都是1
+        
+        CheckCol = new boolean[9][10];
+        CheckRow = new boolean[9][10];
+        grid = new boolean[3][3][10];
+        // 遍历数组
+        for(int i = 0; i < 9;i++) {
+            for (int j = 0; j < 9;j++) {
+                if (board[i][j] != '.') {
+                    // 说明是数字
+                    int num = board[i][j] - '0';
+                    // 判断当前行 列 以及3*3的九宫格有没有出现过这个数字
+                    if (CheckRow[i][num] || CheckCol[j][num] || grid[i/3][j/3][num]) {
+                        return false;
+                    }
+                    // 第一次出现
+                    CheckRow[i][num] = CheckCol[j][num] =  grid[i/3][j/3][num] = true;
+                }
+            }
+        }
+        return true;
+    }
+
+}
