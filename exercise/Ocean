@@ -1,0 +1,50 @@
+class Solution {
+    int[][] flag = {{0,1},{0,-1},{1,0},{-1,0}};
+    int m,n;
+    public List<List<Integer>> pacificAtlantic(int[][] h) {
+        // 题目分析：在数组中找到一个元素，可以向比它小的位置递归，最终可以到达左边和上边以及右边后边和下边
+        // 洪水灌溉问题（正难则反）
+        // 先遍历第一行和第一列 将比当前元素大的所有数据全部标记
+        // 再遍历最后一列和最后一行，把比当前元素大的所有数据全部标记
+        m = h.length;
+        n = h[0].length;
+        List<List<Integer>> retList = new ArrayList<>();
+        // 标记太平洋
+        boolean[][] pac = new boolean[m][n];
+        // 标记大西洋
+        boolean[][] alt = new boolean[m][n];
+        
+        // 1.遍历太平洋第一行 和 第一列
+        for (int j = 0; j < n;j++) dfs(h,0,j,pac);
+        for (int i = 0; i < m;i++) dfs(h,i,0,pac);
+        // 2.遍历大西洋最后一列和最后一行
+        for (int i = 0; i < m;i++) dfs(h,i,n-1,alt);
+        for (int j = 0; j < n;j++) dfs(h,m-1,j,alt);
+
+        // 3.找并集
+        for (int i = 0;i < m;i++) {
+            for (int j = 0; j < n;j++) {
+                if (pac[i][j] && alt[i][j]) {
+                    List<Integer> tmp = new ArrayList<>();
+                    tmp.add(i);
+                    tmp.add(j);
+                    retList.add(new ArrayList<>(tmp));
+                }
+            }
+        }
+        return retList;
+    }
+    public void dfs(int[][] h,int i,int j,boolean[][] arr) {
+        // 先将当前位置标记
+        arr[i][j] = true;
+        // 遍历四个方向
+        for (int k = 0; k < 4;k++) {
+            int x = i + flag[k][0];
+            int y = j + flag[k][1];
+            // 如果不越界，并且下一个位置没有标记过，并且下一个位置的值大于等于当前值，就继续递归
+            if (x >= 0 && x < m && y >= 0 && y < n && !arr[x][y] && h[x][y] >= h[i][j]) {
+                dfs(h,x,y,arr);
+            }
+        }
+    }
+}
