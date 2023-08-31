@@ -1,0 +1,57 @@
+package exercise;
+
+import com.sun.corba.se.impl.orbutil.ObjectWriter;
+import org.omg.CORBA.INTERNAL;
+
+import java.io.BufferedWriter;
+import java.io.Writer;
+import java.util.*;
+
+/**
+ * @author 26568
+ * @date 2023-08-06 19:40
+ */
+
+public class TestHeapSort {
+    public static void main(String[] args) {
+        int[] arr = {1,6,7,5,9,10,8,2,3};
+        heapSort(arr);
+        System.out.println(Arrays.toString(arr));
+    }
+    public static void heapSort(int[] arr) {
+        // 创建大根堆
+        createBigHeap(arr);
+        int len = arr.length - 1;
+        while (len > 0) {
+            int tmp = arr[0];
+            arr[0] = arr[len];
+            arr[len] = tmp;
+            shitUp(arr,0,len);
+            len--;
+        }
+    }
+    public static void createBigHeap(int[] arr) {
+        for (int parent = (arr.length -1 -1)/2 ; parent >= 0 ; parent--) {
+            shitUp(arr,parent,arr.length);
+        }
+    }
+    public static void shitUp(int[] arr,int parent,int len) {
+        int child = 2 * parent + 1;
+        while (child < len) {
+            // 拿到左右孩子节点较大值
+            if (child + 1 < len && arr[child] < arr[child + 1]) {
+                child++;
+            }
+            // 当父节点值大于子节点就无需交换
+            if (arr[child] > arr[parent]) {
+                int tmp = arr[parent];
+                arr[parent] = arr[child];
+                arr[child] = tmp;
+                parent = child;
+                child = 2 * parent + 1;
+            } else {
+                break;
+            }
+        }
+    }
+}
