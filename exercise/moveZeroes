@@ -1,0 +1,22 @@
+class Solution {
+    public void moveZeroes(int[] nums) {
+        // 使用双指针法
+        // 让cur从左到右扫描 如果遇到0直接向后移动一位  不是0的话就要和dest位置的交换
+        // dest 下标指向的值已经处理过的区间的最后一个元素，因此，交换之前，先让dest ++
+        // 交换完以后，让cur继续向后移动一位
+
+        int n = nums.length;
+        int cur = 0;
+        int dest = -1;
+        while (cur < n) {
+            if (nums[cur] != 0) {
+                // 需要交换，先让dest++
+                dest++;
+                int tmp = nums[cur];
+                nums[cur] = nums[dest];
+                nums[dest] = tmp;
+            }
+            cur++;
+        }
+    }
+}
