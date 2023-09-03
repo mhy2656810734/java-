@@ -1,0 +1,32 @@
+class Solution {
+    public boolean isHappy(int n) {
+        // 解题思路：使用快慢指针
+        // 数n，如果最终能够变成1 会在这个环里面一直变化，只不过环里面的数据都是1
+        //      如果不能变成1，也会在一个换里面变化，只不过环里面的数据都不是1
+        // 因此，定义两个指针slow 和fast
+        int slow = n;
+        int fast = func(n);
+        while (true) {
+            if (slow == fast) {
+                // 判断这两个值是否相等
+                if (slow == 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            // 不相等就继续变化
+            slow = func(slow);
+            fast = func(fast);
+            fast = func(fast);
+        }
+    }
+    public int func(int n) {
+        int ret = 0;
+        while (n > 0) {
+            ret += (n % 10) *(n % 10);
+            n /= 10;
+        }
+        return ret;
+    }
+} 
