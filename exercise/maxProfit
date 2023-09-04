@@ -1,0 +1,63 @@
+class Solution {
+    public int maxProfit(int[] prices) {
+        // 1.状态表示
+        // 以i结尾的位置...
+        // 到i位置时，i位置有三种状态，处于买入状态、冷冻期、可交易状态
+        // buy[i] 表示买入后的利润  frozen[i] 表示冷冻期利润 can[i] 表示可交易状态利润
+        // 2.状态转移方程
+        // 有三种状态，画状态机写状态转移方程
+        // 如果当天i可以买入，那么i - 1天已经买入了，i天什么都不做或者i-1天是可交易状态，i天买入
+        //                 前一天的利润buy[i-1]                   can[i-1] - prices[i]
+        // buy[i] = Math.max(buy[i-1],can[i-1] - prices[i])
+        // 如果当天i是可交易，那么i-1天可以是冷冻期 或者i-1天是可交易状态
+        //                 forzen[i-1]            can[i-1]
+        // can[i] = Math.max(forzen[i-1],can[i-1])
+        // 如果当天是冷冻期，那么 i-1 天可以是买入状态（i天卖出） 
+        // forzen[i] = buy[i-1] + prices[i]
+        // 3.初始化
+        // 出现了i-1 初始化0下标
+        // buy[0] 是第一天买入 利润就是 -prices[i]
+        // can[0] 是第一天是可交易状态，啥也没干,利润就是0
+        // forzen[0] 就是第一天结束是冷冻期，当天买入又卖出, 利润是0
+        // 4.填表顺序 左到右
+        // 5.返回值   如果最后一天还持有股票，必不可能是最大利润，当手里没有股票才有最大利润
+        // return max(can[n],forzen[n])
+
+        // 创建dp表
+        // int n = prices.length;
+        // int[] buy = new int[n];
+        // int[] forzen = new int[n];
+        // int[] can = new int[n];
+        // // 初始化
+        // buy[0] = -prices[0];
+        // forzen[0] = 0;
+        // can[0] = 0;
+        // // 填表
+        // for (int i = 1; i < n;i++) {
+        //     // i天买入
+        //     buy[i] = Math.max(buy[i-1],can[i-1] - prices[i]);
+        //     // i天冷冻期
+        //     forzen[i] = buy[i-1] + prices[i];
+        //     // i天可交易
+        //     can[i] = Math.max(can[i-1],forzen[i-1]);
+        // }
+        // return Math.max(can[n-1],forzen[n-1]);
+        // 也可以使用二维数组
+        int n = prices.length;
+        int[][] dp = new int[n][3];
+        // dp[i][0] 是买入状态下的利润  dp[i][1]是冷冻期 dp[i][2] 是可交易
+        // 初始化]
+        dp[0][0] = -prices[0];
+        dp[0][1] = 0;
+        dp[0][2] =0;
+        for (int i = 1; i < n;i++) {
+            // 买入
+            dp[i][0] = Math.max(dp[i-1][0],dp[i-1][2] - prices[i]);
+            // 冷冻期
+            dp[i][1] = dp[i-1][0]+prices[i];
+            // 可交易
+            dp[i][2] = Math.max(dp[i-1][2],dp[i-1][1]);
+        }
+        return Math.max(dp[n-1][1],dp[n-1][2]);
+    }
+}
