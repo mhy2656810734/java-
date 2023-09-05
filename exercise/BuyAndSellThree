@@ -1,0 +1,46 @@
+class Solution {
+    public int maxProfit(int[] prices) {
+        // 1.状态表示
+        // 将一次买入卖出 看做一次交易
+        // buy[i][j] 表示第i天结束以后，交易了j次，处于“买入”状态时的最大利润
+        // can[i][j] 表示第i天结束以后，交易了j次，处于“可交易”状态的最大利润
+        // 2.状态转移方程
+        // 2.1对于第i天结束以后，处于“买入”状态来说
+        //    可以由i-1天“买入”状态啥也不干得到，或者i-1天"可交易"状态，在i天买入
+        // 因此 buy[i][j] = Math.max(buy[i-1][j],can[i - 1][j] - prices[i])
+        // 2.2对于第i天结束以后，处于“可交易”状态来说
+        //   可以有i-1天“可交易状态”啥也不干得到，或者i-1天“买入”，今天卖出，但是需要注意今天交易次数是j，前天是j-1
+        // 因此,can[i][j] = Math.max(can[i-1][j],buy[i-1][j-1] + prices[i])
+        // 3.初始化
+        // 出现了i-1 避免越界
+        // 出现了j-1 加一个判定即可  j - 1 >= 0
+        // 4.填表顺序
+        // 从左到右
+        // 5.返回值
+        // can表中的最大值
+        int INF = 0X3F3F3F3F;
+        int n = prices.length;
+        // 表示交易了 0 1 2 三次
+        int[][] buy = new int[n][3];
+        int[][] can = new int[n][3];
+        // 对两张表初始化
+        buy[0][0] = -prices[0];
+        // 要让交易次数尽可能多，然后利润最大，所以第一天不可能让交易次数全部完成，也避免影响结果
+        buy[0][1] = buy[0][2] = -INF;
+        can[0][1] = can[0][2] = -INF;
+        for (int i = 1; i < n;i++) {
+            for (int j = 0; j < 3;j++) {
+                buy[i][j] = Math.max(buy[i-1][j],can[i - 1][j] - prices[i]);
+                can[i][j] = can[i-1][j];
+                if (j - 1 >= 0) {
+                    can[i][j] = Math.max(can[i][j],buy[i-1][j-1] + prices[i]);
+                }
+            }
+        }
+        int ret = -INF;
+        for (int j = 0; j < 3;j++) {
+            ret = Math.max(ret,can[n-1][j]);
+        }
+        return ret;
+    }
+}
