@@ -1,0 +1,32 @@
+class Solution {
+    public int maxArea(int[] height) {
+        // 解题思路:
+        // 使用双指针法：定义一个left和right  以及最大体积vMax
+        // 计算出当前left和right的体积 v， 然后比较和vMax的大小关系
+        // 设 right - left = w    v = h * w
+        // 如果right下标的值比较小，此时h固定是height[right]
+        // 开始遍历从left+1到right的数据，这个过程w 一直减小 
+        // 如果遇到的新高度newH(left+1到right之间的值) 会和h有两种关系
+        // 如果newH < h    则计算后的新体积 newV < v    (w在减小  h 也在减小，则体积减小)
+        // 如果newH >= h   则计算后的新体积 newV < V    (w在减小  h不变，则体积减小)
+        // 综上，去掉最小值（此时的height[right]），right--,继续在[left,right - 1] 找最大值
+        // 每次让Vmax记录最大值即可
+        int vMax = 0;
+        int left = 0;
+        int right = height.length - 1;
+        while (left < right) {
+            // 计算当前体积v
+            int h = Math.min(height[left],height[right]);
+            int w = right - left;
+            int v = h * w;
+            vMax = Math.max(vMax,v);
+            // 去掉最小值
+            if (height[left] <= height[right]) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+        return vMax;
+    }
+}
