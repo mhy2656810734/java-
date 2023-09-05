@@ -1,0 +1,32 @@
+class Solution {
+    public int triangleNumber(int[] arr) {
+        // 题目解析：使用双指针法
+        // 首先将数组排序  然后固定数组最大的那个数，下标为 arrMax
+        // 第一个位置为left，倒数第二个是right(arrMax - 1)
+        // 然后遍历这个[left,right] 区间
+        // arr[left] <= arr[right] <= arr[arrMax]
+        //  a             b              c
+        // 1.1先判断当前 a + b > c 如果成立，此时三角形有效个数[left,right]区间个数 right - left
+        //     然后让right-- 看看剩下的[left,right-1] 区间是否还要有效三角形的个数
+        // 因为 a + b 就已经大于c了  left后面的数字比a大，所以 +b 一定大于c
+        // 1.2 如果当前 a + b <= c 就让left++, 继续找和比 c大的数的下标
+        Arrays.sort(arr);
+        int n = arr.length;
+        int arrMax = n - 1;
+        int sum = 0;
+        while (arrMax >= 2) {
+            int left = 0;
+            int right = arrMax - 1;
+            while (left < right) {
+                if (arr[left] + arr[right] > arr[arrMax]) {
+                    sum += right - left;
+                    right--;
+                } else {
+                    left++;
+                }
+            }
+            arrMax--;
+        }
+        return sum;
+    }
+}
