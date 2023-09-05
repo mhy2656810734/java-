@@ -1,0 +1,28 @@
+class Solution {
+    public int maxSubarraySumCircular(int[] nums) {
+        // 环形问题转换为线性问题
+        // 对于最大连续子数组和来说，可能是在中国位置，也有可能是数组最后一个元素+第一个元素
+        // 因此 可以创建两张表
+        // 1.状态表示
+        // mid[i] 表示以i位置结尾的所有子数组的最大连续和
+        // se[i] 表示以i位置结尾的所有子数组的最小联系和 (用所有元素和sum - 这个值 就是数组第一+最后一的值)
+        
+        int n = nums.length;
+        if (n == 0) return nums[0];
+        int[] mid = new int[n+1];
+        int[] se = new int[n+1];
+        mid[0] = -0x3F3F3F3F;
+        se[0] = 0X3F3F3F3F;
+        int midMax = -0X3F3F3F;
+        int seMin = 0X3F3F3F3F;
+        int sum = 0;
+        for (int i = 1;i <= n;i++) {
+            mid[i] = Math.max(mid[i-1] + nums[i-1],nums[i-1]);
+            se[i] = Math.min(se[i-1] + nums[i-1],nums[i-1]);
+            sum += nums[i-1];
+            midMax = Math.max(midMax,mid[i]);
+            seMin = Math.min(seMin,se[i]);
+        }
+        return sum == seMin?midMax:Math.max(midMax,(sum - seMin));
+    }
+}
