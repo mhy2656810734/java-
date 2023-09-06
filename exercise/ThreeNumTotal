@@ -1,0 +1,50 @@
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        // 解题思路：使用双指针
+        // 首先，对该数组进行排序
+        // 1.固定第一个数，下标为first，然后从[left,right] 区间找nums[left] + nums[right] = -nums[first]
+        // 2.如果nums[left] + nums[right] != -nums[first] ,继续缩小区间
+        // 3.如果nums[left] + nums[right] == -nums[first]   
+        //   3.1 将当前三个下标的值存入list，继续缩小区间
+        //   3.2 这里很可能会出现重复集合的问题，因此，需要将left移动到不和刚刚存的值相等的地方，right也是
+        //   3.3 first 下标的后一个元素的值也有可能和当前值相等，继续让first向后移动
+
+        int n = nums.length;
+        Arrays.sort(nums);
+        List<List<Integer>> list = new ArrayList<>();
+        for (int i = 0; i < n;) { // 固定第一个数first
+            // 如果当前第一个数已经大于1了，后面区间不可能找到一个负数
+            if (nums[i] > 0) break;
+            int left = i+1;
+            int right = n - 1;
+            int target = -nums[i];
+            while (left < right) {
+                int sum = nums[left] + nums[right];
+                if (sum > target) {
+                    right--;
+                } else if (sum < target) {
+                    left++;
+                } else {
+                    // 说明相等，将这三个数加入list
+                    list.add(new ArrayList<Integer>(Arrays.asList(nums[i],nums[left],nums[right])));
+                    // 继续缩小区间
+                    left++;
+                    right--;
+                    // 移动left和right 避免重复
+                    while ((left < right) && (nums[left] == nums[left-1])) {
+                        left++;
+                    }
+                    while ((left < right) && (nums[right] == nums[right + 1])) {
+                        right--;
+                    }
+                }
+            }
+             // 去重i下标的值
+                i++;
+                while ((i < n) && (nums[i] == nums[i-1])) {
+                    i++;
+                }
+        }
+        return list;
+    }
+}
