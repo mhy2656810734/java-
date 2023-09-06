@@ -1,0 +1,33 @@
+class minArrayLen {
+    public int minSubArrayLen(int target, int[] nums) {
+        // 解题思路:使用滑动窗口（同向双指针）
+        // 对于这道题来说，定义两个指针right和left，先指向数组第一个元素，len表示最终结果
+        // 让right走在前面    定义一个sum 用来求和
+        // 1.先计算sum += nums[right] 
+        // 1.1 如果这个值 大于等于 target，则对len求最小值 len = Math.min(len,(right - left))
+        // 1.2 然后就不用再管right后面的数据了，因为right后面的数据+right之前的一定大于target，并且长度在增加
+        //     因此，让sum -= nums[left] 然后让left往前走，继续找满足条件的结果
+
+        //  2使用滑动窗口的步骤
+        // 2.1 left = 0 right = 0
+        // 2.2 进窗口
+        // 2.3 判断 并决定是否出窗口
+        // 2.4 决定更新结果的地方 
+        int n = nums.length;
+        int left = 0;
+        int right = 0;
+        int sum = 0;
+        int len = Integer.MAX_VALUE;
+        while (right < n) {
+            sum += nums[right];// 进窗口
+            // 判断
+            while (sum >= target) {
+                len = Math.min(len,right - left + 1);// 更新结果
+                sum -= nums[left];
+                left++;  // 出窗口
+            }
+            right++;
+        }
+        return len == Integer.MAX_VALUE?0:len;
+    }
+}
