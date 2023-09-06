@@ -1,0 +1,54 @@
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        // 解题思路:使用双指针
+        // 和三数之和的解法一样
+        // 1.先排序
+        // 2.固定第一个数（值为a） 接下来，在剩下区间找 target - a
+        // 3.固定第二个数(值为b)   接下来，在剩下的区间找 target -a  - b
+        // 4.定义两个双指针left 和 right 开始找，并缩小区间
+        //   为了避免重复，需要调整left  right a  b的下标
+        int n = nums.length;
+        Arrays.sort(nums);
+        List<List<Integer>> retList = new ArrayList<>();
+        // 判断数组中是不是全是负数，而要求的target是正数  或者 数组都是正数，而target是负数
+        // if ((nums[0] < 0 && target > 0) || nums[0] > 0 && target < 0) {
+        //     return retList;
+        // }
+        for (int i = 0; i < n;) {
+            // 如果当前这个数已经大于target了，就不用再找了
+           
+            int a = nums[i];
+            for (int j = i + 1; j < n;) {
+                int b = nums[j];
+                int left = j + 1;
+                int right = n - 1;
+                long sum = (long)target - a - b;
+                while (left < right) {
+                    int total = nums[left] + nums[right];
+                    if (total > sum) {
+                        right--;
+                    } else if (total < sum) {
+                        left++;
+                    } else {
+                        // 相等，将这个四个值加入retList的
+                        retList.add(new ArrayList<Integer>(Arrays.asList(a,b,nums[left],nums[right])));
+                        // 缩小范围
+                        left++;
+                        right--;
+                        // 去重
+                        while ((left < right) && (nums[left] == nums[left - 1])) left++;
+                        while ((left <right) && (nums[right] == nums[right+ 1 ])) right--;
+                    }
+                }
+                // 调整j的下标
+                j++;
+                while ((j < n) && (nums[j] == nums[j - 1])) j++;
+            }
+
+            // 调整i的下标
+            i++;
+            while ((i < n) && (nums[i] == nums[i-1])) i++;
+        }
+        return retList;
+    }
+}
