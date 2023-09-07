@@ -1,0 +1,30 @@
+class Solution {
+    public int longestOnes(int[] nums, int k) {
+        // 解题思路：滑动窗口
+        // 定义一个right 和 left   right在left前面走，当right遇到1继续走，遇到0，用一个zero统计
+        // 当zero > k 时，说明此时的长度就是最长了，更新数据
+        // 然后让left指向的数据出窗口，left++ 如果left出的是1，不处理，如果是0，就让zero--,知道zero <= k 为止
+        // 重复上述这个过程
+
+        int n = nums.length;
+        int left = 0;
+        int right = 0;
+        int zero = 0;
+        int len = 0;
+        // 进窗口
+        while (right < n) {
+            // 如果right的值是0 需要处理
+            if (nums[right] == 0) zero++;
+            // 判断
+            while (zero > k) {
+                // 出窗口的数字如果是0需要处理
+                if (nums[left] == 0) zero--;
+                left++;
+            }
+            // 更新数据
+            len = Math.max(len,right - left + 1);
+            right++;
+        }
+        return len;
+    }
+}
