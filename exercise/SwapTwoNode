@@ -1,0 +1,33 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class SwapTwoNode {
+    public ListNode swapPairs(ListNode head) {
+        // 使用递归
+        // 和反转链表一个思路
+        // 先递归到最后面
+        // 然后进行反转，最后返回即可
+        // 只有一个节点或者空 不反转
+        if (head == null || head.next == null) {
+            return head;
+        }
+        // 从第三个节点开始递归
+        ListNode temp = swapPairs(head.next.next);
+        // 此时需要修改前两个节点和temp的指针
+        // 让第二个节点指向第一个节点
+        head.next.next = head;
+        // 第二个节点就是最终要返回的新头结点
+        ListNode newHead = head.next;
+        // 第一个节点的指针指向temp
+        head.next = temp;
+        // 返回
+        return newHead;
+    }
+}
