@@ -1,0 +1,24 @@
+class Solution {
+    public double myPow(double x, int n) {
+        // 分析题目
+        // 使用快速幂(时间复杂度是O(logN))  递归问题
+        //  3^10 = 3^5*3^ = 3^2*3^2*3 * 3^2*3^2*3 ...
+        // 1.重复子问题->函数头     int myPow(x,int)
+        // 2.只关系每一个子问题做了什么->函数体
+        //   temp = myPow(x,n/2);
+        //   return n%2 == 0?temp*temp:temp*temp*x;
+        // 3.函数的出口
+        // n == 0  return 1
+        // 处理特殊情况
+        // n如果是负数，先求n是正数的情况，然后用1除这个结果
+        // 如果x是-2^31 时，会出错，因此，先将其转换成long
+        
+        return n < 0 ? 1.0 / pow(x, -n) : pow(x, n);
+        
+    }
+    public double pow(double x,int n) {
+        if(n == 0) return 1.0;
+        double tmp = pow(x,n / 2);
+        return n % 2 == 0 ? tmp * tmp : tmp * tmp * x;
+    }
+}
