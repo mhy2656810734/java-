@@ -1,0 +1,25 @@
+class Solution {
+    public int maxProduct(int[] nums) {
+        // 1.子数组/子序列问题可以根据当前位置，以及当前位置和前面位置拼接划分问题
+        // 2.由于当前num[i] 有可能是负数，因此，如果只用一个状态表示最大值的话，无法区分正数和负数
+        // f[i] 表示以i位置结尾的所有子数组中的最大值
+        // g[i] 表示以i位置结尾的所有子数组的最小值
+        //                 长度1   num[i]是正数    是负数
+        // f[i] = Math.max(num[i],num[i] * f[i-1],num[i]*g[i-1])
+        // g[i] = Math.min(num[i],num[i] * f[i-1],num[i] * g[i-1])
+
+        int n = nums.length;
+         if (n == 1) {
+            return nums[0];
+        }
+        int[] f = new int[n + 1];
+        int[] g = new int[n + 1];
+        int ret = Integer.MIN_VALUE;
+        for (int i = 1; i <= n;i++) {
+            f[i] = Math.max(Math.max(nums[i-1],nums[i - 1] *f[i-1]),nums[i-1]*g[i - 1]);
+            g[i] = Math.min(Math.min(nums[i-1],nums[i-1] * f[i-1]),nums[i-1] * g[i-1]);
+            ret = Math.max(ret,f[i]);
+        }
+        return ret;
+    }
+}
