@@ -1,0 +1,49 @@
+class Solution {
+    List<String> retList;
+    StringBuilder path;
+    int n,right,left;
+    public List<String> generateParenthesis(int _n) {
+        // 解题思路
+        // 对于传入的n 生成有效括号组合的必须满足的条件是：（left表示左括号数，right表示右括号数）
+        // 1.左括号数 = 右括号数
+        // 2.左括号始数始终大于等于右括号数  left >= right
+        // 使用递归来解决这道题
+        // 创建全局变量left  right   n(传入的数字)    path用来拼接括号  retList 最终结果
+        // 当right == n  也就是右括号数刚好等于n的时候，递归就需要结束了
+        //               此时，将path加入retList即可 
+        // 首先，先让path 拼接一个左括号,然后继续向后递归 当递归返回来的时候了需要恢复现场
+        //      然后让path拼接右括号，然后继续向后递归 当递归返回来的时候了需要恢复现场
+        n = _n;
+        retList = new ArrayList<>();
+        path = new StringBuilder();
+        dfs();
+        return retList;
+    }
+    public void dfs() {
+        // 递归的出口
+        if (right == n) {
+            retList.add(path.toString());
+            return;
+        }
+        // 如果左括号还能继续拼接
+        if (left < n) {
+            path.append('(');
+            left++;
+            // 继续向后递归
+            dfs();
+            // 回溯，恢复现场
+            path.deleteCharAt(path.length() - 1);
+            left--;
+        }
+        // 如果右括号还能继续拼接
+        if (right < left) {
+            path.append(')');
+            right++;
+            // 继续向后递归
+            dfs();
+            // 回溯，恢复现场
+            path.deleteCharAt(path.length() - 1);
+            right--;
+        }
+    }
+}
