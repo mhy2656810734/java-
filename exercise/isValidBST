@@ -1,0 +1,39 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    long prev = Long.MIN_VALUE;
+    public boolean isValidBST(TreeNode root) {
+        // 策略1
+        // 二叉搜索树的中序遍历时一个有序的数组
+        // 使用一个全局变量，prev 记录中序遍历的前一个节点的值，初始值为最小值 后面需要更新
+        // 使用递归进行判断
+        if (root == null) {
+            return true;
+        }
+        // 向左子树递归
+        boolean left = isValidBST(root.left);
+        // 判断当前节点和前一个节点值的大小关系
+        boolean cur = false;
+        if (prev < root.val) {
+            cur = true;
+        }
+        // 更新当前prev的值
+        prev = root.val;
+        // 向右子树递归
+        boolean right = isValidBST(root.right);
+        return left && cur && right;
+    }
+}
