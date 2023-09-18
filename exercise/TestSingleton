@@ -1,0 +1,33 @@
+package exercise;
+
+/**
+ * @author 26568
+ * @date 2023-09-18 13:29
+ */
+class Singleton {
+    public volatile static Singleton instance = new Singleton();
+    public Singleton getInstance() {
+        return  instance;
+    }
+    private Singleton() {}
+}
+class SingletonLazy {
+    public volatile static SingletonLazy instance = null;
+    public SingletonLazy getInstance() {
+        // 第一个if判断需不需要加锁
+        if (instance == null) {
+            synchronized (SingletonLazy.class) {
+                // 第二个if判断需不需要实例化
+                if (instance == null) {
+                    instance = new SingletonLazy();
+                }
+            }
+        }
+        return instance;
+    }
+}
+public class TestSingleton {
+    public static void main(String[] args) {
+
+    }
+}
