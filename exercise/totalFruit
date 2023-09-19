@@ -1,0 +1,32 @@
+class Solution {
+    public int totalFruit(int[] fruits) {
+        // 解题思路：使用滑动窗口
+        // 创建一个hash表，需要统计水果的种类，以及每个种类的个数
+        // 1.初始化
+        Map<Integer,Integer> hash = new HashMap<>();
+        int left = 0;
+        int right = 0;
+        int n = fruits.length;
+        int ret = 0;
+        while (right < n) {
+            // 2.进窗口 将right指的值放入窗口
+            int in = fruits[right];
+            hash.put(in,hash.getOrDefault(in,0)+1);
+            // 判断  当hash表中key值个数大于2的时候就需要出窗口
+            while (hash.size() > 2) {
+                int out = fruits[left];
+                // 3.出窗口
+                hash.put(out,hash.get(out) - 1);
+                // 如果这种水果为0 就要从hash表中删除
+                if (hash.get(out) == 0) {
+                    hash.remove(out);
+                }
+                left++;
+            }
+            // 4.更新结果
+            ret = Math.max(ret,right - left + 1);
+            right++;
+        }
+        return ret;
+    }
+}
