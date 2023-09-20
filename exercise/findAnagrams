@@ -1,0 +1,45 @@
+class Solution {
+    public List<Integer> findAnagrams(String ss, String pp) {
+        // 解题思路：使用滑动窗口
+        // 先将pp字符串中的字符存入hash1表（统计每个字符出现的次数）
+        // 然后让right指针向后走，每次将right对应的字符存入hash2表，用一个count维护hash2表中有效字符的个数
+        // 如果count == pp.length就说明此时left下标就是变位词的起点
+
+        // 1.初始化
+        int left = 0;
+        int right = 0;
+        List<Integer> list = new ArrayList<>();
+        int count = 0;
+        int m = pp.length();
+        char[] s = ss.toCharArray();
+        char[] p = pp.toCharArray();
+        int[] hash1 = new int[26];
+        int[] hash2 = new int[26];
+        // 将p中的数据存入hash1表
+        for (char x:p) {
+            hash1[x - 'a']++;
+        }
+        while (right < s.length) {
+            // 进窗口    让当前right下标的数据进窗口
+            int in = s[right] - 'a';
+            hash2[in]++;
+            // 判断  是否需要维护有效字符的个数
+            // 如果进窗口的字符 in 对应的个数小于 hash1[in]的个数，说明此时进入的字符是一个有效字符
+            if (hash2[in] <= hash1[in]) count++;
+            // 当窗口中字符长度已经超过p的长度时，就要考虑出窗口
+            if (right - left + 1 > m) {
+                // 让left对应的字符出窗口
+                int out = s[left] - 'a';
+                left++;
+                if(hash2[out] <= hash1[out]) {
+                    count--;
+                } 
+                hash2[out]--;
+            }
+            // 判断有效数据的个数
+            if (count == m) list.add(left);
+            right++;
+        }
+        return list;
+    }
+}
