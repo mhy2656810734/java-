@@ -1,0 +1,55 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if (headA == null || headB == null) {
+            return null;
+        }
+        // 求长度
+        int lenA = 0;
+        int lenB = 0;
+        ListNode hl = headA;
+        ListNode hs = headB;
+        while (hl != null) {
+            lenA++;
+            hl = hl.next;
+        }
+        while (hs != null) {
+            lenB++;
+            hs = hs.next;
+        }
+        // 求差值
+        int len = lenA - lenB;
+        if (len > 0) {
+            hl = headA;
+            hs = headB;
+        } else {
+            hl = headB;
+            hs = headA;
+            len = -len;
+        }
+        // 让长的走差值步
+        while (len > 0) {
+            len--;
+            hl = hl.next;
+        }
+        // 然后一起走
+        while (hl != null && hs != null) {
+            if (hl == hs) {
+                return hl;
+            }
+            hl = hl.next;
+            hs = hs.next;
+        }
+        return null;
+    }
+}
