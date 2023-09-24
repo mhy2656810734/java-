@@ -1,0 +1,38 @@
+class Solution {
+    public int wiggleMaxLength(int[] nums) {
+        // 1.状态表示
+        // dp[i] 表示以i位置结尾的所有子序列中摆动序列的最长子序列的长度
+        // 2.状态转移方程
+        // 对于子序列问题，统统考虑长度为1和大于1的情况
+        // 2.1长度为1
+        // dp[i] = 1
+        // 2.2长度大于1 i位置和前面的进行拼接
+        // 这就要对前面的进行判断
+        // 如果前面是递减的摆动序列 则 nums[i] > nums[j] 的话，满足摆动序列
+        // 因为一个一维数组无法满足表示摆动序列，使用二维数组
+
+        // 1.状态表示
+        // f[i] 表示以i位置结尾的子序列中处于上升状态的摆动序列的最长长度
+        // g[i] 表示以i位置结尾的子序列中处于下降状态的摆动序列的最长长度
+        int n = nums.length;
+        int[] f = new int[n];
+        int[] g = new int[n];
+        Arrays.fill(f,1);
+        Arrays.fill(g,1);
+        int fmax = 1;
+        int gmax = 1;
+        for (int i = 1; i < n;i++) {
+            for (int j = 0; j < i;j++) {
+                if (nums[i] > nums[j]) {
+                    f[i] = Math.max(f[i],g[j] + 1);
+                }
+                if (nums[i] < nums[j]) {
+                     g[i] = Math.max(g[i],f[j]+1);
+                }
+            }
+            gmax = Math.max(gmax,g[i]);
+            fmax = Math.max(fmax,f[i]);
+        }
+        return fmax > gmax?fmax:gmax;
+    }
+}
