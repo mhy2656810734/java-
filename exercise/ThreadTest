@@ -1,0 +1,48 @@
+package exercise;
+
+import java.io.*;
+import java.lang.management.ThreadMXBean;
+import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
+
+
+public class Main {
+    static ReentrantLock lock = new ReentrantLock();
+    static int maxCount = 100;
+    public static void main(String[] args) {
+        Thread t1 = new Thread(() -> {
+            func1();
+        });
+        Thread t2 = new Thread(() -> {
+            func2();
+        });
+        t1.start();
+        t2.start();
+    }
+    public static void func1() {
+
+        int i = 1;
+        while (i <= maxCount) {
+            lock.lock();
+            try {
+                System.out.println("奇数线程： " + i);
+                i += 2;
+            } finally {
+                lock.unlock();
+            }
+        }
+    }
+    public static void func2() {
+
+            int i = 2;
+            while (i <= maxCount) {
+                lock.lock();
+                try {
+                    System.out.println("偶数线程： "+i);
+                    i += 2;
+                } finally {
+                    lock.unlock();
+                }
+            }
+    }
+}
