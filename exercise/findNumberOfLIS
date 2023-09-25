@@ -1,0 +1,30 @@
+class Solution {
+    public int findNumberOfLIS(int[] nums) {
+        int n = nums.length;
+        int[] len = new int[n];
+        int[] count = new int[n];
+        Arrays.fill(len,1);
+        Arrays.fill(count,1);
+        int retlen = 1,retcount = 1;
+        for (int i = 1; i < n;i++) {
+            for (int j = 0; j < i;j++) {
+                // 是递增子序列的前提
+                if (nums[i] > nums[j]) {
+                    // 判断以i 结尾和以j结尾的长度的大小关系
+                    if (len[j] + 1 == len[i]) {
+                        count[i] += count[j];
+                    } else if (len[j] + 1 > len[i]) {
+                        count[i] = count[j];
+                        len[i] = len[j] + 1;
+                    }
+                }
+            }
+            if (retlen == len[i]) retcount += count[i];
+            else if (retlen < len[i]) {
+                retcount = count[i];
+                retlen = len[i];
+            }
+        }
+        return retcount;
+    }
+}
