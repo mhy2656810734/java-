@@ -1,0 +1,25 @@
+class Solution {
+    public int longestArithSeqLength(int[] nums) {
+        int n = nums.length;
+        int[][] dp = new int[n][n];
+        for (int i = 0; i < n;i++) {
+            for (int j = 0; j < n;j++) {
+                dp[i][j] = 2;
+            }
+        }
+        int ret = 2;
+        Map<Integer,Integer> hash = new HashMap<>();
+        hash.put(nums[0],0);
+        for (int i = 1; i < n;i++) {
+            for (int j = i + 1; j < n;j++) {
+                int a = 2*nums[i] - nums[j];
+                if (hash.containsKey(a)) {
+                    dp[i][j] = dp[hash.get(a)][i] + 1;
+                    ret = Math.max(ret,dp[i][j]);
+                }
+            }
+            hash.put(nums[i],i);
+        }
+        return ret;
+    }
+}
