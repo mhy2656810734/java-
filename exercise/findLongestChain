@@ -1,0 +1,29 @@
+class Solution {
+    public int findLongestChain(int[][] pairs) {
+       // 0.对数组进行排序
+       // 1.状态表示
+       // dp[i] 表示以i位置结尾的数对链中，最长数对链的长度
+       // 2.状态转移方程
+       // 分为2种
+       // 2.1长度为1  i位置自长
+       // 2.2长度为2  i位置跟在前面的数对后面，前提：paris[i][0] > paris[j][1]
+       // 二者求最大值
+       // 3.初始哈
+       // 全部初始化为1
+
+       int n = pairs.length;
+       Arrays.sort(pairs,(a,b) ->(a[0] - b[0]));
+       int[] dp = new int[n];
+       Arrays.fill(dp,1);
+       int ret = 1;
+       for (int i = 1; i < n;i++) {
+           for (int j = 0; j < i;j++) {
+               if (pairs[i][0] > pairs[j][1]) {
+                   dp[i] = Math.max(dp[i],dp[j] + 1);
+                   ret = Math.max(ret,dp[i]);
+               }
+           }
+       }
+       return ret;
+    }
+}
