@@ -1,0 +1,44 @@
+class Solution {
+    public String minWindow(String s, String t) {
+        // 解题思路：使用滑动窗口
+        int n = s.length();
+        int m = t.length();
+        char[] tt = t.toCharArray();
+        // 0.预处理
+        // 先统计t中有效字符的种类并放入hash表
+        int[] hash1 = new int[128];
+        int kind = 0;
+        for (char ch:tt) {
+            if (hash1[ch] == 0) {
+                kind++;
+            }
+            hash1[ch]++;
+        }
+        // 1.初始化
+        int[] hash2 = new int[128];
+        // 表示最终返回的字符串的开始位置 和 长度
+        int begin = -1;
+        int minLen = Integer.MAX_VALUE;
+        // count 表示窗口中有效字符的种类
+        for (int left = 0,right = 0,count = 0; right < n;right++) {
+            // 2.进窗口
+            char in = s.charAt(right);
+            hash2[in]++;
+            if (hash1[in] == hash2[in]) count++;
+            // 3.判断并出窗口
+            while (count >= kind) {
+                char out = s.charAt(left);
+                if (hash1[out] == hash2[out]) count--;
+                // 拿到最小长度
+                if (right - left + 1 < minLen) {
+                    begin = left;
+                    minLen = right - left+1;
+                }
+                hash2[out]--;
+                left++;
+            }
+        }
+        if (begin == -1) return new String();
+        return s.substring(begin,begin+minLen);
+    }
+}
