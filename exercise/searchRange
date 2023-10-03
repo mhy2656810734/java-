@@ -1,0 +1,46 @@
+class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        // 解题思路:使用二分查找
+        // 1.找到左边端点
+        // 需要注意循环的条件，当left 和 right相等的时候，就是最终要求的结果，判断是够有结果即可
+        // 2.找到右边端点
+        // 需要注意循环的条件，当left 和 right相等的时候，就是最终要求的结果，判断是够有结果即可
+        // 3.需要注意求mid 的方法
+        // 3.1找左端点的时候，使用 left+(right-left) /2 求mid，否则会死循环
+        // 3.2找右端点的时候，使用 left+(right-left + 1)/2求mid，否则会死循环
+        int[] ret = new int[2];
+        ret[0] = ret[1] = -1;
+        int n = nums.length;
+        if (n == 0) return ret;
+        // 1.找左端点
+        int left = 0;
+        int right = n - 1;
+        while (left < right) {
+            int mid = left + (right - left) /2;
+            if (nums[mid] < target) {
+                left = mid + 1;
+            } else {
+                // 因为要从一段区间中找结果，因此不能将 =target 和 > target区分开
+                right = mid;
+            }
+        }
+        // 判断是否有结果
+        if (nums[left] != target) return ret;
+        // 找到左端点
+        ret[0] = left;
+        // 2.找右端点
+        left = 0;
+        right = n - 1;
+        while (left < right) {
+            int mid = left + (right - left + 1) / 2;
+            if (nums[mid] <= target) {
+                left = mid;
+            } else {
+                right = mid - 1;
+            }
+        }
+        if (nums[left] != target) return ret;
+        ret[1] = left;
+        return ret;
+    }
+}
