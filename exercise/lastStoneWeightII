@@ -1,0 +1,47 @@
+class Solution {
+    public int lastStoneWeightII(int[] stones) {
+        // 转换问题
+        // 这道题的意思是给数组中的元素添上正负号，使其结果最后只剩下一个元素并且值最小
+        // 假设数组元素是 a b c d e
+        // 先选b d 则 b-d 剩元素:  b-d  a c e  再选 a c  则a-c 剩元素 a-c b-d e
+        // 再选前两个碰撞: 则 a-c-(b-d),剩元素 a-c-b+d e
+        // 最后碰撞，剩 e - a + c + b -d
+        // 数组总和是 sum  分成正数总和a   负数总和 b,a+b = sum, 求 a-b 的最小值
+        // 将一个整数拆分成两个数a和b，当a和b越接近 sum / 2 的时候， a- b 的值最小
+        // 比如：9  当拆分成 4 和 5 时，4-5 的值最小（保证是正数）
+        // 因此，这道题就可以转换成:在数组中选择一些数，让这些数尽可能的接近 sum / 2
+        // 背包问题:  物品个数:n  体积: stones[i]  价值: stones[i]
+        // 1.状态表示
+        // dp[i][j] 表示从前i个元素中，总和不超过j，此时的最大和
+        // 2.状态转移方程
+        // 2.1选i位置
+        // if (j - stones[i] >= 0)  dp[i][j] = stones[i] + dp[i-1][j-stones[i]];
+        // 2.2不选i位置
+        // dp[i][j] = dp[i-1][j]
+        // 二者求最大值
+        // 3.初始化
+        // 初始化第一列：填表的时候初始化即可
+        // 4.填表顺序
+        // 从左到右 从上到下
+        // 5.返回值
+        // dp[n][sum/2] 是拆分的一个元素，另一个元素是sum - dp[n][sum/2] ,然后返回后面-前面即可
+        int n = stones.length;
+        int sum = 0;
+        for (int x : stones) {
+            sum += x;
+        }
+        int m = sum / 2;
+        int[][] dp = new int[n+1][m+1];
+        for (int i = 1; i <= n;i++) {
+            for (int j = 0; j <= m;j++) {
+                // 不选i位置
+                dp[i][j] = dp[i-1][j];
+                // 选i位置必须满足条件
+                if (j - stones[i-1] >= 0) {
+                    dp[i][j] = Math.max(dp[i][j],stones[i-1] + dp[i-1][j-stones[i-1]]);
+                }
+            }
+        }
+        return sum - 2 *dp[n][m];
+    }
+} 
