@@ -1,0 +1,19 @@
+class Solution {
+    public int findMin(int[] nums) {
+        // 解题思路：使用二分查找算法
+        // 根据数组最后一个元素来判断,可以将数组划分成两个区间
+        // 前一段区间所有的值都是 > 数组最后一个元素
+        // 后一段区间所有的值都是 < 数组最后一个元素
+        int left = 0,right = nums.length - 1;
+        int n = nums.length;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] > nums[n-1]) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        return nums[left];
+    }
+}
