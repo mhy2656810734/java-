@@ -1,0 +1,24 @@
+class Solution {
+    public int pivotIndex(int[] nums) {
+        // 解题思路：使用前缀和
+        // f[i] 表示: [0,i-1] 区间的和  前缀和数组
+        // g[i] 表示:[i+1,n-1] 区间的和 后缀和数组
+        // 初始化避免越界: f[0] = 0  g[n-1] = 0
+        // f从左到右填  g 从右到左填
+        int n = nums.length;
+        int[] f = new int[n];
+        int[] g = new int[n];
+        for (int i = 1; i < n;i++) {
+            f[i] = f[i-1] + nums[i-1];
+        }
+        for (int i = n-2; i >= 0;i--) {
+            g[i] = g[i+1] + nums[i+1];
+        }
+        for (int i = 0; i < n;i++) {
+            if (f[i] == g[i]) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
