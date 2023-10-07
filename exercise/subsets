@@ -1,0 +1,20 @@
+class Solution {
+    public List<List<Integer>> retList;
+    public List<Integer> path;
+    public List<List<Integer>> subsets(int[] nums) {
+        retList = new ArrayList<>();
+        path = new ArrayList<>();
+        dfs(nums,0);
+        return retList;
+    }
+    public void dfs(int[] nums,int pos) {
+        if (pos == nums.length) {
+            retList.add(new ArrayList<>(path));
+            return;
+        }
+        path.add(nums[pos]);
+        dfs(nums,pos+1);
+        path.remove(path.size()-1);
+        dfs(nums,pos+1);
+    }
+}
