@@ -1,0 +1,25 @@
+class Solution {
+    public String[] hash = {"","","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+    public List<String> retList;
+    public StringBuilder path;
+    public List<String> letterCombinations(String digits) {
+        retList = new ArrayList<>();
+        path = new StringBuilder();
+        if ("".equals(digits)) return retList;
+        dfs(digits,0);
+        return retList;
+    }
+    public void dfs(String digits,int pos) {
+        if (pos == digits.length()) {
+            retList.add(path.toString());
+            return;
+        }
+        char ch = digits.charAt(pos);
+        String str = hash[ch - '0'];
+        for (int i = 0; i < str.length();i++) {
+            path.append(str.charAt(i));
+            dfs(digits,pos+1);
+            path.deleteCharAt(path.length() - 1);
+        }
+    }
+}
