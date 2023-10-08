@@ -1,0 +1,22 @@
+class Solution {
+    public int sum,aim,path;
+    public int findTargetSumWays(int[] nums, int target) {
+        aim = target;
+        dfs(nums,0);
+        return sum;
+    }
+    public void dfs(int[] nums,int pos) {
+        if (pos == nums.length) {
+            if (path == aim) {
+                sum++;
+            }
+            return;
+        }
+        path += nums[pos];
+        dfs(nums,pos+1);
+        path -= nums[pos];
+        path -= nums[pos];
+        dfs(nums,pos+1);
+        path += nums[pos];
+    }
+}
