@@ -1,0 +1,31 @@
+class Solution {
+    public List<String> retList;
+    public StringBuilder path;
+    public int left,right;
+    public List<String> generateParenthesis(int n) {
+        retList = new ArrayList<>();
+        path = new StringBuilder();
+        dfs(n);
+        return retList;
+    }
+    public void dfs(int n) {
+        if (right == n) {
+            retList.add(path.toString());
+            return;
+        }
+        if (left < n) {
+            path.append('(');
+            left++;
+            dfs(n);
+            left--;
+            path.deleteCharAt(path.length() - 1);
+        }
+        if (right < left) {
+            path.append(')');
+            right++;
+            dfs(n);
+            right--;
+            path.deleteCharAt(path.length() - 1);
+        }
+    }
+}
