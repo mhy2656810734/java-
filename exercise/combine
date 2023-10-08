@@ -1,0 +1,23 @@
+class Solution {
+    public List<List<Integer>> retList;
+    public List<Integer> path;
+    public int total;
+    public List<List<Integer>> combine(int n, int k) {
+        retList = new ArrayList<>();
+        path = new ArrayList<>();
+        total = n;
+        dfs(1,k);
+        return retList;
+    }
+    public void dfs(int pos,int k) {
+        if (path.size() == k) {
+            retList.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i = pos;i <= total;i++) {
+            path.add(i);
+            dfs(i+1,k);
+            path.remove(path.size() - 1);
+        }
+    }
+}
