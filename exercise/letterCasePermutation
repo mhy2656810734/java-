@@ -1,0 +1,43 @@
+class Solution {
+    public List<String> retList;
+    public String str;
+    public List<String> letterCasePermutation(String s) {
+        retList = new ArrayList<>();
+        StringBuilder path = new StringBuilder();
+        str = s;
+        dfs(0,path);
+        return retList;
+    }
+    public void dfs(int pos,StringBuilder path) {
+        if (pos == str.length()) {
+            retList.add(path.toString());
+            return;
+        }
+        if (str.charAt(pos) >= '0' && str.charAt(pos) <= '9') {
+            path.append(str.charAt(pos));
+            dfs(pos+1,path);
+            path.deleteCharAt(path.length() - 1);
+        } else {
+            char ch = str.charAt(pos);
+            if (ch >= 'a' && ch <= 'z') {
+                ch -= 32;
+                path.append(ch);
+                dfs(pos+1,path);
+                path.deleteCharAt(path.length() - 1);
+                ch += 32;
+                path.append(ch);
+                dfs(pos+1,path);
+                path.deleteCharAt(path.length() - 1);
+            } else {
+                ch += 32;
+                path.append(ch);
+                dfs(pos+1,path);
+                path.deleteCharAt(path.length() - 1);
+                ch -= 32;
+                path.append(ch);
+                dfs(pos+1,path);
+                path.deleteCharAt(path.length() - 1);
+            }
+        }
+    }
+}
