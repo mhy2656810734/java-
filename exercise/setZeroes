@@ -1,0 +1,26 @@
+class Solution {
+    public void setZeroes(int[][] matrix) {
+        int m = matrix.length, n = matrix[0].length;
+        // 创建两个boolean类型数组作为标记
+        boolean[] row = new boolean[m];// 标记出现0的行
+        boolean[] col = new boolean[n];// 标记出现0的列
+        // 对原数组进行遍历
+        for (int i = 0; i < matrix.length;i++) {
+            for (int j = 0; j < matrix[0].length;j++) {
+                // 如果出现0 就标记该行 和 列
+                if (matrix[i][j] == 0) {
+                    row[i] = col[j] = true;
+                }
+            }
+        }
+        // 此时 只需要知道某行或者列有true就进行修改即可
+         for (int i = 0; i < matrix.length;i++) {
+            for (int j = 0; j < matrix[0].length;j++) {
+                // 只要刚i行或者j列有0就直接标记为0即可
+                if (row[i] || col[j]) {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+    }
+}
