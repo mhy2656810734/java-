@@ -1,0 +1,46 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public void reorderList(ListNode head) {
+        // 先找到中间节点，然后将后半部分逆序
+        if (head == null) {
+            return;
+        }
+        ListNode slow = head;
+        ListNode fast = head;
+        ListNode newHead = head;
+        while ((fast != null)&& (fast.next != null)) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        // 此时slow就是中间节点，从slow开始逆序
+        ListNode cur = slow.next;
+        ListNode prev = slow;
+        ListNode curNext = null;
+        // 当cur为空时，头节点就是prev
+        while (cur != null) {
+            curNext = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = curNext;
+        }
+        while (head != prev && head.next != prev && head != null ) {
+            ListNode headNext = head.next;
+            ListNode prevNext = prev.next;
+            head.next = prev;
+            prev.next = headNext;
+            head = headNext;
+            prev = prevNext;
+        }
+        prev.next = null;// 这一步是将prev这个结点也就是最后那个结点的next置空
+        head = newHead;
+    }
+}
