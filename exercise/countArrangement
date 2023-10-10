@@ -1,0 +1,22 @@
+class Solution {
+    int ret = 0;
+    boolean[] book;
+    public int countArrangement(int n) {
+        book = new boolean[n+1];
+        dfs(1,n);
+        return ret;
+    }
+    public void dfs(int pos,int n) {
+        if (pos == n + 1) {
+            ret++;
+            return;
+        }
+        for (int i = 1; i <= n;i++) {
+            if (book[i] == false &&(i % pos == 0 || pos % i == 0)) {
+                book[i] = true;
+                dfs(pos+1,n);
+                book[i] = false;
+            }
+        }
+    }
+}
