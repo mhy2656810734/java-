@@ -1,0 +1,47 @@
+class Solution {
+    List<List<String>> retList;
+    char[][] path;
+    boolean[] checkCol,checkRow,dig1,dig2;
+    int target;
+    public List<List<String>> solveNQueens(int n) {
+        target = n;
+        path = new char[n][n];
+        retList = new ArrayList<>();
+        checkCol = new boolean[n];
+        dig1 = new boolean[2 * n];
+        dig2 = new boolean[2 * n];
+        for (int i = 0; i < n;i++) {
+            Arrays.fill(path[i],'.');
+        }
+        dfs(0);
+        return retList;
+    }
+    public void dfs(int row) {
+        if (row == target) {
+            // 说明所有皇后都已经放下了
+            List<String> tmp = new ArrayList<>();
+            for (int i = 0; i < target;i++) {
+                // 添加每一行的字符
+                tmp.add(new String(path[i]));
+            }
+            // 加入retList
+            retList.add(new ArrayList<>(tmp));
+            return;
+        }
+        // 判断当前这一行的哪个列可以放皇后
+        for (int col = 0; col < target;col++) {
+            if (checkCol[col] == false && dig1[row-col+target] == false &&
+             dig2[row + col ] == false) {
+                path[row][col] = 'Q';
+                checkCol[col] = true;
+                dig1[row-col+target] = true;
+                dig2[row + col] = true;
+                dfs(row+1);
+                checkCol[col] = false;
+                dig1[row-col+target] = false;
+                dig2[row + col] = false;
+                path[row][col] = '.';
+            }
+        }
+    }
+}
