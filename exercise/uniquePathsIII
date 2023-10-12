@@ -1,0 +1,42 @@
+class Solution {
+    public int ret,step,n,m;
+    public boolean[][] book;
+    public int[][] flag = {{0,-1},{0,1},{1,0},{-1,0}};
+    public int uniquePathsIII(int[][] grid) {
+        n = grid.length;
+        m = grid[0].length;
+        int beginX = 0,beginY = 0;
+        book = new boolean[n][m];
+        for (int i = 0; i < n;i++) {
+            for (int j = 0; j < m;j++) {
+                if (grid[i][j] == 0) {
+                    step++;
+                } else if (grid[i][j] == 1) {
+                    beginX = i;
+                    beginY = j;
+                }
+            }
+        }
+        step += 2;
+        book[beginX][beginY] = true;
+        dfs(grid,beginX,beginY,1);
+        return ret;
+    }
+    public void dfs(int[][] grid,int beginX,int beginY,int count) {
+        if (grid[beginX][beginY] == 2) {
+            if (count == step) {
+                ret++;
+            }
+            return;
+        }
+        for (int i = 0; i < 4;i++) {
+            int x = beginX + flag[i][0];
+            int y = beginY + flag[i][1];
+            if (x >= 0 && x < n && y >= 0 && y < m && !book[x][y] && grid[x][y] != -1) {
+                book[x][y] = true;
+                dfs(grid,x,y,count+1);
+                book[x][y] = false;
+            }
+        }
+    }
+}
