@@ -1,0 +1,29 @@
+class Solution {
+    public int[][] flag = {{1,0},{-1,0},{0,-1},{0,1}};
+    public int ret,n,m;
+    public boolean[][] book;
+    public int numIslands(char[][] grid) {
+        n = grid.length;
+        m = grid[0].length;
+        book = new boolean[n][m];
+        for (int i = 0; i < n;i++) {
+            for (int j = 0; j < m;j++) {
+                if (grid[i][j] == '1' && !book[i][j]) {
+                    dfs(grid,i,j);
+                    ret++;
+                }
+            }
+        }
+        return ret;
+    }
+    public void dfs(char[][] grid,int i,int j) {
+        book[i][j] = true;
+        for (int k = 0; k < 4;k++) {
+            int x = i + flag[k][0];
+            int y = j + flag[k][1];
+            if (x>=0&&x<n&&y>=0&&y<m&&!book[x][y]&&grid[x][y]=='1') {
+                dfs(grid,x,y);
+            }
+        }
+    }
+}
