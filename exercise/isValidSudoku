@@ -1,0 +1,19 @@
+class Solution {
+    public boolean isValidSudoku(char[][] board) {
+        boolean[][] checkRow = new boolean[9][10];
+        boolean[][] checkCol = new boolean[9][10];
+        boolean[][][] grid = new boolean[3][3][10];
+        for (int i = 0; i < 9;i++) {
+            for (int j = 0; j < 9;j++) {
+                if (board[i][j] != '.') {
+                    int num = board[i][j] - '0';
+                    if (checkRow[i][num] || checkCol[j][num] || grid[i/3][j/3][num]) {
+                        return false;
+                    }
+                    checkRow[i][num] = checkCol[j][num] = grid[i/3][j/3][num] = true;
+                }
+            }
+        }
+        return true;
+    }
+}
