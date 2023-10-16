@@ -1,0 +1,37 @@
+import java.util.*;
+public class Solution {
+    public int n,m,ret,three;
+    public boolean[][] book;
+    public int[][] flag = {{1,0},{-1,0},{0,-1},{0,1}};
+    public int movingCount(int threshold, int rows, int cols) {
+        n = rows;
+        m = cols;
+        three = threshold;
+        book = new boolean[n][m];
+        dfs(0,0);
+        return ret;
+    }
+    public void dfs(int i,int j) {
+      ret++;
+      book[i][j] = true;
+      for (int k = 0; k < 4;k++) {
+          int x = i+ flag[k][0];
+          int y = j + flag[k][1];
+          if (x >= 0 && x < n && y >= 0 && y < m && !book[x][y] && check(x,y)) {
+            dfs(x,y);
+          }
+      }
+    }
+    public boolean check(int i,int j) {
+        int tmp = 0;
+        while (i != 0) {
+            tmp += i % 10;
+            i /= 10;
+        }
+        while (j != 0) {
+            tmp += j % 10;
+            j /= 10;
+        }
+        return tmp <= three;
+    }
+}
