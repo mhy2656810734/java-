@@ -1,0 +1,39 @@
+class Solution {
+    public int[][] flag = {{1,0},{-1,0},{0,-1},{0,1},{-1,-1},{1,1},{-1,1},{1,-1}};
+    public int n,m;
+    public char[][] updateBoard(char[][] board, int[] click) {
+        n = board.length;
+        m = board[0].length;
+        int x = click[0];
+        int y = click[1];
+        if (board[x][y] == 'M') {
+            board[x][y] = 'X';
+            return board;
+        }
+        dfs(board,x,y);
+        return board;
+    }
+    public void dfs(char[][] board,int i,int j) {
+        int ret = 0;
+        for (int k = 0; k < 8;k++) {
+            int x = i + flag[k][0];
+            int y = j + flag[k][1];
+            if (x >= 0 && x < n && y >= 0 && y < m && board[x][y] == 'M') {
+                ret++;
+            }
+        }
+        if (ret != 0) {
+            board[i][j] = (char)('0' + ret);
+            return;
+        } else {
+            board[i][j] = 'B';
+            for (int k = 0; k < 8;k++) {
+            int x = i + flag[k][0];
+            int y = j + flag[k][1];
+            if (x >= 0 && x < n && y >= 0 && y < m && board[x][y] == 'E') {
+                dfs(board,x,y);
+            }
+            }
+        }
+    }
+}
