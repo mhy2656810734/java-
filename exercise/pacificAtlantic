@@ -1,0 +1,44 @@
+class Solution {
+    public int[][] flag = {{1,0},{-1,0},{0,-1},{0,1}};
+    public int n,m;
+    public List<List<Integer>> pacificAtlantic(int[][] heights) {
+        n = heights.length;
+        m = heights[0].length;
+        boolean[][] pac = new boolean[n][m];
+        boolean[][] alt = new boolean[n][m];
+        List<List<Integer>> retList = new ArrayList<>();
+        for (int i = 0; i < n;i++) {
+            dfs(heights,i,0,pac);
+        }
+        for (int j = 0; j < m;j++) {
+            dfs(heights,0,j,pac);
+        }
+        for (int j = 0; j < m;j++) {
+            dfs(heights,n-1,j,alt);
+        }
+        for (int i = 0; i < n;i++) {
+            dfs(heights,i,m-1,alt);
+        }
+        for (int i = 0; i < n;i++) {
+            for (int j = 0; j < m;j++) {
+                if (pac[i][j] && alt[i][j]) {
+                    List<Integer> tmp = new ArrayList<>();
+                    tmp.add(i);
+                    tmp.add(j);
+                    retList.add(new ArrayList<>(tmp));
+                }
+            }
+        }
+        return retList;
+    }
+    public void dfs(int[][] grid,int i,int j,boolean[][] arr) {
+        arr[i][j] = true;
+        for (int k = 0; k < 4;k++) {
+            int x = i + flag[k][0];
+            int y = j + flag[k][1];
+            if (x >= 0 && x < n && y >= 0 && y < m && !arr[x][y]&& grid[i][j] <= grid[x][y]) {
+                dfs(grid,x,y,arr);
+            }
+        }
+    }
+}
