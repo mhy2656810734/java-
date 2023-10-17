@@ -1,0 +1,27 @@
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        // 解题思路：使用前缀和
+        // f[i] 表示 [0,i-1] 区间的前缀积
+        // g[i] 表示 [i+1,n-1] 区间的前缀积
+        // f[i] = f[i-1] * nums[i-1];
+        // g[i] = g[i+1] * num[i+1]
+        int n = nums.length;
+        int[] f = new int[n];
+        int[] g = new int[n];
+        // 1.预处理
+        // 2.初始化
+        f[0] = 1;
+        g[n-1] = 1;
+        for (int i = 1; i < n;i++) {
+            f[i] = f[i-1] * nums[i-1];
+        }
+        for (int i = n-2; i >= 0;i--) {
+            g[i] = g[i+1] * nums[i+1];
+        }
+        // 开始填数组
+        for (int i = 0; i < n;i++) {
+            nums[i] = f[i] * g[i];
+        }
+        return nums;
+    }
+} 
