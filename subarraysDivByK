@@ -1,0 +1,20 @@
+class Solution {
+    public int subarraysDivByK(int[] nums, int k) {
+        // 解题思路：使用前缀和
+        // 同余定理： （a-b） % k == 整数   则  a % k == b % k
+        // Java对 负数 % 正数 的修正 : (sum % k + k) % k
+        Map<Integer,Integer> hash = new HashMap<>();
+        hash.put(0 % k,1);
+        int sum = 0,ret = 0;
+        for (int x : nums) {
+            // 计算当前的前缀和
+            sum += x;
+            int val = (sum % k + k) % k;
+            // 统计结果
+            ret += hash.getOrDefault(val,0);
+            // 将当前前缀和 % k 的结果存入hash表
+            hash.put(val,hash.getOrDefault(val,0)+1);
+        }
+        return ret;
+    }
+}
