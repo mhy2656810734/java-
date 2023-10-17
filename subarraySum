@@ -1,0 +1,15 @@
+class Solution {
+    public int subarraySum(int[] nums, int k) {
+        int sum = 0,ret = 0;
+        Map<Integer,Integer> hash = new HashMap<>();
+        hash.put(0,1);
+        for (int x : nums) {
+            sum += x; // 统计当前的前缀和
+            // 统计结果
+            ret += hash.getOrDefault(sum-k,0);
+            // 将当前的前缀和放入哈希表
+            hash.put(sum,hash.getOrDefault(sum,0)+1);
+        }
+        return ret;
+    }
+}
