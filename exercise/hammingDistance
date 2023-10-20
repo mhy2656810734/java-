@@ -1,0 +1,12 @@
+class Solution {
+    public int hammingDistance(int x, int y) {
+        // 先异或，然后看异或结果有几个1
+        int sum = (x ^ y);
+        int ret = 0;
+        while (sum != 0) {
+            sum &= sum - 1;
+            ret++;
+        }
+        return ret;
+    }
+}
