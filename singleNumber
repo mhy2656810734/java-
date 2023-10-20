@@ -1,0 +1,24 @@
+class Solution {
+    public int[] singleNumber(int[] nums) {
+        // 异或所有数字
+        int ret = 0;
+        for (int x : nums) {
+            ret ^= x;
+        }
+        // 找到ret右侧第一个1
+        int h = 1;
+        while ((ret & h) == 0) {
+            h <<= 1;
+        }
+        // 根据该位是否为0 将其分成两组
+        int a = 0,b = 0;
+        for (int x : nums) {
+            if ((h & x) == 0) {
+                a ^= x;
+            } else {
+                b ^= x;
+            }
+        }
+        return new int[]{a,b};
+    }
+}
