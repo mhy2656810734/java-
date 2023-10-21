@@ -1,0 +1,13 @@
+class Solution {
+    public int getSum(int a, int b) {
+        // 解题思路：1.a^b   2 (a & b) <<1  这一步是找进位
+        // 重复 1 2 步，直到2的结果为0
+        while (b != 0) {
+            int x = (a ^ b);// 计算无进位异或的结果
+            int y = (a & b) << 1; // 计算进位
+            a = x;
+            b = y;
+        }
+        return a;
+    }
+}
