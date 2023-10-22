@@ -1,0 +1,17 @@
+class Solution {
+    public int singleNumberTwo(int[] nums) {
+        // 解题思路：可以使用位运算
+        int ret = 0;// 最终结果
+        // 一次修改ret中的每个比特位
+        for (int i = 0; i < 32;i++) {
+            // 统计nums中所有数据的第i位的和
+            int sum = 0;
+            for (int x:nums) {
+                if (((x>>i)&1) == 1) sum++;
+            }
+            sum %= 3;
+            if (sum == 1) ret |= 1<<i;
+        }
+        return ret;
+    }
+}
