@@ -1,0 +1,17 @@
+class Solution {
+    public int findPoisonedDuration(int[] timeSeries, int duration) {
+        // 解题思路: [a,b] b-a = x,如果x >= duration,说明中毒时间可以持续duration
+        //                        如果x < duration， 说明中毒时间只能持续x
+        //  最后一个位置的持续时间也要计算
+        int ret = 0;
+        for (int i = 1; i < timeSeries.length;i++) {
+            int x = timeSeries[i] - timeSeries[i-1];
+            if (x >= duration) {
+                ret += duration;
+            } else {
+                ret += x;
+            }
+        }
+        return ret + duration;
+    }
+}
