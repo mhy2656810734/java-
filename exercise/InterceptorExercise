@@ -1,0 +1,20 @@
+package com.example.demo.exercise;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+/**
+ * @author 26568
+ * @date 2023-10-25 14:18
+ */
+public class Config implements WebMvcConfigurer {
+    @Autowired
+    private LoginInterceptor loginInterceptor;
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(loginInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns();
+    }
+}
