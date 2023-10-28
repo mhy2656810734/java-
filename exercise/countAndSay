@@ -1,0 +1,32 @@
+class Solution {
+    public String countAndSay(int n) {
+        // 解题思路： 使用模拟+双指针
+        // 11122233454 创建right和left指针，初始时都指向第一个位置，
+        // 然后让right开始移动到和left不同的数据下标,right-left就是个数，left指向的就是那个数据
+        // HashMap<Integer,String> hash = new HashMap<>();
+        // hash.put(1,"1");
+        // for (int i = 2; i <= 30;i++) {
+        //     char[] arr = hash.get(i-1).toCharArray();
+        //     int len = arr.length;
+        //     int right = 0,left = 0;
+        //     // 创建要加入到hash中的字符串
+        //     StringBuilder str = new StringBuilder();
+        //     while (right < len) {
+        //         if (arr[left] == arr[right]) {
+        //             right++;
+        //         } else {
+        //             int count = right - left;
+        //             str.append(count+"");
+        //             str.append(arr[left]+"");
+        //             left = right;
+        //             right++;
+        //         }
+        //     }
+        //     int count = right - left;
+        //     str.append(count+"");
+        //     str.append(arr[left]+"");
+        //     hash.put(i,str.toString());
+        // }
+        // return hash.get(n);
+    }
+}
