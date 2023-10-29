@@ -1,0 +1,42 @@
+class Solution {
+    public int minNumberOfFrogs(String croakOfFrogs) {
+        // 解题方法：模拟 + 哈希表
+        // 遇到 roak 字符，在哈希表中找其前驱字符，看看是否存在
+        //                如果存在，让前驱--,当前字符++
+        //                如果不存在，直接返回-1
+        // 遇到 c    字符，在哈希表中找k字符，看看是否存在
+        //                如果存在，k--，当前++
+        //                如果不存在，则当前++
+        char[] arr = croakOfFrogs.toCharArray();
+        String t = "croak";
+        int n = t.length();
+        // 创建一个哈希表统计字符出现的个数
+        int[] hash = new int[n];
+        // 第二个hash表统计字符和下标的映射关系
+        Map<Character,Integer> map = new HashMap<>();
+        for (int i = 0; i < n;i++) {
+            map.put(t.charAt(i),i);
+        }
+        // 遍历字符数组 开始判断
+        for (char ch : arr) {
+            // 如果当前的字符是哇叫的第一个字符,也就是c
+            if (ch == t.charAt(0)) {
+                // 判断最后一个位置的字符在hash表中是不是存在
+                if (hash[n-1] != 0) hash[n-1]--;
+                hash[0]++;
+            } else {
+                // 如果是其它字符，则需要判断其前驱字符是否存在
+                int i = map.get(ch);
+                if (hash[i-1] == 0)  return -1;
+                hash[i-1]--;
+                hash[i]++;
+            }
+        }
+        // 开始判断整个hash表中是否有残留字符
+        for (int i = 0;i < n-1;i++) {
+            if (hash[i] != 0) return -1;
+        }
+        // 返回最后一个hash表的数据
+        return hash[n-1];
+    }
+}
