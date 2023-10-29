@@ -1,0 +1,32 @@
+class Solution {
+    public String convert(String s, int numRows) {
+        // 解题思路：
+        // 先找出第一行的公差d = 2 * numRows - 2
+        // 然后按照公差填第一行和最后一个的字符
+        // 中间字符每次都是两个一组，之间的规律就是: d - 当前字符下标 = 另一个字符的下标
+        StringBuilder strBuilder = new StringBuilder();
+        int n = s.length();
+        // 避免越界
+        if (numRows == 1) return s;
+        int d = 2 * numRows - 2;
+        // 1.拼接第一行
+        // 列的长度当做字符串的长度即可
+        for (int i = 0; i < n;i+=d) {
+            strBuilder.append(s.charAt(i));
+        }
+        // 2.拼接中间k行
+        for (int k = 1; k < numRows-1;k++) {
+            // 拼接每行的两个字符
+            for (int i = k,j = d-i; i < n || j < n; i+=d,j+=d) {
+                // 避免越界
+                if (i < n) strBuilder.append(s.charAt(i));
+                if (j < n) strBuilder.append(s.charAt(j));
+            }
+        }
+        // 3.拼接最后一行
+        for (int i = numRows-1; i < n;i += d) {
+            strBuilder.append(s.charAt(i));
+        }
+        return strBuilder.toString();
+    }
+}
