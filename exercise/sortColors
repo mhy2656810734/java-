@@ -1,0 +1,39 @@
+class Solution {
+    public void sortColors(int[] nums) {
+        // 解题思路：使用“三指针”
+        // 分析题目：对数组进行排序，0 1 2 这种
+        // 让left 最终指向0区域的最右侧， right指向2区域的最左侧
+        // 中间i开始遍历数组中的元素
+        // 根据 left i right 三个指针划分出四个区间
+        // [0,left]   全都是0
+        // [left+1,i-1] 全都是1
+        // [i,right-1]  待扫描区间
+        // [right,n-1]  全都是2
+        // 每次判断i下标的数字是几
+        // 是0的话，就先++left(left初始值是-1)然后swap(nums[i],nums[left]) 然后i++
+        // 如果是1的话，直接让i++即可
+        // 如果是2的话  先--right（right初始值是n） 然后swap(nums[i],nums[right])(i不用++)
+        // 循环条件 i < right
+        int n = nums.length;
+        int left = -1;
+        int right = n;
+        int i = 0;
+        while (i < right) {
+            if (nums[i] == 0) {
+                left++;
+                int a = nums[i];
+                nums[i] = nums[left];
+                nums[left] = a;
+                i++;
+            } else if (nums[i] == 1) {
+                i++;
+            } else {
+                right--;
+                int a = nums[i];
+                nums[i] = nums[right];
+                nums[right] = a;
+            }
+        }
+        
+    }
+}
