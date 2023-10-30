@@ -1,0 +1,35 @@
+class Solution {
+    public int[] sortArray(int[] nums) {
+        // 解题思路：使用数组分三块的方法
+        // 使用left i right 三个指针划分四个区间
+        // [l,left] 小于key
+        // [left+1,i-1] key
+        // [i,right-1] 待排序
+        // [right,r] 大于key
+        qSort(nums,0,nums.length-1);
+        return nums;
+    }
+    public void qSort(int[] nums,int l,int r) {
+        if (l >= r) return;
+        // 使用一个随机下标
+        int key = nums[new Random().nextInt(r-l+1)+l];
+        int left = l-1,i = l,right = r+1;
+        while (i < right) {
+            if (nums[i] < key) {
+                swap(nums,++left,i++);
+            } else if (nums[i] == key) {
+                i++;
+            } else {
+                swap(nums,--right,i);
+            }
+        }
+        // 此时中间的排好了，递归去排两边
+        qSort(nums,l,left);
+        qSort(nums,right,r);
+    }
+    public void swap(int[] nums,int a,int b) {
+        int k = nums[a];
+        nums[a] = nums[b];
+        nums[b] = k;
+    }
+}
