@@ -1,0 +1,41 @@
+class Solution {
+    public int[] smallestK(int[] arr, int k) {
+        // 解题思路：随机基准元素+数组分三块+快排
+        qSort(arr,0,arr.length - 1,k);
+        int[] ret = new int[k];
+        for (int i = 0; i < k;i++) {
+            ret[i] = arr[i];
+        }
+        return ret;
+    }
+    public void qSort(int[] nums,int l,int r,int k) {
+        if (l >= r) return;
+        // 1.选择随机基准元素
+        int key = nums[new Random().nextInt(r-l+1)+l];
+        // 2.数组分三块
+        int left = l - 1,right = r + 1,i = l;
+        while (i < right) {
+            if (nums[i] < key) swap(nums,++left,i++);
+            else if (nums[i] == key) i++;
+            else swap(nums,--right,i);
+        }
+        // 分成的三个区间[l,left] [left+1,right-1] [right,r]
+        // 找最小的则从第一个区间开始
+        // a b c 分别表示每个区间的元素个数
+        int a = left - l + 1,b = right-left-1;
+        // 说明前k个都在第一个区间
+        if (a >= k) {
+            qSort(nums,l,left,k);
+        } else if (a+b >= k) {
+            // 说明前k个在第二个区间 直接返回即可
+            return;
+        } else {
+            qSort(nums,right,r,k-a-b);
+        }
+    }
+    public void swap(int[] nums,int left,int right) {
+        int t = nums[left];
+        nums[left] = nums[right];
+        nums[right] = t;
+    }
+}
