@@ -1,0 +1,34 @@
+class Solution {
+    int[] tmp;
+    public int[] sortArrayMergeSort(int[] nums) {
+        tmp = new int[nums.length];
+        mergeSort(nums,0,nums.length-1);
+        return nums;
+    }
+    public void mergeSort(int[] nums,int left,int right) {
+        if (left >= right) return;
+        int mid = (left + right) /2;
+        mergeSort(nums,left,mid);
+        mergeSort(nums,mid+1,right);
+        // 排序
+        int s1 = left,s2 = mid + 1,i = 0;
+        while ((s1 <= mid) && (s2 <= right)) {
+            if (nums[s1] <= nums[s2]) {
+                tmp[i++] = nums[s1++];
+            } else {
+                tmp[i++] = nums[s2++];
+            }
+        }
+        // 处理残留元素
+        while (s1 <= mid) {
+            tmp[i++] = nums[s1++];
+        }
+        while (s2 <= right) {
+            tmp[i++] = nums[s2++];
+        }
+        //拷贝回原数组
+        for (int j = left; j <= right;j++) {
+            nums[j] = tmp[j - left];  
+        }
+    }
+}
