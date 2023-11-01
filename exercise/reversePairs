@@ -1,0 +1,40 @@
+class Solution {
+    int[] tmp;
+    public int reversePairs(int[] record) {
+        int n = record.length;
+        tmp = new int[n];
+        return mergeSort(record,0,n-1);
+    }
+    public int mergeSort(int[] nums,int left,int right) {
+        if (left >= right) return 0;
+        // 记录这一层有多少个逆序对
+        int ret = 0;
+        int mid = left + (right - left)/2;
+        // 左半部分的个数+排序+右半部分的个数+排序
+        ret += mergeSort(nums,left,mid);
+        ret += mergeSort(nums,mid+1,right);
+        // 一左一右的个数
+        int cur1 = left,cur2 = mid+1,i = 0;
+        while ((cur1 <= mid) && (cur2 <= right)) {
+            if (nums[cur1] <= nums[cur2]) {
+                // 这种情况说明无法判断，先存到tmp数组
+                tmp[i++] = nums[cur1++];
+            } else {
+                // 说明此时cur1下标的值比cur2下标的值要大
+                // 则[cur1,mid] 这个区间所有的数字都要比nums[cur2]大
+                // 也就是可以组成 mid-cur+1个逆序对
+                ret += (mid - cur1 + 1);
+                // 然后将cur2的数据存入tmp数组
+                tmp[i++] = nums[cur2++];
+            }
+        }
+        // 继续排序
+        while (cur1 <= mid) tmp[i++] = nums[cur1++];
+        while (cur2 <= right) tmp[i++] = nums[cur2++];
+        // 拷贝回原数组
+        for (int j = left;j <= right;j++) {
+            nums[j] = tmp[j-left];
+        }
+        return ret;
+    }
+}
