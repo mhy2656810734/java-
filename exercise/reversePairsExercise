@@ -1,0 +1,41 @@
+class Solution {
+    int[] tmp;
+    public int reversePairs(int[] nums) {
+        // 解题思路：使用归并排序
+        int n = nums.length;
+        tmp = new int[n];
+        return mergeSort(nums,0,n-1);
+    }
+    public int mergeSort(int[] nums,int left,int right) {
+        if (left >= right) return 0;
+        // 1.根据中间元素划分区间
+        int mid = left + (right - left) / 2;
+        int ret = 0;
+        // 2.计算左右区间的翻转对数
+        ret += mergeSort(nums,left,mid);
+        ret += mergeSort(nums,mid + 1,right);
+        // 3.计算一左一右
+        int cur1 = left,cur2 = mid+1,i = left;
+        // 降序方式
+        // 计算当前元素后面，有多少元素的两倍比我小
+        // 升序方式
+        // 计算当前元素之前，有多少元素的一半比我大
+        while (cur1 <= mid) {
+            while (cur2 <= right && nums[cur2] >= nums[cur1]/2.0) cur2++;
+            if (cur2 > right) break;
+            ret += (right - cur2 + 1);
+            cur1++;
+        }
+        // 3.合并排序
+        cur1 = left; cur2 = mid + 1;
+        while (cur1 <= mid && cur2 <= right) 
+        tmp[i++] = nums[cur1] <= nums[cur2] ?nums[cur2++]:nums[cur1++];
+        while(cur1 <= mid) tmp[i++] = nums[cur1++];
+        while (cur2 <= right) tmp[i++] = nums[cur2++];
+        // 4.拷贝回原数组
+        for (int j = left;j <= right;j++) {
+            nums[j] = tmp[j];
+        }
+        return ret;
+    }
+}
