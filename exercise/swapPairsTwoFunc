@@ -1,0 +1,40 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        // 递归
+        if (head == null || head.next == null) return head;
+        // ListNode tmp = swapPairs(head.next.next);
+        // head.next.next = head;
+        // ListNode newHead = head.next;
+        // head.next = tmp;
+        // return newHead;
+        // 循环
+        ListNode newHead = new ListNode(-1);
+        ListNode prev = newHead;
+        prev.next = head;
+        ListNode next = head.next;
+        ListNode cur = head;
+        ListNode nnext = head.next.next;
+        while (cur != null && next != null) {
+            // 交换节点
+            prev.next = next;
+            next.next = cur;
+            cur.next = nnext;
+            // 移动指针
+            prev = cur;
+            cur = nnext;
+            if (cur != null) next = cur.next;
+            if(next != null)nnext = next.next;
+        }
+        return newHead.next;
+    }
+}
