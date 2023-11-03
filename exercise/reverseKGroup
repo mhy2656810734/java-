@@ -1,0 +1,44 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        // 解题思路：先统计需要翻转n组,再将剩余的节点拼接到后面
+        int n = 0;
+        if (head == null || head.next == null) return head;
+        ListNode cur = head;
+        while (cur != null) {
+            n++;
+            cur = cur.next;
+        }
+        n /= k;
+        cur = head;
+        ListNode newHead = new ListNode(-1);
+        ListNode prev = newHead;
+        // 翻转n组
+        for (int i = 0; i < n;i++) {
+            // 保存翻转后每组最后一个节点（也就是不翻转前的第一个节点）
+            ListNode tmp = cur;
+            // 每组k个节点
+            for (int j = 0; j < k;j++) {
+                ListNode curNext = cur.next;
+                cur.next = prev.next;
+                prev.next = cur;
+                cur = curNext;
+            }
+            // 每组翻转完以后，让prev更新到最后一个节点的位置
+            prev = tmp;
+        }
+        // 将剩余的节点加入到prev的后面
+        // 剩余的节点是cur
+        prev.next = cur;
+        return newHead.next;
+    }
+}
