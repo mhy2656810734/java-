@@ -1,0 +1,47 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public void reorderList(ListNode head) {
+        // 解题思路：1.找到中间节点 2.将后半部分节点逆序 3.合并两个有序链表
+        if (head == null || head.next == null) return;
+        ListNode fast = head;
+        ListNode slow = head;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        // 此时slow就是中间节点
+        // 开始逆序
+        ListNode prev = null;
+        ListNode slowNext = null;
+        while (slow != null) {
+            slowNext = slow.next;
+            slow.next = prev;
+            prev = slow;
+            slow = slowNext;
+        }
+        // prev 是后半部分头结点
+        // 开始合并
+        ListNode newHead = head;
+        ListNode prevNext = null;
+        ListNode headNext = null;
+        while (head != prev && head.next != prev && head != null) {
+            headNext = head.next;
+            prevNext = prev.next;
+            head.next = prev;
+            prev.next = headNext;
+            head = headNext;
+            prev = prevNext;
+        }
+        prev.next = null;
+        head = newHead;
+    }
+}
