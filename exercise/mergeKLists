@@ -1,0 +1,30 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        // 解法1：使用优先级队列，直接将所有结点都加入小根堆，然后弹出直接合并
+        PriorityQueue<ListNode> heap = new PriorityQueue<>((v1,v2) -> v1.val - v2.val);
+        for (ListNode node:lists) {
+            if (node != null) {
+                 heap.offer(node);
+            }  
+        }
+        ListNode newHead = new ListNode(-1);
+        ListNode cur = newHead;
+        while (!heap.isEmpty()) {
+            ListNode t = heap.poll();
+            cur.next = t;
+            cur = t;
+            if (t.next != null) heap.offer(t.next);
+        }
+        return newHead.next;
+    }
+}
