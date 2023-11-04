@@ -1,0 +1,18 @@
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        // 解题思路：使用哈希表
+        Map<Integer,Integer> hash = new HashMap<>();
+        int n = nums.length;
+        int[] ret = new int[2];
+        for (int i = 1; i < n;i++) {
+            // 先将前一个数据存入hash表
+            hash.put(nums[i-1],i-1);
+            // 然后开始判断
+            if (hash.containsKey(target - nums[i]) ) {
+                ret[0] = hash.get(target - nums[i]);
+                ret[1] = i;
+            }
+        }
+        return ret;
+    }
+}
