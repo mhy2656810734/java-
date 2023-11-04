@@ -1,0 +1,17 @@
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        // 解题思路：使用哈希表，遍历字符串数组，对每个字符串重新排序
+        // 将排序后的结果加入哈希表
+        Map<String,List<String>> hash = new HashMap<>();
+        for (String str:strs) {
+            char[] arr = str.toCharArray();
+            Arrays.sort(arr);
+            String key = new String(arr);
+            if (!hash.containsKey(key)) {
+                hash.put(key,new ArrayList());
+            }
+            hash.get(key).add(str);
+        }
+        return new ArrayList(hash.values());
+    }
+}
