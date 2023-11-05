@@ -1,0 +1,16 @@
+class Solution {
+    public String addBinary(String a, String b) {
+        StringBuilder str = new StringBuilder();
+        int i = a.length() -  1;
+        int j = b.length() - 1;
+        int t = 0;
+        while (i >= 0 || j >= 0 || t != 0) {
+            if (i >=0) t += a.charAt(i--) - '0';
+            if (j >= 0) t += b.charAt(j--) - '0';
+            str.append((char)((t % 2)+'0'));
+            t /= 2;
+        }
+        str.reverse();
+        return str.toString();
+    }
+}
