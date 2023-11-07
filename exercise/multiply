@@ -1,0 +1,36 @@
+class Solution {
+    public String multiply(String num1, String num2) {
+        // 解题思路：无进位相乘，然后相加，最后处理进位
+        if (num1.equals("0") || num2.equals("0")) return "0";
+        // 创建一个数字，用来存储每一个位置相乘相加之后的结果
+        int n = num1.length(),m = num2.length();
+        int[] ret = new int[m+n-1];
+        // 先将原来的两个字符串都逆置
+        StringBuilder str1 = new StringBuilder(num1);
+        StringBuilder str2 = new StringBuilder(num2);
+        str1.reverse();
+        str2.reverse();
+        for (int i = 0; i < m;i++) {
+            for (int j = 0; j < n;j++) {
+                // 先拿到两个字符串的每个位置的值
+                int a = str2.charAt(i) - '0';
+                int b = str1.charAt(j) - '0';
+                // 存放位置是两个字符的下标之和
+                ret[i+j] += a*b;
+            }
+        }
+        // 此时数组中的每个数字都存储的是计算之后的结果
+        int t = 0;// 记录进位
+        StringBuilder str = new StringBuilder();
+        for (int i = 0;i < m+n-1;i++) {
+            int a = ret[i] + t;
+            str.append((char)((a % 10)+'0'));
+            t = a / 10;
+        }
+        if (t != 0) {
+            str.append((char)(t + '0'));
+        }
+        str.reverse();
+        return str.toString();
+    }
+}
