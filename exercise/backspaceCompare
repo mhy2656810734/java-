@@ -1,0 +1,41 @@
+class Solution {
+    public boolean backspaceCompare(String s, String t) {
+        // 解题思路：使用同栈
+        Stack<Character> stack1 = new Stack<>();
+        Stack<Character> stack2 = new Stack<>();
+        // 先将一个字符串的所有字符加入栈，遇到#要弹出
+        int n = s.length();
+        int m = t.length();
+        for (int i = 0; i < n;i++) {
+            char ch = s.charAt(i);
+            if (ch == '#') {
+                if (!stack1.isEmpty()) {
+                   stack1.pop();
+                }
+                
+            } else {
+                stack1.push(ch);
+            }
+        }
+        // 然后再将另外一个字符串的所有字符加入栈
+        for (int i = 0; i < m;i++) {
+            char ch = t.charAt(i);
+            if (ch == '#') {
+                if (!stack2.isEmpty()) {
+                    stack2.pop();
+                }
+            } else {
+                stack2.push(ch);
+            }
+        }
+        // 然后比较这两个栈中的元素
+        while (!stack1.isEmpty() && !stack2.isEmpty()) {
+            if (stack1.pop() != stack2.pop()) {
+                return false;
+            }
+        }
+        // 有不为空的直接false
+        if (!stack1.isEmpty() || !stack2.isEmpty()) return false;
+        return true;
+    }
+}
