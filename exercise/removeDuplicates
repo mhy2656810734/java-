@@ -1,0 +1,23 @@
+class Solution {
+    public String removeDuplicates(String s) {
+        // 解题思路：使用栈
+        StringBuilder str = new StringBuilder();
+        Stack<Character> stack = new Stack<>();
+        int n = s.length();
+        stack.push(s.charAt(0));
+        for (int i = 1; i < n;i++) {
+            char ch = s.charAt(i);
+            if (!stack.isEmpty() && stack.peek() == ch) {
+                stack.pop();
+            } else {
+                stack.push(ch);
+            }
+        }
+        // 再将栈中字符拼接，然后逆序
+        while (!stack.isEmpty()) {
+            str.append(stack.pop());
+        }
+        str.reverse();
+        return str.toString();
+    }
+}
