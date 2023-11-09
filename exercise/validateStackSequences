@@ -1,0 +1,21 @@
+class Solution {
+    public boolean validateStackSequences(int[] pushed, int[] popped) {
+        // 解题思路：使用一个栈
+        int n = pushed.length;
+        int m = popped.length;
+        if (n != m) return false;
+        Stack<Integer> stack = new Stack<>();
+        int j = 0;
+        for (int i = 0; i < n;i++) {
+            // 先将数字入栈
+            stack.push(pushed[i]);
+            // 然后判断栈顶的元素是不是和j对应的元素一样
+            while (!stack.isEmpty() && stack.peek() == popped[j]) {
+                j++;
+                stack.pop();
+            }
+        }
+        if (stack.isEmpty()) return true;
+        return false;
+    }
+}
