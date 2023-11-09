@@ -1,0 +1,52 @@
+class Solution {
+    public String decodeString(String s) {
+        // 解题思路：使用两个栈，一个字符串栈，一个数字栈
+        Stack<StringBuilder> strStack = new Stack<>();
+        Stack<Integer> numStack = new Stack<>();
+        int i = 0,n = s.length();
+        char[] arr = s.toCharArray();
+        // 为了后续字符串栈为空 操作异常，给字符串栈中加入空串
+        strStack.push(new StringBuilder());
+        while (i < n) {
+            // 先判断是不是数字
+            if (arr[i] >= '0' && arr[i] <= '9') {
+                int tmp = 0;
+                while (i < n && arr[i] >= '0' && arr[i] <= '9') {
+                    tmp = tmp * 10 + (arr[i] - '0');
+                    i++;
+                }
+                // 然后数字入栈
+                numStack.push(tmp);
+            } else if (arr[i] == '[') {
+                // 如果是左括号，就将后面所有字符串拼接起来，然后拼接到字符串栈顶字符串的后面
+                i++;
+                StringBuilder str = new StringBuilder();
+                while (i < n && arr[i] >= 'a' && arr[i] <= 'z') {
+                    str.append(arr[i]);
+                    i++;
+                }
+                // 然后加入字符串栈
+                strStack.push(str);
+            } else if (arr[i] == ']') {
+                // 此时需要拼接字符串栈顶的元素
+                int k = numStack.pop();
+                StringBuilder str = strStack.pop();
+                while (k-- != 0) {
+                    strStack.peek().append(str);
+                }
+                i++;
+            } else {
+                // 说明arr[i] 是字符
+                StringBuilder str = new StringBuilder();
+                while (i < n && arr[i] >= 'a' && arr[i] <= 'z') {
+                    str.append(arr[i]);
+                    i++;
+                }
+                // 然后加入字符串栈
+                strStack.peek().append(str);
+            }
+        }
+        // 此时字符串栈中的就是最终的结果
+        return strStack.pop().toString();
+    }
+}
