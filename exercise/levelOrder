@@ -1,0 +1,46 @@
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> children;
+
+    public Node() {}
+
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, List<Node> _children) {
+        val = _val;
+        children = _children;
+    }
+};
+*/
+
+class Solution {
+    public List<List<Integer>> levelOrder(Node root) {
+        List<List<Integer>> list = new ArrayList<>();
+        if (root == null) return list;
+        Queue<Node> queue = new LinkedList<>();
+        // 先把头结点加入
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            // 统计此时队列中有几个节点
+            int sz = queue.size();
+            List<Integer> tmp = new ArrayList<>();
+            while (sz-- > 0) {
+                // 拿出每一个节点
+                Node cur = queue.poll();
+                tmp.add(cur.val);
+                // 然后将这个节点的所有孩子加入队列
+                for (Node ch:cur.children) {
+                    if (ch != null) {
+                        queue.offer(ch);
+                    }
+                }
+            }
+            list.add(tmp);
+        }
+        return list;
+    }
+}
