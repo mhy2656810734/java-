@@ -1,0 +1,45 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int widthOfBinaryTree(TreeNode root) {
+        // 解题思路：使用Pari将每个节点和下标绑定
+        // 使用list来存储上述绑定关系，然后计算数组第一个元素和最后一个元素的下标差就是最大宽度
+        List<Pair<TreeNode,Integer>> list = new ArrayList<>();
+        // 结点从1开始编号
+        list.add(new Pair<>(root,1));
+        int ret = 0;// 记录最终结果
+        while (!list.isEmpty()) {
+            // 先更新这一层的宽度
+            Pair<TreeNode,Integer> t1 = list.get(0);
+            Pair<TreeNode,Integer> t2 = list.get(list.size() - 1);
+            ret = Math.max(ret,t2.getValue() - t1.getValue()+1);
+            // 让下一层进队列
+            List<Pair<TreeNode,Integer>> tmp = new ArrayList<>();
+            for (Pair<TreeNode,Integer> t:list) {
+                TreeNode node = t.getKey();
+                int index = t.getValue();
+                if (node.left != null) {
+                    tmp.add(new Pair<TreeNode,Integer>(node.left,2*index));
+                }
+                if (node.right != null) {
+                    tmp.add(new Pair<TreeNode,Integer>(node.right,2*index+1));
+                }
+            }
+            list = tmp;
+        }
+        return ret;
+    }
+}
