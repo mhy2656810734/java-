@@ -1,0 +1,42 @@
+class Solution {
+    public List<String> topKFrequent(String[] words, int k) {
+        // 解题思路：
+        // 1.先统计每个单词出现的频率
+        // 2.创建一个小根堆
+        //   当频率相等的时候(从大到校)，比较字典序（从小到大）
+        // 3.拿到1中的每个字符串加入堆 当size > k 就弹出
+        // 4.拿出堆中的所有字符串并逆序
+        Map<String,Integer> hash =  new HashMap<>();
+        List<String> list = new ArrayList<>();
+        for (String s:words) {
+            hash.put(s,hash.getOrDefault(s,0)+1);
+        }
+        PriorityQueue<Pair<String,Integer>> queue = new PriorityQueue<>
+        (
+            (a,b) ->
+            {
+                // 先按照出现频次建立小根堆，频次相同比较字典序（大根堆）
+                if (a.getValue().equals(b.getValue())) {
+                    return b.getKey().compareTo(a.getKey());
+                }
+                return a.getValue() - b.getValue();
+            }
+        );
+        // 遍历字符串加入堆
+        for (Map.Entry<String,Integer> entry:hash.entrySet()) {
+            queue.offer(new Pair<>(entry.getKey(),entry.getValue()));
+            // 当数量超过k时，就要弹出
+            // 将所有出现次数少的弹出，那么剩下的就是所有出现次数多的
+            if (queue.size() > k) {
+                queue.poll();
+            }
+        }
+        // 遍历堆
+        while (!queue.isEmpty()) {
+            list.add(queue.poll().getKey());
+        }
+        // 此时list存储的都是
+        Collections.reverse(list);
+        return list;
+    }
+}
