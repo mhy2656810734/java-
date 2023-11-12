@@ -1,0 +1,17 @@
+class Solution {
+    public int lastStoneWeight(int[] stones) {
+        PriorityQueue<Integer> queue = new PriorityQueue<>((a,b) -> (b-a));
+        for (int x:stones) {
+            queue.offer(x);
+        }
+        while (queue.size() > 1) {
+            // 拿到堆顶的两个数据
+            int x = queue.poll();
+            int y = queue.poll();
+            if (x - y  != 0) {
+                queue.offer(x-y);
+            }
+        }
+        return queue.isEmpty()?0:queue.poll();
+    }
+}
