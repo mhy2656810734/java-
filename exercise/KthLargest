@@ -1,0 +1,29 @@
+class KthLargest {
+    // 解题思路：使用优先级队列创建大根堆
+    PriorityQueue<Integer> quque;
+    int K;
+    public KthLargest(int k, int[] nums) {
+        K = k;
+        quque = new PriorityQueue<>();
+        for (int x:nums) {
+            quque.offer(x);
+            if (quque.size() > K) {
+                quque.poll();
+            }
+        }
+    }
+    
+    public int add(int val) {
+        quque.offer(val);
+        if (quque.size() > K) {
+            quque.poll();
+        }
+        return quque.peek();
+    }
+}
+
+/**
+ * Your KthLargest object will be instantiated and called as such:
+ * KthLargest obj = new KthLargest(k, nums);
+ * int param_1 = obj.add(val);
+ */
