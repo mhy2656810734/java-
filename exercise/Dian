@@ -1,0 +1,50 @@
+class MedianFinder {
+    // 解题思路：使用大小堆来维护数据流的中位数
+    PriorityQueue<Integer> left;
+    PriorityQueue<Integer> right;
+    public MedianFinder() {
+        // 左边大根堆
+        left = new PriorityQueue<>((a,b) -> b- a);
+        // 右边小根堆
+        right = new PriorityQueue<>();
+    }
+    
+    public void addNum(int num) {
+        // 先判断所有大小根堆的元素个数
+        if (left.size() == right.size()) {
+            // 如果left为空或者 num <= left堆顶的话直接进左堆
+            if (left.isEmpty() || num <= left.peek()) {
+                left.offer(num);
+            } else {
+                // 先将num加入right，然后将right的堆顶加入left
+                right.offer(num);
+                left.offer(right.poll());
+            }
+        }  else {
+            // 此时说明左堆比右堆多一个
+            // 先判断num和left堆顶的大小关系
+            if (num <= left.peek()) {
+                // 先将num加入左堆，然后再弹出大的加入右堆
+                left.offer(num);
+                right.offer(left.poll());
+            } else {
+                // 直接加入右堆，此时两个堆的元素个数一样
+                right.offer(num);
+            }
+        }
+    }
+    
+    public double findMedian() {
+        // 如果两个堆的个数一样，则堆顶之和/2
+        // 否则是左堆的堆顶
+        if (left.size() == right.size()) return (left.peek() + right.peek()) / 2.0;
+        return left.peek();
+    }
+}
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder obj = new MedianFinder();
+ * obj.addNum(num);
+ * double param_2 = obj.findMedian();
+ */
