@@ -1,0 +1,43 @@
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        // 解题思路：典型的最短路径问题，使用BFS求解
+        // 1.预处理
+        if (beginWord.equals(endWord)) return 0;
+        // 如果最终变化不了
+        Set<String> words = new HashSet<>();
+        Set<String> vis = new HashSet<>();
+        for (String s: wordList) vis.add(s);
+        if (!vis.contains(endWord)) return 0;
+        // 记录已经变化过的字符串
+        Set<String> hash = new HashSet<>();
+        Queue<String> q = new LinkedList<>();
+        q.offer(beginWord);
+        hash.add(beginWord);
+        int ret = 1;
+        while (!q.isEmpty()) {
+            ret++;
+            // 统计每层可以变化的字符串个数
+            int sz = q.size();
+            while (sz-- > 0) {
+                // 弹出字符串
+                String t = q.poll();
+                // 将t字符串的每个位置都变化
+                for (int i = 0; i < t.length();i++) {
+                    char[] tmp = t.toCharArray();
+                    for (char ch = 'a';ch <= 'z';ch++) {
+                        tmp[i] = ch;
+                        String next = new String(tmp);
+                        // 判断这个字符串是不是在wordList中，是不是没有在hash中
+                        if (vis.contains(next) && !hash.contains(next)) {
+                            // 判断是不是已经是最终结果了
+                            if (next.equals(endWord)) return ret;
+                            q.offer(next);
+                            hash.add(next);
+                        }
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+}
