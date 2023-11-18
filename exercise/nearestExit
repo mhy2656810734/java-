@@ -1,0 +1,37 @@
+class Solution {
+    public int nearestExit(char[][] maze, int[] entrance) {
+        // 解题思路：典型的最短路径问题，使用BFS进行解答
+        Queue<int[]> q = new LinkedList<>();
+        q.offer(new int[]{entrance[0],entrance[1]});
+        int[][] flag = {{1,0},{0,1},{-1,0},{0,-1}};
+        int n = maze.length;
+        int m = maze[0].length;
+        boolean[][] book = new boolean[n][m];
+        book[entrance[0]][entrance[1]] = true;
+        int ret  = 0;
+        while (!q.isEmpty()) {
+            // 统计每一层有多少个结点
+            int sz =  q.size();
+            ret++;
+            while (sz-- > 0) {
+                // 弹出坐标进行扩展
+                int[] t = q.poll();
+                int a = t[0];
+                int b = t[1];
+                // 四个方向
+                for (int k = 0; k < 4;k++) {
+                    int x = a + flag[k][0];
+                    int y = b + flag[k][1];
+                    if (x >= 0 && x < n && 
+                    y >= 0 && y < m && !book[x][y] &&maze[x][y] == '.') {
+                        // 判断是不是已经走到了出口
+                        if (x == 0 || x == n-1 || y == 0 || y == m-1) return ret;
+                        q.offer(new int[]{x,y});
+                        book[x][y] = true;
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+}
