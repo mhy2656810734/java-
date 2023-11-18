@@ -1,0 +1,47 @@
+class Solution {
+    public int minMutation(String startGene, String endGene, String[] bank) {
+        // 解题思路：典型的最短路径问题，使用BFS
+        // 预处理
+        if (startGene.equals(endGene)) return 0;
+        // 1.先将ban中的字符串加入哈希表，方便判断
+        Set<String> bankSet = new HashSet<>();
+        for (String str : bank) {
+            bankSet.add(str);
+        }
+        if (!bankSet.contains(endGene)) return -1;
+        // 这个哈希表用来判断变化后的字符串是不是已经搜索过了
+        Set<String> changeSet = new HashSet<>();
+        char[] arr = {'A','C','G','T'};
+        // 2.先将起始字符串加入队列
+        Queue<String> q = new LinkedList<>();
+        q.offer(startGene);
+        changeSet.add(startGene);
+        int ret = 0;
+        while (!q.isEmpty()) {
+            // 统计字符个数
+            ret++;
+            int sz = q.size();
+            while (sz-- > 0) {
+                // 弹出字符串
+                String t = q.poll();
+                // 修改t字符串的每个位置为arr字符数组中的字符
+                for (int i = 0; i < 8;i++) {
+                    char[] tmp = t.toCharArray();
+                    for (int j = 0; j < 4;j++) {
+                        tmp[i] = arr[j];
+                        // 新变化的字符串
+                        String next = new String(tmp);
+                        // 如果这个字符串没有搜索过，并且在bankset中，就加入队列
+                        if (!changeSet.contains(next) && bankSet.contains(next)) {
+                            // 判断是不是已经是最终结果了
+                            if (next.equals(endGene)) return ret;
+                            q.offer(next);
+                            changeSet.add(next);
+                        }
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+}
