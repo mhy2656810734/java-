@@ -1,0 +1,42 @@
+class Solution {
+    public int m,n;
+    public int[][] flag = {{1,0},{0,1},{-1,0},{0,-1}};
+    public int maxDistance(int[][] grid) {
+        // 解题思路：多源BFS+正难则反
+        // 创建一个同等规模的数组，然后将原数组所有的1下标加入队列
+        // 然后遍历队列进行扩展，每次的扩展距离是1
+        // 最后统计创建的数组的最大值即可
+        m = grid.length;n = grid[0].length;
+        int[][] dist = new int[m][n];
+        Queue<int[]> q = new LinkedList<>();
+        for (int i = 0; i < m;i++) {
+            for (int j = 0; j < n;j++) {
+                dist[i][j] = -1;
+                if (grid[i][j] == 1) {
+                    dist[i][j] = 0;
+                    q.offer(new int[]{i,j});
+                }
+            }
+        }
+        while (!q.isEmpty()) {
+            int[] t = q.poll();
+            int a = t[0];
+            int b = t[1];
+            for (int i = 0; i < 4;i++) {
+                int x = a + flag[i][0];
+                int y = b + flag[i][1];
+                if (x>=0&&x<m&&y>=0&&y<n&& dist[x][y] == -1) {
+                    dist[x][y] = dist[a][b] + 1;
+                    q.offer(new int[]{x,y});
+                }
+            }
+        }
+        int ret = 0;
+          for (int i = 0; i < m;i++) {
+            for (int j = 0; j < n;j++) {
+                ret = Math.max(ret,dist[i][j]);
+            }
+        }
+        return ret == 0?-1:ret;
+    }
+}
