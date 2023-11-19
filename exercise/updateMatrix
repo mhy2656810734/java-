@@ -1,0 +1,42 @@
+class Solution {
+    public int[][] flag = {{1,0},{0,1},{-1,0},{0,-1}};
+    public int[][] updateMatrix(int[][] mat) {
+        // 解题思路：典型的多源最短路径问题，使用BFS+正难则反
+        // 如果从1开始出发找0的话，记录好距离以后，需要修改原来1的下标，不好修改
+        // 因此，正难则反，从0开始找1，找到就根据距离修改1
+        int m = mat.length,n = mat[0].length;
+        // dist[i][j] 有两个含义
+        // dist[i][j] == -1 表示该位置没有被搜索过
+        // dist[i][j] != -1 表示记录从0到该位置的最短距离
+        int[][] dist = new int[m][n];
+        for (int i = 0; i < m;i++) {
+            for (int j = 0; j < n;j++) 
+            dist[i][j] = -1;
+        }
+        Queue<int[]> q = new LinkedList<>();
+        // 1.将所有源点加入队列
+        for (int i = 0; i < m;i++) {
+            for (int j = 0; j < n;j++) {
+                if (mat[i][j] == 0) {
+                    q.offer(new int[]{i,j});
+                    dist[i][j] = 0;
+                }
+            }
+        }
+        // 2.开始一层层进行扩展
+        while (!q.isEmpty()) {
+            int[] t = q.poll();
+            int a = t[0];
+            int b = t[1];
+            for (int i = 0; i < 4;i++) {
+                int x = a + flag[i][0];
+                int y = b + flag[i][1];
+                if (x >= 0 && x < m && y >= 0 && y < n && dist[x][y] == -1) {
+                    q.offer(new int[]{x,y});
+                    dist[x][y] = dist[a][b]+1;
+                }
+            }
+        }
+        return dist;
+    }
+}
