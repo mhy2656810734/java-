@@ -1,0 +1,45 @@
+class Solution {
+    public boolean canFinish(int n, int[][] p) {
+        // 解题思路：使用拓扑排序判断是否有环
+        // 1.准备工作
+        // 邻接表存图
+        Map<Integer,List<Integer>> edges = new HashMap<>();
+        // 存储每个顶点的入度
+        int[] in = new int[n];
+        // 2.建图
+        // 遍历p数组的每一个数组对
+        for (int i = 0; i < p.length;i++) {
+            int a = p[i][0],b = p[i][1]; // b->a
+            if (!edges.containsKey(b)) {
+                edges.put(b,new ArrayList<>());
+            }
+            edges.get(b).add(a);
+            // 统计每个顶点的入度
+            in[a]++;
+        }
+        Queue<Integer> q = new LinkedList<>();
+        // 3.进行拓扑排序
+        // 3.1将入度为0的顶点加入队列
+        for (int i = 0; i < n;i++) {
+            // in[i] 表示 顶点i 的入度数量
+            if (in[i] == 0) q.offer(i);
+        }
+        // 3.2进行排序
+        while (!q.isEmpty()) {
+            int t = q.poll();// 入度为0的顶点
+            // 修改这个顶点的边指向的顶点的入度
+            // 注意，t可能是最后一个顶点，没有指向的顶点，也就是edge中对应的list为空
+            for (int i:edges.getOrDefault(t,new ArrayList<>())) {
+                in[i]--;
+                // 将入度为0的顶点继续加入队列
+                if (in[i] == 0) q.offer(i);
+            }
+        }
+        // 4.判断是否有环(直接看入度表in中是不是有不为0的顶点)
+        // 如果没有环的话，最后所有顶点的入度都为0
+        for (int i = 0; i < n;i++) {
+            if (in[i] != 0) return false;
+        }
+        return true;
+    }
+}
