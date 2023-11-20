@@ -1,0 +1,81 @@
+class Solution {
+    // 因为一个字符可能对应多个字符，使用数组可能会重复统计，最好使用set
+    Map<Character,Set<Character>> edges = new HashMap<>();// 邻接表存图
+    Map<Character,Integer> in = new HashMap<>();// 统计入度信息
+    boolean check;// 判断是不是合法字符串，也就是abc ab 这种情况
+    public String alienOrder(String[] words) {
+        // 解题思路：拓扑排序
+        // 1.准备工作
+        int n = words.length;
+        // 初始化入度哈希表
+        for (String s:words) {
+            for (int i = 0; i < s.length();i++) {
+                char ch = s.charAt(i);
+                in.put(ch,0);
+            }
+        }
+        // 2.建图
+        // 两层for循环，比较两个字符串的关系
+        for (int i = 0; i < n;i++) {
+            for (int j = i+1; j < n; j++) {
+                add(words[i],words[j]);
+                // 如果check的值被修改了，说明前面字符串长度大于后面字符串长度，不合法
+                if (check) return "";
+            }
+        }
+        // 3.拓扑排序
+        Queue<Character> q = new LinkedList<>();
+        // 先将入度为0的顶点加入队列
+        for (char ch:in.keySet()) {
+            if (in.get(ch) == 0) q.offer(ch);
+        }
+        // BFS
+        StringBuilder ret = new StringBuilder();
+        while (!q.isEmpty()) {
+            char t = q.poll();
+            ret.append(t);
+            // 这个t字符可能不在邻接表中,因为in中存的是所有的words中所有的字符，只考虑在edges中的
+            if (!edges.containsKey(t)) continue;
+            for (char ch:edges.get(t)) {
+                // 修改t字符串的边对应的顶点的入度值
+                in.put(ch,in.get(ch) - 1);
+                // 度为0就加入队列
+                if (in.get(ch) == 0) q.offer(ch);
+            }
+        }
+        // 判断是不是出现了环(判断入度哈希表即可)
+        for (char ch:in.keySet()) {
+            if (in.get(ch) != 0) return "";
+        }
+        return ret.toString();
+    }
+    // 完成邻接表存图
+    public void add(String s1,String s2) {
+        // 拿到两个字符串长度比较小的那个,判断不合法情况
+        int n = Math.min(s1.length(),s2.length());
+        int i = 0;
+        for (;i < n;i++) {
+            char ch1 = s1.charAt(i);
+            char ch2 = s2.charAt(i);
+            // 两个字符串不相等的时候才存入edges  ch1 -> ch2
+            if (ch1 != ch2) {
+                // 如果在edges中没有ch1的话，就创建一个
+                if (!edges.containsKey(ch1)) {
+                    edges.put(ch1,new HashSet<>());
+                }
+                // 不存ch1指向ch2的重复信息
+                if (!edges.get(ch1).contains(ch2)) {
+                    // 将ch1 指向的ch2加入
+                    edges.get(ch1).add(ch2);
+                    // 修改ch2的入度值
+                    in.put(ch2,in.get(ch2)+1);
+                }
+                // 只要一个字符串不相等即可
+                break;
+            }
+        }
+        // 判断是不是出现了不合法的状态，也就是第一个字符串比第二个长
+        if (i == s2.length() && i < s1.length()) check = true;
+
+    }
+}
