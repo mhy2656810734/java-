@@ -1,0 +1,43 @@
+class Solution {
+    public int[] findOrder(int n, int[][] p) {
+        // 解题思路：拓扑排序
+        // 1.准备工作
+        Map<Integer,List<Integer>> edges = new HashMap<>();// 邻接表存图
+        int[] in = new int[n];// 存每个顶点的入度值
+        int[] ret = new int[n];// 最终结果
+        int z = 0;
+        // 2.建图
+        for (int i = 0; i < p.length;i++) {
+            int a = p[i][0],b = p[i][1];// b->a
+            if (!edges.containsKey(b)) {
+                edges.put(b,new ArrayList<>());
+            }
+            edges.get(b).add(a);
+            // 记录入度
+            in[a]++;
+        }
+        // 3.进行拓扑排序
+        Queue<Integer> q = new LinkedList<>();
+        // 3.1将入度为0的点加入队列
+        for (int i = 0; i < n;i++) {
+            if (in[i] == 0) q.offer(i);
+        }
+        // 3.2BFS
+        while (!q.isEmpty()) {
+            // 弹出的入度为0的顶点，加入结果数组
+            int t = q.poll();
+            ret[z++] = t;
+            // 修改顶点t的边指向的顶点的入度值
+            for (int i:edges.getOrDefault(t,new ArrayList<>())) {
+                in[i]--;
+                // 入度值为0就加入队列
+                if (in[i] == 0) q.offer(i);
+            }
+        }
+        // 判断是不是有环，有环返回空数组
+        for (int i = 0; i < n;i++) {
+            if (in[i] != 0) return new int[0];
+        }
+        return ret;
+    }
+}
