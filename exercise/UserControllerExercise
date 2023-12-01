@@ -1,0 +1,63 @@
+@RestController
+public class UserControllerExercise {
+
+    @Autowired
+    private UserService userService;
+    @PostMapping("/login")
+    public Object selectByName(String username, String password, HttpServletRequest request) {
+        // 1.先去数据库查找是否能找到这个username
+        User user = userService.selectByName(username);
+        if (user == null || !PasswordToos.decrypt(password,user.getPassword())) {
+            System.out.println("用户名或者密码错误:"+user);
+            return  new User();
+        }
+
+        // 2.如果都匹配 登录成功，创建会话
+        HttpSession session = request.getSession(true);
+        session.setAttribute(MyConfig.USER_INFO,user);
+        user.setPassword("");
+        return user;
+    }
+    // 注册
+    @PostMapping ("/register")
+    public Object register(String username,String password) {
+        // 1.先创建user对象
+        User user = null;
+        // 2.插入数据库
+        try {
+            user = new User();
+            user.setUsername(username);
+            // 对密码进行加盐加密处理
+            String dbPassword = PasswordToos.encrypt(password);
+            user.setPassword(dbPassword);
+            // 如果用户名重复，会注册失败
+            int ret = userService.insert(user);
+            user.setPassword("");
+            System.out.println("注册结果ret: "+ret);
+        } catch (DuplicateKeyException e) {
+            // 注册失败 创建空对象
+            user = new User();
+            System.out.println("注册失败:"+username);
+        }
+        return user;
+    }
+    // 主界面查询登录用户的用户信息
+    @GetMapping("/getUserInfo")
+    public Object getUserInfo(HttpServletRequest request) {
+        // 1.先获取到session
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            System.out.println("当前用户未登录");
+            return new User();
+        }
+        // 2.拿到当前登录用户
+        User user = (User)session.getAttribute(MyConfig.USER_INFO);
+        if (user == null) {
+            System.out.println("[getUserInof] 无法获取到用户信息");
+            return new User();
+        }
+        // 获取到当前用户，但是需要将密码设置为空
+        user.setPassword("");
+        return user;
+    }
+}
