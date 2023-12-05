@@ -1,0 +1,18 @@
+package com.example.demo.entity;
+
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+/**
+ * @author 26568
+ * @date 2023-12-05 19:21
+ */
+@ConfigurationProperties("student")
+@Data
+@Component
+public class Student {
+    public int id;
+    public String name;
+    public int age;
+}
