@@ -1,0 +1,18 @@
+package com.example.demo.entity.vo;
+
+import com.example.demo.entity.ArticleInfo;
+
+/**
+ * @author 26568
+ * @date 2023-12-10 19:37
+ */
+public class ArticleInfoVo extends ArticleInfo {
+    public String username;
+
+    @Override
+    public String toString() {
+        return "ArticleInfoVo{" +
+                "username='" + username + '\'' +
+                "} " + super.toString();
+    }
+}
