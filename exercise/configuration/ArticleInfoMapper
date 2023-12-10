@@ -1,0 +1,22 @@
+package com.example.demo.mapper;
+
+import com.example.demo.entity.UserInfo;
+import com.example.demo.entity.vo.ArticleInfoVo;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+@Mapper
+public interface ArticleInfoMapper {
+    ArticleInfoVo getDetail(@Param("uid")Integer id);
+    int update(@Param("id")Integer id,
+               @Param("password")String password,
+               @Param("newPassword")String newPassword);
+    int addUser(UserInfo userInfo);
+    int addUser2(UserInfo userInfo);
+    int addUser3(UserInfo userInfo);
+    List<ArticleInfoVo> getList(@Param("id")Integer id,
+                                @Param("title")String title);
+    int delByList(List<Integer> idList);
+}
