@@ -1,0 +1,74 @@
+package com.example.demo.mapper;
+
+import com.example.demo.entity.UserInfo;
+import com.example.demo.entity.vo.ArticleInfoVo;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+@SpringBootTest
+class ArticleInfoMapperTest {
+    @Autowired
+    private ArticleInfoMapper articleInfoMapper;
+    @Test
+    void getDetail() {
+        ArticleInfoVo articleInfoVo = articleInfoMapper.getDetail(1);
+        System.out.println(articleInfoVo);
+    }
+    @Transactional
+    @Test
+    void update() {
+        System.out.println(articleInfoMapper.update(1,"weiaizuqiu","admin"));
+    }
+
+    @Test
+    void addUser() {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setPassword("hhhhh");
+        userInfo.setUsername("张三");
+        int result = articleInfoMapper.addUser(userInfo);
+        System.out.println("添加成功的用户的id是："+userInfo.getId());
+    }
+
+    @Test
+    void addUser2() {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setPassword("hhhhh");
+        userInfo.setUsername("李四");
+        userInfo.setPhoto("jjjj");
+        int result = articleInfoMapper.addUser(userInfo);
+        System.out.println("添加成功的用户的id是："+userInfo.getId());
+    }
+
+    @Test
+    void addUser3() {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setPassword("hhhhh");
+        userInfo.setUsername("王五");
+        userInfo.setPhoto("jjjj");
+        int result = articleInfoMapper.addUser(userInfo);
+        System.out.println("添加成功的用户的id是："+userInfo.getId());
+    }
+
+    @Test
+    void getList() {
+        List<ArticleInfoVo> list = articleInfoMapper.getList(1,"Ja");
+        for (ArticleInfoVo articleInfoVo:list) {
+            System.out.println(articleInfoVo);
+        }
+    }
+
+    @Test
+    void delByList() {
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        int result = articleInfoMapper.delByList(list);
+        System.out.println("删除成功:"+result);
+    }
+}
