@@ -1,0 +1,55 @@
+package com.example.demo;
+
+/**
+ * @author 26568
+ * @date 2023-12-15 18:09
+ */
+public class ThreadExercise {
+    public static void main(String[] args) {
+        Object lock = new Object();
+       Thread t1 = new Thread(() ->{
+           for (int i = 0; i < 10; i++) {
+               synchronized (lock) {
+                   System.out.println("abc1");
+                   lock.notifyAll();
+                   try {
+                       lock.wait();
+                   } catch (InterruptedException e) {
+                       e.printStackTrace();
+                   }
+               }
+           }
+       });
+        Thread t2 = new Thread(() ->{
+            for (int i = 0; i < 10; i++) {
+                synchronized (lock) {
+                    System.out.println("abc2");
+                    lock.notifyAll();
+                    try {
+                        lock.wait();
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        Thread t3 = new Thread(() ->{
+            for (int i = 0; i < 10; i++) {
+                synchronized (lock) {
+                    System.out.println("abc3");
+                    lock.notifyAll();
+                    try {
+                        lock.wait();
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+}
