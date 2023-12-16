@@ -1,0 +1,55 @@
+public class Queue8 {
+    // 皇后的数量
+    int max = 8;
+    // 使用一个一维数组来记录  下表i就代表第几行   arr[i] = val val就代表第几列
+    int[] arr = new int[max];
+    static int count;
+ 
+    private void print() {
+        count++;
+        for (int i = 0; i < max; i++) {
+            System.out.print(this.arr[i]+" ");
+        }
+        System.out.println();
+    }
+    public static void main(String[] args) {
+        Queue8 queue = new Queue8();
+        queue.check(0);
+        System.out.println("共"+count+"种解法");
+    }
+ 
+    /**
+     * 放置皇后
+     * @param n 第n个皇后
+     */
+    public  void check(int n) {
+        if (n == 8) { // n=8 说明皇后都已经放好了
+            print();
+            return;
+        }
+        // 开始放皇后
+        for (int i = 0; i < max; i++) {
+            // 每次将第n个皇后放到第 i 列
+            arr[n] = i;
+            // 判断将第n个皇后放到第 i 列时，是否冲突
+            if (judge(n)) {
+                // 此时说明不冲突  继续放下一个皇后
+                check(n+1);
+            }
+        }
+    }
+    /**
+     * 检查皇后放的位置是否合法
+     */
+    public boolean judge(int n) {
+        // 判断第n个皇后和前面 n-1个 皇后放置的位置是否冲突
+        for (int i = 0; i < n; i++) {
+            // arr[i] == arr[n]   判断第n个皇后是不是和前面第n-1个皇后在一列
+            // Math.abs(n-i) == Math.abs(arr[n] - arr[i])   判断第n个皇后 是不是和前n-1个在同一斜线
+            if (arr[i] == arr[n] || Math.abs(n-i) == Math.abs(arr[n] - arr[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
