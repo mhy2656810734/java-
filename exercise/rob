@@ -1,0 +1,23 @@
+class Solution {
+    public int rob(int[] nums) {
+        int n = nums.length;
+        if (n == 0) return 0;
+        // 2.初始化
+        // 第一家偷的话，则最后一家就不能偷和第二家不能偷
+        // 第一家不偷的话，则就是从第二家到最后一家的金额
+        return Math.max(nums[0] + func(nums,2,n-2),func(nums,1,n-1));
+    }
+    public int func(int[] nums,int left,int right) {
+        if (left > right) return 0;
+        // 1.创建dp表
+        int n = nums.length;
+        int[] f = new int[n];
+        int[] g = new int[n];
+        f[left] = nums[left];
+        for (int i = left+1; i <= right;i++) {
+            f[i] = g[i-1] + nums[i];
+            g[i] = Math.max(f[i-1],g[i-1]);
+        } 
+        return Math.max(f[right],g[right]);
+    }
+}
