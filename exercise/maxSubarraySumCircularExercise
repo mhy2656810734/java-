@@ -1,0 +1,25 @@
+class Solution {
+    public int maxSubarraySumCircular(int[] nums) {
+        int n = nums.length;
+        // 1.创建dp表
+        // f[i] 表示以i位置为结尾的所有子数组中的最大值
+        // g[i] 表示以i位置为结尾的所有子数组中的最小值
+        int[] f = new int[n+1];
+        int[] g = new int[n+1];
+        // 2.初始化
+        f[0] = -0X3F3F3F3F;
+        g[0] = 0X3F3F3F3F;
+        // 3.填表
+        int fmax = f[0];
+        int gmin = g[0];
+        int sum = 0;
+        for (int i = 1; i <= n; i++) {
+            f[i] = Math.max(nums[i-1],nums[i-1] + f[i-1]);
+            g[i] = Math.min(nums[i-1],nums[i-1] + g[i-1]);
+            sum += nums[i-1];
+            fmax = Math.max(f[i],fmax);
+            gmin = Math.min(gmin,g[i]);
+        }
+        return gmin == sum?fmax:Math.max(fmax,(sum - gmin));
+    }
+}
