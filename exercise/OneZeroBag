@@ -1,0 +1,50 @@
+import java.util.Scanner;
+
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        // 注意 hasNext 和 hasNextLine 的区别
+        while (in.hasNextInt()) { // 注意 while 处理多个 case
+            int n = in.nextInt();
+            int bagV = in.nextInt();
+            int[] v = new int[n];
+            int[] w = new int[n];
+            for (int i = 0; i < n;i++) {
+                v[i] = in.nextInt();
+                w[i] = in.nextInt();
+            }
+            int ret1 = func1(n,bagV,v,w);
+            int ret2 = func2(n,bagV,v,w);
+            System.out.println(ret1);
+            System.out.println(ret2);
+        }
+    }
+    public static int func1(int n,int bagV,int[] v,int[] w) {
+        int[][] dp = new int[n+1][bagV+1];
+        for (int i = 1; i <= n;i++) {
+            for (int j = 1; j <= bagV;j++) {
+                dp[i][j] = dp[i-1][j];
+                if (j-v[i-1] >= 0) {
+                    dp[i][j] = Math.max(dp[i][j],w[i-1]+dp[i-1][j-v[i-1]]);
+                }
+            }
+        }
+        return dp[n][bagV];
+    }
+    public static int func2(int n,int bagV,int[] v,int[] w) {
+        int[][] dp = new int[n+1][bagV+1];
+        for (int j = 1; j <= bagV;j++) {
+            dp[0][j] = -1;
+        }
+        for (int i = 1; i <= n;i++) {
+            for (int j = 1; j <= bagV;j++) {
+                dp[i][j] = dp[i-1][j];
+                if (j-v[i-1] >= 0 && dp[i-1][j-v[i-1]] != -1) {
+                    dp[i][j] = Math.max(dp[i][j],w[i-1]+dp[i-1][j-v[i-1]]);
+                }
+            }
+        }
+        return dp[n][bagV] == -1?0:dp[n][bagV];
+    }
+}
