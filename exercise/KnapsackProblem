@@ -1,0 +1,40 @@
+import java.util.Scanner;
+
+// 注意类名必须为 Main, 不要有任何 package xxx 信息
+public class Knapsack Problem{
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        // 注意 hasNext 和 hasNextLine 的区别
+        while (in.hasNextInt()) { // 注意 while 处理多个 case
+            int n = in.nextInt(); // 物品数量
+            int V = in.nextInt(); // 背包体积
+            int[] v = new int[n]; // 物品体积数组
+            int[] w = new int[n]; // 物品价值数组
+            for (int i = 0; i < n;i++) {
+                v[i] = in.nextInt();
+                w[i] = in.nextInt();
+            }
+            int ret1 = func1(n,V,v,w);
+            System.out.println(ret1);
+        }
+    }
+    public static int func1(int n,int V,int[] v,int[] w) {
+        // 1.创建dp表
+        int[][] dp = new int[n+1][V+1];
+        // 2.初始化
+        // 无需初始化
+        // 3.填表
+        for (int i = 1; i <= n;i++) {
+            for (int j = 1; j <= V;j++) {
+                // 不选当前物品
+                dp[i][j] = dp[i-1][j];
+                // 如果体积可以装当前物品，那么选当前物品 然后求最大值
+                if (j-v[i-1] >= 0) {
+                    dp[i][j] = Math.max(dp[i][j],dp[i-1][j-v[i-1]] + w[i-1]);
+                }
+            }
+        }
+        // 4.返回值
+        return dp[n][V];
+    }
+}
