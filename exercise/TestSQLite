@@ -1,0 +1,56 @@
+import org.sqlite.SQLiteDataSource;
+
+import javax.sql.DataSource;
+import java.sql.*;
+
+/**
+ * @author 26568
+ * @date 2024-01-07 11:34
+ */
+public class TestSQLite {
+    public static void main(String[] args) throws SQLException {
+        //testInsert();
+        testSelect();
+    }
+    private static void testInsert() throws SQLException {
+        // 使用SQLite
+        // 1.创建数据源 DataSource
+        DataSource dataSource = new SQLiteDataSource();
+        ((SQLiteDataSource)dataSource).setUrl("jdbc:sqlite://F:/All Users/GitHub/FileSearchTool/test.db");
+        // 2.建立连接
+        Connection connection = dataSource.getConnection();
+        // 3.构造SQL语句
+        String sql = "insert into test values(?,?)";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setInt(1,10);
+        statement.setString(2,"小马");
+        // 4.执行SQL语句
+        statement.executeUpdate();
+        // 5.释放资源
+        statement.close();
+        connection.close();
+    }
+    private static void testSelect() throws SQLException {
+        // 查询数据
+        // 1.创建数据源
+        DataSource dataSource = new SQLiteDataSource();
+        ((SQLiteDataSource)dataSource).setUrl("jdbc:sqlite:\\F:\\All Users\\GitHub\\FileSearchTool\\test.db");
+        // 2.建立连接
+        Connection connection = dataSource.getConnection();
+        // 3.编写SQL语句
+        String sql = "select * from test";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        // 4.执行SQL
+        ResultSet resultSet = statement.executeQuery();
+        // 5.遍历结果集合
+        while (resultSet.next()) {
+            int id = resultSet.getInt("id");
+            String name = resultSet.getString("name");
+            System.out.println("id: "+id+", name: "+name);
+        }
+        // 6.释放资源
+        resultSet.close();
+        statement.close();
+        connection.close();
+    }
+}
