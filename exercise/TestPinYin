@@ -1,0 +1,14 @@
+import net.sourceforge.pinyin4j.PinyinHelper;
+
+import java.util.Arrays;
+
+/**
+ * @author 26568
+ * @date 2024-01-07 21:36
+ */
+public class TestPinYin {
+    public static void main(String[] args) {
+        String[] arr = PinyinHelper.toHanyuPinyinStringArray('马');
+        System.out.println(Arrays.toString(arr));
+    }
+}
