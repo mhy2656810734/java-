@@ -1,0 +1,14 @@
+import util.PinYinUtil;
+
+/**
+ * @author 26568
+ * @date 2024-01-07 22:08
+ */
+public class TestPinYinUtil {
+    public static void main(String[] args) {
+        System.out.println(PinYinUtil.get("踢球很开心",true));
+        System.out.println(PinYinUtil.get("踢球很开心",false));
+        System.out.println(PinYinUtil.get("红鲤鱼与绿鲤鱼与驴",true));
+        System.out.println(PinYinUtil.get("红鲤鱼与绿鲤鱼与驴",false));
+    }
+}
