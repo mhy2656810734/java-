@@ -1,0 +1,46 @@
+package exercise;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+/**
+ * @author 26568
+ * @date 2024-01-13 19:32
+ */
+public class MyThreadPool {
+    private BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>();
+    public MyThreadPool(int n) {
+        for (int i = 0; i < n; i++) {
+            Thread t = new Thread(() -> {
+                while (true) {
+                    try {
+                        Runnable runnable = queue.take();
+                        runnable.run();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+            t.start();
+        }
+    }
+    public void submit(Runnable runnable) {
+        try {
+            queue.put(runnable);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static void main(String[] args) {
+        MyThreadPool pool = new MyThreadPool(10);
+        for (int i = 0; i < 1000; i++) {
+            int n = i;
+            pool.submit(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("hello:  "+n);
+                }
+            });
+        }
+    }
+}
