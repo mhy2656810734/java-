@@ -1,0 +1,72 @@
+package exercise;
+
+import java.lang.management.ThreadMXBean;
+
+/**
+ * @author 26568
+ * @date 2024-01-14 9:59
+ */
+class Count {
+    public volatile int count = 0;
+    public synchronized void add() {
+        count++;
+    }
+}
+class MyRunnable implements Runnable{
+    @Override
+    public void run() {
+       while (true) {
+           System.out.println("Runnable");
+       }
+    }
+}
+public class MyThread extends Thread{
+    @Override
+    public void run() {
+        System.out.println("hello");
+    }
+    public static boolean flag = true;
+    public static void main1(String[] args) {
+
+        Thread t = new Thread(()-> {
+            while (!Thread.currentThread().isInterrupted()) {
+                System.out.println("runging");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        },"MyThread");
+        t.start();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        t.interrupt();
+    }
+
+    public static void main(String[] args) {
+        Count count = new Count();
+        Thread t1 = new Thread(() ->{
+            for (int i = 0; i < 50000; i++) {
+                count.add();
+            }
+        });
+        Thread t2 = new Thread(() ->{
+            for (int i = 0; i < 50000; i++) {
+                count.add();
+            }
+        });
+        t1.start();
+        t2.start();
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("最终结果:"+count.count);
+    }
+}
