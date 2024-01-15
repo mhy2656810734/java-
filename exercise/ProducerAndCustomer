@@ -1,0 +1,45 @@
+package thread;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+/**
+ * @author 26568
+ * @date 2024-01-15 18:25
+ */
+// 生产者和消费者
+public class ThreadDemo23 {
+    public static void main(String[] args) throws InterruptedException {
+        BlockingQueue<Integer> blockingQueue = new LinkedBlockingQueue<>();
+        // 消费者
+        Thread customer = new Thread(() -> {
+            // 循环取出阻塞队列中的元素
+            while (true) {
+                try {
+                    int result = blockingQueue.take();
+                    System.out.println("消费元素:"+result);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        customer.start();
+        // 生产者
+        Thread producer = new Thread(() -> {
+            // 循环给队列放元素
+            int count = 0;
+            while (true) {
+                try {
+                    blockingQueue.put(count);
+                    System.out.println("生产元素:"+count);
+                    count++;
+                    // 多消费少生产
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        producer.start();
+    }
+}
