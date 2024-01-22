@@ -1,0 +1,227 @@
+/**
+ * @author 26568
+ *  哈希表
+ * @date 2022-07-02 15:53
+ */
+
+import com.sun.xml.internal.bind.v2.model.core.ID;
+
+import java.util.Scanner;
+
+/**
+ * 员工(结点)
+ */
+class Emp {
+    public int id;
+    public String name;
+    public Emp next;// 默认为空
+    public Emp(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+}
+
+/**
+ * 哈希表中的单链表
+ */
+class HashLikedList {
+    private Emp head;// 默认为空即可
+
+    /**
+     * 添加雇员
+     */
+    public void add(Emp emp) {
+        // 第一次加入
+        if (head == null) {
+            head = emp;
+            System.out.println("添加成功");
+            return;
+        }
+        // 辅助结点辅助构造
+        Emp cur = head;
+        while (cur.next != null) {
+            cur = cur.next;
+        }
+        cur.next = emp;
+        System.out.println("添加成功");
+    }
+    public void list(int i) {
+        if (head == null) {
+            System.out.println("第"+(i+1)+"条链表为空");
+            return;
+        }
+        Emp cur = head;
+        System.out.print("第"+(i+1)+"条链表的信息为:");
+        while ( cur != null) {
+            System.out.printf("id = %d name = %s\t",cur.id,cur.name);
+            cur = cur.next;
+        }
+        System.out.println();
+    }
+    /**
+     * 查找员工
+     * 找到返回结点 没找到就返回空
+     */
+    public Emp findId(int id) {
+        if (head == null) {
+            System.out.println("链表为空");
+            return null;
+        }
+        Emp cur = head;
+        while (cur != null) {
+            if (cur.id == id) {
+                return cur;
+            }
+            cur = cur.next;
+        }
+        return null;
+    }
+    /**
+     * 删除员工
+     */
+    public void delId(int id) {
+        if (head == null) {
+            System.out.println("链表为空");
+            return;
+        }
+        if (head.id == id) {
+            head = head.next;
+            System.out.println("删除成功");
+            return;
+        }
+        // 遍历查找该ID员工的前一个员工
+        Emp prev = searchId(id);
+        if (prev == null) {
+            System.out.println("没有你要查找的员工");
+            return;
+        }
+        // 然后删除该员工结点
+        prev.next = prev.next.next;
+        System.out.println("删除成功");
+    }
+    /**
+     * 查找前一个员工
+     */
+    public Emp searchId(int id) {
+        Emp cur = head;
+        while (cur.next != null) {
+            if (cur.next.id == id) {
+                return cur;
+            }
+            cur = cur.next;
+        }
+        return null;
+    }
+}
+
+/**
+ * 哈希表
+ */
+class HashTab {
+    private HashLikedList[] hashLikedListArray;
+    private int size;// 表示多少条链表
+    public HashTab(int size) {
+        this.size = size;
+        hashLikedListArray = new HashLikedList[size];
+        // 实例化每一个链表
+        for (int i = 0; i < size; i++) {
+            hashLikedListArray[i] = new HashLikedList();
+        }
+    }
+    /**
+     * 添加员工
+     */
+    public void add(Emp emp) {
+        // 根据输入的员工号，判断添加到哪条链表
+        int empLinkListNo = hashFun(emp.id);
+        hashLikedListArray[empLinkListNo].add(emp);
+    }
+    /**
+     * 遍历所有链表
+     */
+    public void list() {
+        for (int i = 0; i < size; i++) {
+            hashLikedListArray[i].list(i);
+        }
+    }
+    /**
+     * 散列函数: 简单取模法
+     */
+    public int hashFun(int id) {
+        return id % size;
+    }
+    /**
+     * 查找员工
+     */
+    public void find(int id) {
+        //  使用散列函数确定区哪条链表查找
+        int empLikeListNo = hashFun(id);
+        Emp emp = hashLikedListArray[empLikeListNo].findId(id);
+        if (emp == null) {
+            System.out.println("该员工ID未查找到");
+        } else {
+            System.out.println("查找到该员工,信息如下");
+            System.out.print("在第"+(empLikeListNo+1)+"条链表中:");
+            System.out.println("id="+emp.id+"  name="+emp.name);
+        }
+    }
+    /**
+     * 删除员工
+     */
+    public void delId(int id) {
+        //  使用散列函数确定区哪条链表查找
+        int empLikeListNo = hashFun(id);
+        hashLikedListArray[empLikeListNo].delId(id);
+    }
+}
+public class HashTextDemo {
+    public static void main(String[] args) {
+        HashTab hashTab = new HashTab(7);
+        boolean loop = true;
+        while (loop) {
+            menu();
+            Scanner scan = new Scanner(System.in);
+            int choice = scan.nextInt();
+            switch (choice) {
+                case 1:
+                    System.out.println("请输入你要添加的员工的ID");
+                    int id = scan.nextInt();
+                    System.out.println("请输入你要添加的员工的姓名");
+                    String name = scan.next();
+                    Emp  emp = new Emp(id,name);
+                    hashTab.add(emp);
+                    break;
+                case 2:
+                    hashTab.list();
+                    break;
+                case 3:
+                    System.out.println("请输入你要查找的员工的ID");
+                    id = scan.nextInt();
+                    hashTab.find(id);
+                    break;
+                case 4:
+                    System.out.println("请输入你要删除的员工ID");
+                    id = scan.nextInt();
+                    hashTab.delId(id);
+                    break;
+                case 0:
+                    scan.close();
+                    loop = false;
+                    System.out.println("退出系统");
+                    break;
+                default:
+                    System.out.println("选择有误，请重新输入");
+            }
+        }
+
+    }
+    public static void menu() {
+        System.out.println("1.添加员工");
+        System.out.println("2.显示员工");
+        System.out.println("3.查找员工");
+        System.out.println("4.删除员工");
+        System.out.println("0.退出系统");
+        System.out.println();
+        System.out.println("请输入你的选择");
+    }
+}
