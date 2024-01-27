@@ -1,0 +1,218 @@
+import sun.reflect.generics.tree.Tree;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Random;
+
+class Heap1 {
+    public int[] arr;
+    public int usedSize;
+    public static final int DEFAULT_SIZE = 10;
+    public Heap1(int[] arr) {
+        this.arr = new int[DEFAULT_SIZE];
+        for (int i = 0; i < 10;i++) {
+            this.arr[i] = arr[i];
+            usedSize++;
+        }
+    }
+    // 堆排序
+    public void heapSort() {
+        // 建堆
+        createHeap();
+        int end = usedSize-1;
+        while (end > 0) {
+            int temp = this.arr[0];
+            arr[0] = arr[end];
+            arr[end] = temp;
+            siftDown(0,end);
+            end--;
+        }
+    }
+    public void createHeap() {
+        for (int parent = (this.usedSize -1)/2;parent >= 0;parent--) {
+            siftDown(parent,this.usedSize);
+        }
+    }
+    // 向下调整
+    public void siftDown(int parent,int len) {
+        int child = 2*parent+1;
+        while (child < len) {
+            if ((child + 1 < len) &&(arr[child+1] > arr[child])) {
+                child++;
+            }
+            if (arr[child] > arr[parent]) {
+                int temp = arr[child];
+                arr[child] = arr[parent];
+                arr[parent] = temp;
+                parent = child;
+                child = 2*parent+1;
+            } else {
+                break;// 已经调整好；
+            }
+        }
+    }
+    // 添加数据
+    public void offer(int val) {
+        if (isFull()) {
+            this.arr = Arrays.copyOf(this.arr,2*this.arr.length);
+        }
+        // 加入到最后下标
+        this.arr[usedSize] = val;
+        usedSize++;
+        // 向上调整
+        sitfUp(this.usedSize-1);
+    }
+    // 向上调整
+    public void sitfUp(int child) {
+        int parent = (child-1)/2;
+        while (child > 0) {
+            if (arr[parent] < arr[child]) {
+                int temp =arr[parent];
+                arr[parent] = arr[child];
+                arr[child] = temp;
+                child = parent;
+                parent = (child -1)/2;
+            } else {
+                break;
+            }
+        }
+    }
+    // 判满
+    public boolean isFull() {
+        return usedSize == arr.length;
+    }
+    // 删除数据
+    public int pop() {
+        // 判空
+        if (isEmpty()) {
+            System.out.println("堆空");
+            return -1;
+        }
+        // 交换堆顶和最后一个数据然后开始向下调整
+        int temp = arr[0];
+        arr[0] = arr[this.usedSize-1];
+        arr[this.usedSize -1] = temp;
+        this.usedSize--;
+        siftDown(0,this.usedSize);
+        return temp;
+    }
+    // 判空
+    public boolean isEmpty() {
+        return this.usedSize ==0;
+    }
+}
+public class Exercise {
+    public static void main(String[] args) {
+        int[] arr = {5,9,10,7,3,2,0,20,14,31};
+//        bubbleSort(arr);
+//        System.out.println(Arrays.toString(arr));
+//        textBubbleSort();
+//        countSort(arr);
+//        System.out.println(Arrays.toString(arr));
+//        heapSort(arr);
+//        System.out.println(Arrays.toString(arr));
+//        textHeapSort();
+        Heap1 heap1 = new Heap1(arr);
+        heap1.createHeap();
+       // heap1.heapSort();
+        //System.out.println(Arrays.toString(heap1.arr));
+        //heap1.offer(35);
+        System.out.println(heap1.pop());
+    }
+    // 冒泡排序：  时间复杂度:O(n^2)  空间复杂度：O（1） 稳定
+    public static void bubbleSort(int[] arr) {
+        // 确定趟数
+        for (int i = 0; i < arr.length -1;i++) {
+            // 确定比较对数
+            for (int j = 0; j < arr.length-1-i;j++) {
+                if (arr[j] > arr[j+1] ){
+                        int temp = arr[j];
+                        arr[j] = arr[j+1];
+                        arr[j+1] = temp;
+                }
+            }
+        }
+    }
+    public static void textBubbleSort() {
+        int[] arr = new int[100000];
+        Random random = new Random();
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = random.nextInt();
+        }
+        long start = System.currentTimeMillis();
+        bubbleSort(arr);
+        long end = System.currentTimeMillis();
+        System.out.println("冒泡排序时间复杂度:"+(end -start));
+    }
+    // 计数排序：时间复杂度O(n+范围) 空间复杂度:O（范围） 稳定
+    public static void countSort(int[] arr) {
+        // 遍历确定数组大小
+        int min = arr[0];
+        int max = arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            if (arr[i] > max) {
+                max = arr[i];
+            }
+            if (arr[i] < min) {
+                min = arr[i];
+            }
+        }
+        int[] temp = new int[max - min +1];
+        for (int i = 0; i < arr.length; i++) {
+            int val = arr[i];
+            temp[val - min]++;
+        }
+        int k = 0;
+        for (int i = 0; i < temp.length;i++) {
+            int count = temp[i];
+            while (count > 0) {
+                arr[k++] = i+min;
+                count--;
+            }
+        }
+    }
+    // 堆排序 时间复杂度:O(nlogN)  空间复杂度：O（1） 不稳定
+    public static void heapSort(int[] arr) {
+        createHeap(arr);
+        int end = arr.length-1;
+        while (end > 0) {
+            int temp = arr[0];
+            arr[0] = arr[end];
+            arr[end] = temp;
+            siftDown(arr,0,end);
+            end--;
+        }
+    }
+    // 先建堆
+    public static void createHeap(int[] arr) {
+        for(int parent = (arr.length - 1)/2;parent >= 0; parent--) {
+            siftDown(arr,parent,arr.length);
+        }
+    }
+    public static void siftDown(int[] arr,int parent,int len) {
+        int child = 2 * parent +1;
+        while (child < len) {
+            if ((child + 1 < len) && (arr[child + 1] > arr[child])) {
+                child++;
+            }
+            if (arr[child] > arr[parent]) {
+                int temp = arr[child];
+                parent = child;
+                child = 2 * parent + 1;
+            } else {
+                break;// 已经调整好；
+            }
+        }
+    }
+    public static void textHeapSort() {
+        int[] arr = new int[100000];
+        Random random = new Random();
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = random.nextInt();
+        }
+        long start = System.currentTimeMillis();
+        heapSort(arr);
+        long end = System.currentTimeMillis();
+        System.out.println("堆排序时间复杂度:"+(end -start));
+    }
+}
