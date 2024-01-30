@@ -1,0 +1,87 @@
+package thread;
+
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.PriorityBlockingQueue;
+
+/**
+ * 自定义定时器
+ * @author 26568
+ * @date 2023-04-06 15:05
+ */
+// 任务
+class MyTask implements Comparable<MyTask>{
+    // 要执行的Runnable
+    private Runnable runnable = null;
+    // 要执行的时间
+    private long time;
+    public MyTask(Runnable runnable,long time) {
+        this.runnable = runnable;
+        this.time = time;
+    }
+
+    @Override
+    public int compareTo(MyTask o) {
+        return (int)(this.time-o.time);
+    }
+
+    public long getTime() {
+        return time;
+    }
+    public void run() {
+        runnable.run();
+    }
+}
+class MyTimer{
+    // 扫描线程
+    Thread t = null;
+    // 优先级阻塞队列
+    PriorityBlockingQueue<MyTask> queue = new PriorityBlockingQueue<>();
+    public MyTimer() {
+        t = new Thread(() -> {
+            while (true) {
+                synchronized (this) {
+                    long curTime = System.currentTimeMillis();
+                    try {
+                        MyTask myTask = queue.take();
+                        if (curTime < myTask.getTime()) {
+                            queue.put(myTask);
+                            this.wait(myTask.getTime()-curTime);
+                        } else {
+                            myTask.run();
+                        }
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+        t.start();
+    }
+
+    public void schedule(Runnable runnable,long after) {
+        // 创先任务
+        MyTask myTask = new MyTask(runnable,System.currentTimeMillis()+after);
+        queue.put(myTask);
+        synchronized (this) {
+            this.notify();
+        }
+    }
+}
+public class ThreadDemo223 {
+    public static void main(String[] args) {
+        MyTimer timer = new MyTimer();
+        timer.schedule(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("执行任务2");
+            }
+        },3000);
+        timer.schedule(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("执行任务1");
+            }
+        },1000);
+    }
+}
