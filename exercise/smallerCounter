@@ -1,0 +1,62 @@
+class Solution {
+    int[] ret;
+    int[] tmpIndex;
+    int[] tmpNums;
+    int[] index;// 标记nums元素的原始下标
+    public List<Integer> smallerCounter(int[] nums) {
+        // 解题思路：使用归并排序
+        //          当前元素的后面，有多少个比它小
+        // 需要注意：使用两个数组来标记原来数组元素及其下标
+        int n = nums.length;
+        ret = new int[n];
+        tmpIndex = new int[n];
+        tmpNums = new int[n];
+        index = new int[n];
+        for (int i = 0; i < n;i++) {
+            index[i] = i;
+        }
+        List<Integer> list = new ArrayList<>();
+        mergeSort(nums,0,n-1);
+        for (int x:ret) {
+            list.add(x);
+        }
+        return list;
+    }
+    public void mergeSort(int[] nums,int left,int right) {
+        if (left >= right) return;
+        // 对左右区间进行排序
+        int mid = left + (right - left) / 2;
+        mergeSort(nums,left,mid);
+        mergeSort(nums,mid+1,right);
+        // 一左一右进行处理
+        // 对原数组进行降序，然后判断
+        int i = 0,cur1 = left,cur2 = mid+1;
+        // 使用降序
+        while ((cur1 <= mid) && (cur2 <= right)) {
+            if (nums[cur1] <= nums[cur2]) {
+                // 当cur1下标数据小于cur2时，由于cur1左侧的都是比较大的数据
+                // 不符合条件，但是需要对数组进行排序
+                tmpNums[i] = nums[cur2];
+                tmpIndex[i++] = index[cur2++];
+            } else {
+                ret[index[cur1]] += right - cur2 + 1;
+                tmpNums[i] = nums[cur1];
+                tmpIndex[i++] = index[cur1++];
+            }
+        }
+        // 处理剩余的排序
+        while (cur1 <= mid) {
+            tmpNums[i] = nums[cur1];
+            tmpIndex[i++] = index[cur1++];
+        }
+        while (cur2 <= right) {
+            tmpNums[i] = nums[cur2];
+            tmpIndex[i++] = index[cur2++];
+        }
+        // 拷贝回原数组
+        for (int j = left;j <= right;j++) {
+            nums[j] = tmpNums[j - left];
+            index[j] = tmpIndex[j - left]; 
+        }
+    }
+}
