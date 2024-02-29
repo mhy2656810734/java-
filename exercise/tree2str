@@ -1,0 +1,48 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public String tree2str(TreeNode root) {
+        StringBuilder stringBulider = new StringBuilder();
+        tree2strchild(stringBulider,root);
+        return stringBulider.toString();
+    }
+    public void tree2strchild(StringBuilder stringBulider,TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        stringBulider.append(root.val);
+        if (root.left != null) {
+            stringBulider.append("(");
+            tree2strchild(stringBulider,root.left);
+            stringBulider.append(")");
+        } else {
+            // 左右都空结束操作
+            if (root.right == null) {
+                return;
+            } else {
+                // 左空右不空拼接"()"
+                stringBulider.append("()");
+            }
+        }
+        if (root.right != null) {
+              stringBulider.append("(");
+            tree2strchild(stringBulider,root.right);
+            stringBulider.append(")");
+        } else {
+            return;
+        }
+    }
+}
